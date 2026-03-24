@@ -729,40 +729,70 @@ function getTimeAgoSL(dateStr) {
   return Math.floor(h/24) + 'd ago';
 }
 
+// Parse raw RSS XML into articles array
+function parseRSSXML(xmlText, sourceName) {
+  try {
+    const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+    return [...xml.querySelectorAll('item')].slice(0,10).map(item => {
+      const title = (item.querySelector('title')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'').trim();
+      const rawDesc = (item.querySelector('encoded')?.textContent||item.querySelector('description')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'');
+      const desc = rawDesc.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,180);
+      const linkEl = item.querySelector('link');
+      const url = linkEl?.textContent?.trim()||linkEl?.nextSibling?.textContent?.trim()||'#';
+      const pubDate = item.querySelector('pubDate')?.textContent||'';
+      const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
+      const img = item.querySelector('enclosure')?.getAttribute('url')||(imgMatch&&imgMatch[1])||'';
+      return title ? {title,desc,url,pubDate,img,source:sourceName,isNative:SL_NATIVE.has(sourceName)} : null;
+    }).filter(Boolean);
+  } catch(e){ return []; }
+}
+
+// Fetch one feed: try rss2json JSON API first, then allorigins CORS proxy
+async function fetchOneFeed(feedUrl, sourceName) {
+  // Method 1: rss2json (JSON response, easiest to parse)
+  try {
+    const ctrl = new AbortController();
+    setTimeout(()=>ctrl.abort(), 9000);
+    const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=10`, {signal:ctrl.signal});
+    const d = await r.json();
+    if(d.status==='ok' && d.items?.length) {
+      return d.items.map(item => {
+        const rd = item.description||item.content||'';
+        const desc = rd.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,180);
+        const imgM = rd.match(/<img[^>]+src=["']([^"']+)["']/i);
+        const img = item.thumbnail||item.enclosure?.link||(imgM&&imgM[1])||'';
+        const title = (item.title||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'").trim();
+        return title ? {title,desc,url:item.link||'#',pubDate:item.pubDate||'',img,source:sourceName,isNative:SL_NATIVE.has(sourceName)} : null;
+      }).filter(Boolean);
+    }
+  } catch(e) {}
+
+  // Method 2: allorigins CORS proxy → raw XML
+  try {
+    const ctrl2 = new AbortController();
+    setTimeout(()=>ctrl2.abort(), 9000);
+    const r2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`, {signal:ctrl2.signal});
+    const d2 = await r2.json();
+    if(d2.contents) return parseRSSXML(d2.contents, sourceName);
+  } catch(e) {}
+
+  return [];
+}
+
 async function loadNews() {
   document.getElementById('news-loading').style.display = 'flex';
   document.getElementById('news-list').innerHTML = '';
 
-  const catFeedMap = {
-    sports:   SL_NEWS_SOURCES.map(s => ({...s, feed: s.feed.replace('/feed/','/category/sports/feed/') || s.feed})),
-    business: SL_NEWS_SOURCES.map(s => ({...s, feed: s.feed.replace('/feed/','/category/business/feed/') || s.feed})),
-    politics: SL_NEWS_SOURCES.map(s => ({...s, feed: s.feed.replace('/feed/','/category/politics/feed/') || s.feed})),
-    diaspora: SL_NEWS_SOURCES.map(s => ({...s})),
-    general:  SL_NEWS_SOURCES,
-  };
-  const activeSources = catFeedMap[currentNewsCat] || SL_NEWS_SOURCES;
-
   const allArticles = [];
-  await Promise.all(activeSources.map(async src => {
-    try {
-      const ctrl = new AbortController();
-      setTimeout(() => ctrl.abort(), 8000);
-      const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(src.feed)}&count=10`;
-      const r = await fetch(rssUrl, {signal: ctrl.signal});
-      const data = await r.json();
-      if(data.status === 'ok' && data.items?.length) {
-        data.items.forEach(item => {
-          const title = (item.title||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'").trim();
-          const rawDesc = item.description || item.content || '';
-          const desc = rawDesc.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,160);
-          const url = item.link || '#';
-          const pubDate = item.pubDate || '';
-          const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
-          const img = item.thumbnail || (imgMatch && imgMatch[1]) || '';
-          if(title) allArticles.push({title, desc, url, pubDate, img, source: src.name, isNative: SL_NATIVE.has(src.name)});
-        });
-      }
-    } catch(e) {}
+  await Promise.all(SL_NEWS_SOURCES.map(async src => {
+    // For category tabs try specific path, fall back to general feed
+    let articles = [];
+    if(currentNewsCat !== 'general' && currentNewsCat !== 'diaspora') {
+      const catFeed = src.feed.replace('/feed/', `/category/${currentNewsCat}/feed/`);
+      articles = await fetchOneFeed(catFeed, src.name);
+    }
+    if(!articles.length) articles = await fetchOneFeed(src.feed, src.name);
+    allArticles.push(...articles);
   }));
 
   document.getElementById('news-loading').style.display = 'none';
