@@ -335,7 +335,7 @@ footer strong{color:var(--primary);}
     <div id="news-list"></div>
 
     <div style="margin-top:14px;font-size:11px;color:var(--mid);text-align:center;">
-      Aggregating <strong style="color:var(--primary);">10 Sierra Leone news sources</strong> in real-time &middot; Click any story to read full article
+      Aggregating <strong style="color:var(--primary);">10 verified Sierra Leone news sources</strong> in real-time &middot; Click any story to read full article
     </div>
   </div>
 </div>
@@ -671,16 +671,16 @@ async function loadWeather(){
 // ══════════════════════════════════════════════════════════
 
 const SL_NEWS_SOURCES = [
-  { name:'SL Telegraph',    url:'https://www.sierraleonnetelegraph.com',  feed:'https://www.sierraleonnetelegraph.com/feed/' },
-  { name:'Awoko',           url:'https://www.awoko.org',                  feed:'https://www.awoko.org/feed/' },
-  { name:'Concord Times',   url:'https://www.concordtimessl.com',         feed:'https://www.concordtimessl.com/feed/' },
-  { name:'Salone Monitor',  url:'https://salonemonitor.com',              feed:'https://salonemonitor.com/feed/' },
-  { name:'Sierra Leone Hub',url:'https://sierraleonehub.org',             feed:'https://sierraleonehub.org/feed/' },
-  { name:'Standard Times',  url:'https://standardtimespress.org',        feed:'https://standardtimespress.org/feed/' },
-  { name:'BBC Africa',      url:'https://www.bbc.com/news/world/africa',  feed:'https://feeds.bbci.co.uk/news/world/africa/rss.xml' },
-  { name:'Africa News SL',  url:'https://www.africanews.com',             feed:'https://www.africanews.com/feed/rss/' },
-  { name:'Politico SL',     url:'https://www.politicosl.com',             feed:'https://www.politicosl.com/feed/' },
-  { name:'SL News Online',  url:'https://slnewsonline.com',               feed:'https://slnewsonline.com/feed/' },
+  { name:'SL Telegraph',        url:'https://www.thesierraleonetelegraph.com',     feed:'https://www.thesierraleonetelegraph.com/feed/' },
+  { name:'Awoko',               url:'https://awokonewspapersl.com',                feed:'https://awokonewspapersl.com/feed/' },
+  { name:'Concord Times',       url:'https://slconcordtimes.com',                  feed:'https://slconcordtimes.com/feed/' },
+  { name:'Cocorioko',           url:'https://cocorioko.net',                       feed:'https://cocorioko.net/feed/' },
+  { name:'The Calabash',        url:'https://thecalabashnewspaper.com',            feed:'https://thecalabashnewspaper.com/feed/' },
+  { name:'Swit Salone',         url:'https://www.switsalone.com',                  feed:'https://www.switsalone.com/feed/' },
+  { name:'Critique Echo',       url:'https://www.critiqueecho.com',                feed:'http://www.critiqueecho.com/feed/' },
+  { name:'Patriotic Vanguard',  url:'https://www.thepatrioticvanguard.com',        feed:'https://feeds.feedburner.com/ThePatrioticVanguard' },
+  { name:'SL Times',            url:'https://www.sierraleonetimes.com',            feed:'http://feeds.sierraleonetimes.com/rss/8fcd2bb0346b8627' },
+  { name:'BBC Africa',          url:'https://www.bbc.com/news/world/africa',       feed:'https://feeds.bbci.co.uk/news/world/africa/rss.xml' },
 ];
 
 // Show source badges in UI
@@ -695,7 +695,7 @@ const SL_NEWS_SOURCES = [
 const SL_KEYWORDS = /sierra leone|sierraleone|leonean|freetown|bo town|kenema|makeni|koidu|kailahun|kono|tonkolili|port loko|kambia|bonthe|pujehun|moyamba|leone stars|salone|julius maada bio|bio government|nra sl|edsa|bsl bank|africell|orange sl|qcell|npp sierra|slpp|apc sierra|sierra rutile|nassit|slicom|rokel|setco/i;
 
 // Native SL sources — pass ALL their articles through without keyword check
-const SL_NATIVE = new Set(['SL Telegraph','Awoko','Concord Times','Salone Monitor','Politico SL','SL News Online','Standard Times','Sierra Leone Hub']);
+const SL_NATIVE = new Set(['SL Telegraph','Awoko','Concord Times','Cocorioko','The Calabash','Swit Salone','Critique Echo','Patriotic Vanguard','SL Times']);
 
 let currentNewsCat = 'general';
 
