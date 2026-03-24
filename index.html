@@ -313,31 +313,28 @@ footer strong{color:var(--primary);}
 <div class="panel" id="panel-news">
   <div class="card">
     <div class="card-title">📰 Sierra Leone Today</div>
-    <div class="card-sub">Live headlines from local Sierra Leonean news sources · Updated in real-time</div>
+    <div class="card-sub">Live headlines from 10 Sierra Leonean news sources · Merged &amp; sorted by latest</div>
 
     <!-- Category filter -->
-    <div class="curr-chips" id="news-cat-chips" style="margin-bottom:10px;">
-      <div class="curr-chip active" data-cat="general"  onclick="setNewsCat(this,'general')">🗞️ All News</div>
-      <div class="curr-chip"        data-cat="business" onclick="setNewsCat(this,'business')">💼 Business</div>
-      <div class="curr-chip"        data-cat="sports"   onclick="setNewsCat(this,'sports')">⚽ Sports</div>
+    <div class="curr-chips" id="news-cat-chips" style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;">
+      <div class="curr-chip active" data-cat="general"  onclick="setNewsCat(this,'general')">&#x1F5DE;&#xFE0F; All News</div>
+      <div class="curr-chip"        data-cat="politics" onclick="setNewsCat(this,'politics')">&#x1F3DB; Politics</div>
+      <div class="curr-chip"        data-cat="business" onclick="setNewsCat(this,'business')">&#x1F4BC; Business</div>
+      <div class="curr-chip"        data-cat="sports"   onclick="setNewsCat(this,'sports')">&#x26BD; Sports</div>
+      <div class="curr-chip"        data-cat="diaspora" onclick="setNewsCat(this,'diaspora')">&#x1F30D; Diaspora</div>
     </div>
 
-    <!-- Source switcher -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-      <span style="font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;">Source:</span>
-      <div class="curr-chips" id="news-source-chips" style="margin-bottom:0;">
-        <div class="curr-chip active" data-source="telegraph"  onclick="setNewsSource(this,'telegraph')">SL Telegraph</div>
-        <div class="curr-chip"        data-source="awoko"      onclick="setNewsSource(this,'awoko')">Awoko</div>
-        <div class="curr-chip"        data-source="concord"    onclick="setNewsSource(this,'concord')">Concord Times</div>
-      </div>
+    <!-- Active sources display -->
+    <div style="background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.12);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;">&#x1F4E1; Reading from all sources simultaneously</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;" id="news-source-badges"></div>
     </div>
 
-    <div class="loading-row" id="news-loading"><div class="spinner"></div> Loading headlines...</div>
+    <div class="loading-row" id="news-loading"><div class="spinner"></div> Loading headlines from all sources...</div>
     <div id="news-list"></div>
 
-    <div id="news-source-bar" style="margin-top:14px;background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.12);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-      <div style="font-size:11px;color:var(--mid);">📡 Reading from: <strong id="news-source-name" style="color:var(--primary);">SL Telegraph</strong></div>
-      <a id="news-source-link" href="https://www.sierraleonnetelegraph.com" target="_blank" style="font-size:11px;color:var(--primary);font-weight:600;">Visit full site →</a>
+    <div style="margin-top:14px;font-size:11px;color:var(--mid);text-align:center;">
+      Aggregating <strong style="color:var(--primary);">10 Sierra Leone news sources</strong> in real-time &middot; Click any story to read full article
     </div>
   </div>
 </div>
@@ -667,42 +664,36 @@ async function loadWeather(){
 }
 
 // NEWS
-// ══════════════════════════════════════════
-// MULTI-SOURCE LOCAL NEWS READER — SaloneHub
-// All feeds are free, no API key needed
-// ══════════════════════════════════════════
-const SL_NEWS_SOURCES = {
-  telegraph: {
-    name: 'Sierra Leone Telegraph',
-    url:  'https://www.sierraleonnetelegraph.com',
-    feeds: {
-      general:  'https://www.sierraleonnetelegraph.com/feed/',
-      business: 'https://www.sierraleonnetelegraph.com/feed/',
-      sports:   'https://www.sierraleonnetelegraph.com/feed/',
-    }
-  },
-  awoko: {
-    name: 'Awoko Newspaper',
-    url:  'https://www.awoko.org',
-    feeds: {
-      general:  'https://www.awoko.org/feed/',
-      business: 'https://www.awoko.org/category/business/feed/',
-      sports:   'https://www.awoko.org/category/sports/feed/',
-    }
-  },
-  concord: {
-    name: 'Concord Times',
-    url:  'https://www.concordtimessl.com',
-    feeds: {
-      general:  'https://www.concordtimessl.com/feed/',
-      business: 'https://www.concordtimessl.com/feed/',
-      sports:   'https://www.concordtimessl.com/feed/',
-    }
-  },
-};
+// ══════════════════════════════════════════════════════════
+// 10-SOURCE PARALLEL NEWS READER — SaloneHub
+// Fetches all sources simultaneously, merges & sorts by date
+// ══════════════════════════════════════════════════════════
 
-let currentNewsCat    = 'general';
-let currentNewsSource = 'telegraph';
+const SL_NEWS_SOURCES = [
+  { name:'SL Telegraph',    url:'https://www.sierraleonnetelegraph.com',  feed:'https://www.sierraleonnetelegraph.com/feed/' },
+  { name:'Awoko',           url:'https://www.awoko.org',                  feed:'https://www.awoko.org/feed/' },
+  { name:'Concord Times',   url:'https://www.concordtimessl.com',         feed:'https://www.concordtimessl.com/feed/' },
+  { name:'Salone Monitor',  url:'https://salonemonitor.com',              feed:'https://salonemonitor.com/feed/' },
+  { name:'Sierra Leone Hub',url:'https://sierraleonehub.org',             feed:'https://sierraleonehub.org/feed/' },
+  { name:'Standard Times',  url:'https://standardtimespress.org',        feed:'https://standardtimespress.org/feed/' },
+  { name:'BBC Africa',      url:'https://www.bbc.com/news/world/africa',  feed:'https://feeds.bbci.co.uk/news/world/africa/rss.xml' },
+  { name:'Africa News SL',  url:'https://www.africanews.com',             feed:'https://www.africanews.com/feed/rss/' },
+  { name:'Politico SL',     url:'https://www.politicosl.com',             feed:'https://www.politicosl.com/feed/' },
+  { name:'SL News Online',  url:'https://slnewsonline.com',               feed:'https://slnewsonline.com/feed/' },
+];
+
+// Show source badges in UI
+(function renderSourceBadges(){
+  const el = document.getElementById('news-source-badges');
+  if(!el) return;
+  el.innerHTML = SL_NEWS_SOURCES.map(s =>
+    `<span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(30,181,58,.1);color:var(--primary);border:1px solid rgba(30,181,58,.2);">${s.name}</span>`
+  ).join('');
+})();
+
+const SL_KEYWORDS = /sierra leone|sierraleone|leonean|freetown|bo town|kenema|makeni|koidu|kailahun|kono|tonkolili|port loko|kambia|bonthe|pujehun|moyamba|leone stars|leone|salone|julius maada bio|bio government|nra sl|edsa|bsl bank|africell|orange sl|qcell|npp|slpp|apc sierra|Leone FC|setco|nassit|slicom|aurora|rokel|sierra rutile|ilmenite|iron ore|ebola|cholera sierra/i;
+
+let currentNewsCat = 'general';
 
 function setNewsCat(el, cat) {
   currentNewsCat = cat;
@@ -711,86 +702,126 @@ function setNewsCat(el, cat) {
   loadNews();
 }
 
-function setNewsSource(el, source) {
-  currentNewsSource = source;
-  document.querySelectorAll('#news-source-chips .curr-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  const src = SL_NEWS_SOURCES[source];
-  if (src) {
-    document.getElementById('news-source-name').textContent = src.name;
-    document.getElementById('news-source-link').href        = src.url;
-    document.getElementById('news-source-link').textContent = 'Visit ' + src.name + ' →';
-  }
-  loadNews();
+function detectSLTag(title, desc) {
+  const t = (title + ' ' + (desc||'')).toLowerCase();
+  if(/football|soccer|leone stars|premier league|champions league|afcon|transfer|goal|match|fifa|world cup|sport/i.test(t)) return {tag:'Sports', color:'#1EB53A'};
+  if(/parliament|minister|president bio|government|cabinet|party|election|politics|senate|police|court|judge|arrest|corruption|efcc/i.test(t)) return {tag:'Politics', color:'#6c5ce7'};
+  if(/business|economy|market|invest|trade|company|gdp|inflation|banking|finance|budget|tax|import|export|revenue|profit/i.test(t)) return {tag:'Business', color:'#e17055'};
+  if(/diaspora|abroad|uk sierra|usa sierra|travel|visa|passport|overseas|london|america|canada/i.test(t)) return {tag:'Diaspora', color:'#0072C6'};
+  if(/health|hospital|doctor|disease|covid|malaria|medical|drug|vaccine|cholera|ebola/i.test(t)) return {tag:'Health', color:'#00b894'};
+  if(/school|university|student|exam|waec|bece|education|academic|scholarship|njala|fourah/i.test(t)) return {tag:'Education', color:'#fdcb6e'};
+  if(/mining|rutile|iron ore|diamond|gold|petroleum|energy|electricity|edsa|power/i.test(t)) return {tag:'Energy', color:'#f39c12'};
+  return {tag:'Sierra Leone', color:'#1EB53A'};
 }
 
-function renderNewsItems(items, sourceName) {
-  if (!items?.length) return `<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;">
-    <div style="font-size:28px;margin-bottom:8px;">📭</div>
-    No articles found from ${sourceName} right now.<br>
-    <span style="font-size:11px;">Try a different source or category.</span>
-  </div>`;
-  return items.map(item => {
-    const title   = (item.title || '').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'");
-    const rawDesc = (item.description || item.content || '');
-    const desc    = rawDesc.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').trim().slice(0,140);
-    const url     = item.link || item.url || '#';
-    const pubDate = item.pubDate || item.publishedAt || '';
-    const dateStr = pubDate ? new Date(pubDate).toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'short'}) : '';
-    const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
-    const img = item.thumbnail || item.enclosure?.link || (imgMatch && imgMatch[1]) || '';
-    return `<div class="news-item" style="display:flex;gap:12px;align-items:flex-start;">
-      ${img ? `<img src="${img}" alt="" style="width:72px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-top:2px;" onerror="this.style.display='none'">` : ''}
-      <div class="news-content" style="flex:1;min-width:0;">
-        <h4><a href="${url}" target="_blank" rel="noopener" style="text-decoration:none;color:var(--charcoal);">${title}</a></h4>
-        ${desc ? `<p style="margin-bottom:6px;">${desc}${desc.length===140?'…':''}</p>` : ''}
-        <div class="news-meta">
-          <span class="news-source">${sourceName}</span>
-          ${dateStr ? `<span>📅 ${dateStr}</span>` : ''}
-          <a href="${url}" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600;font-size:11px;">Read full story →</a>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+function getTimeAgoSL(dateStr) {
+  if(!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const m = Math.floor(diff/60000);
+  if(m < 1)  return 'Just now';
+  if(m < 60) return m + 'm ago';
+  const h = Math.floor(m/60);
+  if(h < 24) return h + 'h ago';
+  return Math.floor(h/24) + 'd ago';
 }
 
 async function loadNews() {
-  const src = SL_NEWS_SOURCES[currentNewsSource];
-  if (!src) return;
-  const feedUrl = src.feeds[currentNewsCat] || src.feeds.general;
-
   document.getElementById('news-loading').style.display = 'flex';
   document.getElementById('news-list').innerHTML = '';
 
-  try {
-    const res  = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=15`);
-    const data = await res.json();
-    if (data.status === 'ok' && data.items?.length) {
-      document.getElementById('news-list').innerHTML = renderNewsItems(data.items, src.name);
-    } else {
-      // auto-fallback to next source
-      const keys    = Object.keys(SL_NEWS_SOURCES);
-      const nextKey = keys[(keys.indexOf(currentNewsSource) + 1) % keys.length];
-      if (nextKey !== currentNewsSource) {
-        const next  = SL_NEWS_SOURCES[nextKey];
-        const res2  = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(next.feeds[currentNewsCat]||next.feeds.general)}&count=15`);
-        const data2 = await res2.json();
-        if (data2.items?.length) {
-          document.getElementById('news-list').innerHTML = renderNewsItems(data2.items, next.name);
-          document.getElementById('news-source-name').textContent = next.name;
-          document.getElementById('news-source-link').href = next.url;
-          return;
-        }
+  const catFeedMap = {
+    sports:   SL_NEWS_SOURCES.map(s => ({...s, feed: s.feed.replace('/feed/','/category/sports/feed/') || s.feed})),
+    business: SL_NEWS_SOURCES.map(s => ({...s, feed: s.feed.replace('/feed/','/category/business/feed/') || s.feed})),
+    politics: SL_NEWS_SOURCES.map(s => ({...s, feed: s.feed.replace('/feed/','/category/politics/feed/') || s.feed})),
+    diaspora: SL_NEWS_SOURCES.map(s => ({...s})),
+    general:  SL_NEWS_SOURCES,
+  };
+  const activeSources = catFeedMap[currentNewsCat] || SL_NEWS_SOURCES;
+
+  const allArticles = [];
+  await Promise.all(activeSources.map(async src => {
+    try {
+      const ctrl = new AbortController();
+      setTimeout(() => ctrl.abort(), 8000);
+      const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(src.feed)}&count=10`;
+      const r = await fetch(rssUrl, {signal: ctrl.signal});
+      const data = await r.json();
+      if(data.status === 'ok' && data.items?.length) {
+        data.items.forEach(item => {
+          const title = (item.title||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'").trim();
+          const rawDesc = item.description || item.content || '';
+          const desc = rawDesc.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,160);
+          const url = item.link || '#';
+          const pubDate = item.pubDate || '';
+          const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
+          const img = item.thumbnail || (imgMatch && imgMatch[1]) || '';
+          if(title) allArticles.push({title, desc, url, pubDate, img, source: src.name, sourceUrl: src.url});
+        });
       }
-      document.getElementById('news-list').innerHTML = renderNewsItems([], src.name);
-    }
-  } catch(e) {
-    document.getElementById('news-list').innerHTML = `<div style="color:var(--mid);font-size:13px;padding:16px 0;">
-      ⚠️ Could not load news. Check your connection or
-      <a href="${src.url}" target="_blank" style="color:var(--primary);font-weight:600;">visit ${src.name} directly →</a>
-    </div>`;
-  }
+    } catch(e) {}
+  }));
+
   document.getElementById('news-loading').style.display = 'none';
+
+  if(!allArticles.length) {
+    document.getElementById('news-list').innerHTML = `<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📭</div>Could not load news right now. Check your connection.</div>`;
+    return;
+  }
+
+  // Sort newest first
+  allArticles.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+  // Category keyword filter
+  const catKW = {
+    sports:   /football|soccer|sport|match|goal|league|afcon|transfer|fifa|stadium|leone stars/i,
+    business: /business|economy|market|invest|trade|company|inflation|banking|finance|budget|tax|revenue/i,
+    politics: /parliament|minister|president|government|cabinet|party|election|politic|senate|corruption/i,
+    diaspora: /diaspora|abroad|uk|usa|canada|overseas|london|america|travel|passport|visa/i,
+  };
+  let filtered = allArticles;
+  if(currentNewsCat !== 'general' && catKW[currentNewsCat]) {
+    const cf = allArticles.filter(a => catKW[currentNewsCat].test(a.title + ' ' + a.desc));
+    if(cf.length >= 3) filtered = cf;
+  }
+
+  // Filter for SL relevance on general tab (fallback to all if too few)
+  if(currentNewsCat === 'general') {
+    const slF = filtered.filter(a => SL_KEYWORDS.test(a.title + ' ' + a.desc) || ['SL Telegraph','Awoko','Concord Times','Salone Monitor','Politico SL','SL News Online','Standard Times','Sierra Leone Hub'].includes(a.source));
+    if(slF.length >= 4) filtered = slF;
+  }
+
+  // Deduplicate by title prefix
+  const seen = new Set();
+  filtered = filtered.filter(a => {
+    const k = a.title.slice(0,50).toLowerCase();
+    if(seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+
+  const final = filtered.slice(0, 15);
+
+  if(!final.length) {
+    document.getElementById('news-list').innerHTML = `<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📭</div>No stories found for this category right now.</div>`;
+    return;
+  }
+
+  document.getElementById('news-list').innerHTML = final.map((item, i) => {
+    const {tag, color} = detectSLTag(item.title, item.desc);
+    const ago = getTimeAgoSL(item.pubDate);
+    return `<div class="news-item" style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;" onclick="window.open('${item.url}','_blank','noopener')">
+      ${item.img ? `<img src="${item.img}" alt="" style="width:70px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-top:2px;" onerror="this.style.display='none'">` : `<div style="width:70px;height:52px;border-radius:8px;background:rgba(30,181,58,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🇸🇱</div>`}
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;">
+          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:${color}18;color:${color};">${tag}</span>
+          <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(30,181,58,.08);color:var(--primary);">${item.source}</span>
+          ${ago ? `<span style="font-size:10px;color:var(--mid);">${ago}</span>` : ''}
+        </div>
+        <div style="font-weight:700;font-size:13px;line-height:1.4;margin-bottom:4px;color:var(--charcoal);">${item.title}</div>
+        ${item.desc ? `<div style="font-size:12px;color:var(--mid);line-height:1.5;">${item.desc}${item.desc.length>=160?'…':''}</div>` : ''}
+        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--primary);">Read full story →</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // FOOTBALL
