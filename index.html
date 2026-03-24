@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaloneHub — Sierra Leone Daily Dashboard | Forex, News & More</title>
+<meta name="description" content="Sierra Leone #1 daily dashboard. Live SLE exchange rates, fuel prices, news, weather, football and more.">
+<meta name="theme-color" content="#1EB53A">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1EB53A;--primary-light:#28d448;--primary-dark:#137a27;
+  --white:#FFFFFF;--blue:#0072C6;--cream:#F6FFFA;--charcoal:#1A1A1A;
+  --mid:#5A5A5A;--border:rgba(30,181,58,0.14);--card:rgba(255,255,255,0.9);
+  --red:#d63031;
+}
+[data-theme="dark"]{--cream:#0f1117;--charcoal:#f0f0f0;--mid:#9a9a9a;--card:rgba(255,255,255,0.06);--border:rgba(30,181,58,0.15);--primary:#28d448;--primary-light:#3ef060;}
+[data-theme="dark"] body{background:#0f1117;color:#f0f0f0;}
+[data-theme="dark"] header{background:rgba(15,17,23,.95);}
+[data-theme="dark"] .card{background:rgba(255,255,255,0.05);border-color:rgba(30,181,58,0.12);}
+[data-theme="dark"] .cat-btn{background:rgba(255,255,255,0.05);color:#ccc;}
+[data-theme="dark"] .cat-btn.active{background:var(--primary);color:white;}
+[data-theme="dark"] .curr-chip{color:#ccc;border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);}
+[data-theme="dark"] .curr-chip.active{color:white;background:var(--primary);border-color:var(--primary);}
+[data-theme="dark"] .rate-chip{background:rgba(255,255,255,0.05);}
+[data-theme="dark"] .fuel-card{background:rgba(255,255,255,0.05);}
+[data-theme="dark"] input,[data-theme="dark"] select{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#f0f0f0;}
+[data-theme="dark"] .card-sub{color:#aaa;}[data-theme="dark"] .card-title{color:#f0f0f0;}
+[data-theme="dark"] .rate-chip .val{color:var(--primary);}[data-theme="dark"] .rate-chip .curr{color:#bbb;}
+[data-theme="dark"] footer{border-color:rgba(255,255,255,0.08);}
+[data-theme="dark"] a{color:var(--primary);}
+[data-theme="dark"] select option{background:#0a1f0f;color:#f0f0f0;}
+[data-theme="dark"] .digest-stat .dv{color:#f0f0f0;}
+[data-theme="dark"] .news-content h4{color:#f0f0f0;}[data-theme="dark"] .news-content p{color:#bbb;}
+[data-theme="dark"] .emrg-card .name{color:#f0f0f0;}[data-theme="dark"] .emrg-card .num{color:var(--primary);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 8% 15%,rgba(30,181,58,.07) 0%,transparent 50%),radial-gradient(ellipse at 92% 85%,rgba(0,114,198,.06) 0%,transparent 50%);}
+.ticker-bar{position:sticky;top:0;z-index:100;background:var(--primary-dark);color:white;padding:7px 0;overflow:hidden;border-bottom:2px solid var(--blue);}
+.ticker-label{background:var(--blue);color:white;font-weight:700;font-size:11px;padding:3px 12px;text-transform:uppercase;letter-spacing:1px;float:left;margin-right:16px;z-index:2;position:relative;}
+.ticker-track{display:flex;gap:32px;animation:ticker 35s linear infinite;white-space:nowrap;}
+.ticker-wrap{overflow:hidden;display:flex;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:7px;}
+.ticker-item .rate{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
+header{position:relative;z-index:10;padding:14px 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(246,255,250,.95);backdrop-filter:blur(14px);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--charcoal);}
+.logo-flag{display:flex;width:34px;height:22px;border-radius:4px;overflow:hidden;border:1px solid rgba(0,0,0,.1);}
+.logo-flag .f1{flex:1;background:#1EB53A;}.logo-flag .f2{flex:1;background:#FFFFFF;}.logo-flag .f3{flex:1;background:#0072C6;}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.5px;}
+.logo-text span{color:var(--primary);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.live-badge{display:flex;align-items:center;gap:5px;background:rgba(30,181,58,.1);border:1px solid rgba(30,181,58,.22);color:var(--primary);font-size:10px;font-weight:600;padding:4px 10px;border-radius:100px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.digest-banner{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,var(--primary-light) 100%);padding:28px 36px;color:white;position:relative;z-index:1;}
+.digest-banner h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:6px;}
+.digest-banner p{font-size:13px;opacity:.85;margin-bottom:18px;}
+.digest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:700px;}
+.digest-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;}
+.digest-stat .dl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
+.digest-stat .dv{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+.digest-stat .ds{font-size:10px;opacity:.7;margin-top:2px;}
+.tab-nav{position:relative;z-index:9;background:rgba(246,255,250,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.cat-row{display:flex;gap:4px;padding:10px 20px 0;overflow-x:auto;scrollbar-width:none;}
+.cat-row::-webkit-scrollbar{display:none;}
+.cat-btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;white-space:nowrap;background:transparent;color:var(--mid);transition:all .2s;}
+.cat-btn.active{background:white;color:var(--primary);border-color:var(--border);border-bottom-color:white;margin-bottom:-1px;}
+.cat-count{font-size:10px;background:rgba(30,181,58,.1);color:var(--primary);padding:1px 6px;border-radius:100px;margin-left:4px;}
+.subtab-row{display:flex;gap:6px;padding:8px 20px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--border);}
+.curr-chip{font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;border:1.5px solid var(--border);cursor:pointer;white-space:nowrap;background:var(--card);color:var(--mid);transition:all .15s;}
+.curr-chip.active{background:var(--primary);border-color:var(--primary);color:white;}
+.panels{padding:20px 36px 40px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.panel{display:none;}.panel.active{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 22px;margin-bottom:18px;}
+.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px;}
+.card-sub{font-size:12px;color:var(--mid);margin-bottom:14px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.g-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-row{color:var(--mid);font-size:13px;padding:16px 0;display:flex;align-items:center;}
+.rate-hero{text-align:center;padding:20px;background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:14px;color:white;margin-bottom:16px;}
+.rate-hero .label{font-size:12px;opacity:.8;margin-bottom:4px;}
+.rate-hero .value{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;}
+.rate-hero .meta{font-size:11px;opacity:.7;margin-top:4px;}
+.rate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+.rate-chip{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
+.rate-chip .curr{font-size:11px;color:var(--mid);margin-bottom:4px;}
+.rate-chip .val{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--primary);}
+.converter{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;margin-top:12px;}
+.conv-label{font-size:11px;color:var(--mid);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.conv-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:18px;font-weight:700;font-family:'Syne',sans-serif;color:var(--charcoal);background:var(--card);outline:none;}
+.conv-input:focus{border-color:var(--primary);}
+.swap-btn{background:var(--primary);color:white;border:none;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.fuel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:14px;}
+.fuel-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;}
+.fuel-icon{font-size:28px;margin-bottom:8px;}
+.fuel-name{font-size:12px;color:var(--mid);margin-bottom:6px;}
+.fuel-price{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--primary);}
+.fuel-sub{font-size:10px;color:var(--mid);margin-top:4px;}
+.news-item{border-bottom:1px solid var(--border);padding:14px 0;}
+.news-item:last-child{border-bottom:none;}
+.news-content h4{font-size:14px;font-weight:700;margin-bottom:4px;}
+.news-content p{font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:8px;}
+.news-meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--mid);}
+.news-source{background:rgba(30,181,58,.08);color:var(--primary);padding:2px 8px;border-radius:100px;font-weight:600;font-size:10px;}
+.emrg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:16px;}
+.emrg-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;}
+.emrg-card:hover{border-color:var(--primary);}
+.emrg-card .name{font-size:12px;font-weight:700;margin-bottom:4px;}
+.emrg-card .num{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--primary);}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
+.match-teams{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.team-name{font-size:13px;font-weight:700;flex:1;}
+.team-name.away{text-align:right;}
+.match-score{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--primary);padding:0 12px;white-space:nowrap;}
+.match-meta{font-size:10px;color:var(--mid);text-align:center;margin-top:6px;}
+.job-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.job-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.job-company{font-size:12px;color:var(--mid);font-weight:600;}
+.job-salary{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--primary);white-space:nowrap;}
+.job-tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;}
+.job-tag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;}
+.job-tag.remote{background:rgba(30,181,58,.1);color:var(--primary);}
+.job-tag.cat{background:rgba(0,114,198,.1);color:var(--blue);}
+.job-tag.new{background:rgba(0,114,198,.15);color:#004a8a;}
+.job-apply{background:var(--primary);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;}
+.job-board-link{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 12px;text-decoration:none;color:var(--charcoal);transition:all .2s;}
+.job-board-link:hover{border-color:var(--primary);transform:translateY(-2px);}
+.job-board-icon{font-size:28px;margin-bottom:6px;}
+.job-board-name{font-weight:700;font-size:13px;margin-bottom:2px;}
+.job-board-sub{font-size:11px;color:var(--mid);}
+.law-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.law-card h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;}
+.law-card p,.law-card li{font-size:12px;color:var(--mid);line-height:1.7;}
+.law-card ul{padding-left:16px;margin-top:6px;}
+.law-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:8px;}
+.tag-green{background:rgba(30,181,58,.1);color:var(--primary);}
+.tag-blue{background:rgba(0,114,198,.1);color:var(--blue);}
+.tag-gold{background:rgba(255,180,0,.15);color:#7a5000;}
+.field-label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;margin-top:12px;}
+input,select,textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--card);outline:none;font-family:'DM Sans',sans-serif;color:var(--charcoal);}
+input:focus,select:focus{border-color:var(--primary);}
+.btn{padding:10px 20px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-primary{background:var(--primary);color:white;}
+.weather-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;}
+.weather-city{font-weight:700;font-size:13px;margin-bottom:4px;}
+.weather-temp{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--primary);}
+.weather-desc{font-size:12px;color:var(--mid);margin-top:4px;}
+footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-size:11px;color:var(--mid);position:relative;z-index:1;}
+footer a{color:var(--blue);text-decoration:none;}
+footer strong{color:var(--primary);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--charcoal);color:white;padding:10px 20px;border-radius:100px;font-size:13px;z-index:9999;transition:transform .3s;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+#cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1A1A1A;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;transform:translateY(100%);transition:transform .4s ease;}
+#cookie-banner.show{transform:translateY(0);}
+.btn-accept{background:var(--primary);color:white;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-decline{background:transparent;color:#aaa;border:1px solid #444;padding:9px 20px;border-radius:8px;font-size:13px;cursor:pointer;}
+#prefs-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99990;backdrop-filter:blur(4px);}
+#prefs-overlay.show{display:flex;align-items:center;justify-content:center;padding:16px;}
+#prefs-panel{background:var(--cream);border-radius:20px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.prefs-header{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:white;padding:18px 22px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between;}
+.prefs-header h3{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin:0;}
+.prefs-close{background:rgba(255,255,255,.2);border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;}
+.prefs-body{padding:18px 22px;}
+.prefs-section{margin-bottom:18px;}
+.prefs-section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--primary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.prefs-field label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px;}
+.prefs-save-btn{width:100%;background:var(--primary);color:white;border:none;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+@media(max-width:600px){header{padding:12px 16px;}.digest-banner{padding:18px 16px;}.digest-grid{grid-template-columns:1fr 1fr;}.panels{padding:14px 12px 32px;}.g2,.g3{grid-template-columns:1fr;}.converter{grid-template-columns:1fr auto 1fr;}}
+</style>
+</head>
+<body>
+<div class="ticker-bar">
+  <span class="ticker-label">🇸🇱 LIVE</span>
+  <div class="ticker-wrap"><div class="ticker-track" id="ticker1">
+    <span class="ticker-item">🇺🇸 USD/SLE <span class="rate" id="t-usd">—</span></span>
+    <span class="ticker-item">🇬🇧 GBP/SLE <span class="rate" id="t-gbp">—</span></span>
+    <span class="ticker-item">🇪🇺 EUR/SLE <span class="rate" id="t-eur">—</span></span>
+    <span class="ticker-item">🇳🇬 NGN/SLE <span class="rate" id="t-ngn">—</span></span>
+    <span class="ticker-item">🇬🇭 GHS/SLE <span class="rate" id="t-ghs">—</span></span>
+    <span class="ticker-item">🇨🇳 CNY/SLE <span class="rate" id="t-cny">—</span></span>
+    <span class="ticker-item">🇺🇸 USD/SLE <span class="rate" id="t-usd2">—</span></span>
+    <span class="ticker-item">🇬🇧 GBP/SLE <span class="rate" id="t-gbp2">—</span></span>
+    <span class="ticker-item">🇪🇺 EUR/SLE <span class="rate" id="t-eur2">—</span></span>
+    <span class="ticker-item">🇳🇬 NGN/SLE <span class="rate" id="t-ngn2">—</span></span>
+    <span class="ticker-item">🇬🇭 GHS/SLE <span class="rate" id="t-ghs2">—</span></span>
+  </div></div>
+</div>
+<header>
+  <div class="logo">
+    <div class="logo-flag"><div class="f1"></div><div class="f2"></div><div class="f3"></div></div>
+    <div class="logo-text">Salone<span>Hub</span></div>
+  </div>
+  <div class="header-right">
+    <span id="today-date" style="font-size:12px;color:var(--mid);"></span>
+    <button onclick="openPrefs()" style="background:none;border:1px solid var(--border);border-radius:20px;padding:4px 12px;cursor:pointer;font-size:13px;color:var(--charcoal);">⚙️</button>
+    <button onclick="toggleTheme()" style="background:none;border:1px solid var(--border);border-radius:20px;padding:4px 12px;cursor:pointer;font-size:13px;color:var(--charcoal);"><span id="theme-icon">🌙</span></button>
+    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
+  </div>
+</header>
+<div class="digest-banner">
+  <h2 id="greeting">🌅 Good morning, Sierra Leone</h2>
+  <p>Your daily briefing — rates, fuel, weather and top headlines, all in one place.</p>
+  <div class="digest-grid">
+    <div class="digest-stat"><div class="dl">Dollar Rate</div><div class="dv" id="d-usd">—</div><div class="ds">BSL Rate</div></div>
+    <div class="digest-stat"><div class="dl">Pound Rate</div><div class="dv" id="d-gbp">—</div><div class="ds">BSL Rate</div></div>
+    <div class="digest-stat"><div class="dl">Freetown Weather</div><div class="dv" id="d-weather">—</div><div class="ds" id="d-weathersub">Loading...</div></div>
+    <div class="digest-stat" style="cursor:pointer;" onclick="switchCat('news');setTimeout(()=>switchTab('holidays'),150)">
+      <div class="dl">Next Holiday 🎉</div><div class="dv" id="d-holiday-days">—</div>
+      <div class="ds" id="d-holiday-name" style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Loading...</div>
+    </div>
+  </div>
+</div>
+<div class="tab-nav">
+  <div class="cat-row" id="cat-row">
+    <button class="cat-btn active" data-cat="money" onclick="switchCat('money')">💰 Money <span class="cat-count">3</span></button>
+    <button class="cat-btn" data-cat="news" onclick="switchCat('news')">📰 News & Info <span class="cat-count">4</span></button>
+    <button class="cat-btn" data-cat="life" onclick="switchCat('life')">🌍 Life & Services <span class="cat-count">4</span></button>
+    <button class="cat-btn" data-cat="work" onclick="switchCat('work')">💼 Work & Travel <span class="cat-count">2</span></button>
+    <button class="cat-btn" data-cat="fun" onclick="switchCat('fun')">⚽ Entertainment <span class="cat-count">1</span></button>
+    <button class="cat-btn" data-cat="ai" onclick="switchCat('ai')">🤖 AI Chat <span class="cat-count">1</span></button>
+  </div>
+  <div class="subtab-row" id="subtab-row"></div>
+</div>
+<div class="panels">
+
+<!-- CURRENCY -->
+<div class="panel active" id="panel-currency">
+  <div class="card">
+    <div class="card-title">💱 Live SLE Exchange Rates</div>
+    <div class="card-sub">Bank of Sierra Leone (BSL) indicative rates · Updated daily</div>
+    <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.2);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--mid);margin-bottom:12px;">ℹ️ <strong>Note:</strong> Sierra Leone redenominated its currency in 2022. The new Leone (SLE/NL) = 1,000 old Leones (SLL). Rates shown are for the <strong>New Leone (SLE)</strong>. <a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);">Verify with BSL →</a></div>
+    <div class="loading-row" id="rate-loading"><div class="spinner"></div> Fetching live rates...</div>
+    <div id="rate-body" style="display:none">
+      <div class="rate-hero"><div class="label">USD / SLE</div><div class="value" id="hero-usd">Le—</div><div class="meta" id="rate-updated">BSL indicative rate</div></div>
+      <div class="rate-grid" id="rate-grid"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔄 SLE Converter</div>
+    <div class="card-sub">Convert between New Leone and any currency</div>
+    <div class="curr-chips" id="curr-chips" style="margin-bottom:12px;"></div>
+    <div class="converter">
+      <div><div class="conv-label">SLE Amount</div><input class="conv-input" type="number" id="local-input" value="10000" oninput="convertLocal()"></div>
+      <button class="swap-btn" onclick="swapCurr()">⇄</button>
+      <div><div class="conv-label" id="conv-label2">USD Amount</div><input class="conv-input" type="number" id="foreign-input" oninput="convertForeign()"></div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--mid)" id="rate-source-line"></div>
+  </div>
+</div>
+
+<!-- FUEL -->
+<div class="panel" id="panel-fuel">
+  <div class="card">
+    <div class="card-title">⛽ Fuel & Daily Prices — Sierra Leone</div>
+    <div class="card-sub">Current prices · NP (National Petroleum) regulated</div>
+    <div class="fuel-grid">
+      <div class="fuel-card"><div class="fuel-icon">⛽</div><div class="fuel-name">Petrol (Gasoline)</div><div class="fuel-price">Le 35</div><div class="fuel-sub">Per litre · Freetown avg</div></div>
+      <div class="fuel-card"><div class="fuel-icon">🛢️</div><div class="fuel-name">Diesel (Gasoil)</div><div class="fuel-price">Le 32</div><div class="fuel-sub">Per litre · Freetown avg</div></div>
+      <div class="fuel-card"><div class="fuel-icon">🍳</div><div class="fuel-name">LPG Cooking Gas</div><div class="fuel-price">Le 180</div><div class="fuel-sub">Per kg cylinder</div></div>
+      <div class="fuel-card"><div class="fuel-icon">⚡</div><div class="fuel-name">EDSA Electricity</div><div class="fuel-price">Le 3.50</div><div class="fuel-sub">Per kWh · Freetown</div></div>
+    </div>
+    <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.2);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--mid);">
+      ⛽ Prices regulated by <strong>National Petroleum</strong> · Vary by region · <a href="https://www.nppsl.gov.sl" target="_blank" style="color:var(--primary);">Verify with NP →</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🛒 Market Prices — Freetown</div>
+    <div class="card-sub">Average food prices in Freetown markets</div>
+    <div class="g-auto">
+      <div class="rate-chip"><div class="curr">🍚 Rice (25kg bag)</div><div class="val">Le 350</div></div>
+      <div class="rate-chip"><div class="curr">🌽 Cassava (kg)</div><div class="val">Le 8</div></div>
+      <div class="rate-chip"><div class="curr">🥚 Eggs (crate)</div><div class="val">Le 120</div></div>
+      <div class="rate-chip"><div class="curr">🍗 Chicken (whole)</div><div class="val">Le 250</div></div>
+      <div class="rate-chip"><div class="curr">🛢️ Palm Oil (1L)</div><div class="val">Le 45</div></div>
+      <div class="rate-chip"><div class="curr">🥖 Bread (loaf)</div><div class="val">Le 15</div></div>
+      <div class="rate-chip"><div class="curr">🐟 Fresh Fish (kg)</div><div class="val">Le 80</div></div>
+      <div class="rate-chip"><div class="curr">🥬 Tomatoes (kg)</div><div class="val">Le 25</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BANKING -->
+<div class="panel" id="panel-banking">
+  <div class="card">
+    <div class="card-title">📲 Mobile Money — Sierra Leone</div>
+    <div class="card-sub">Tap to copy · Works without internet</div>
+    <div class="g-auto">
+      <div class="rate-chip" onclick="copyText('*144#','Africell MoMo copied')" style="cursor:pointer;"><div class="curr">Africell Money</div><div class="val">*144#</div></div>
+      <div class="rate-chip" onclick="copyText('*554#','Orange Money copied')" style="cursor:pointer;"><div class="curr">Orange Money SL</div><div class="val">*554#</div></div>
+      <div class="rate-chip" onclick="copyText('*777#','Qcell copied')" style="cursor:pointer;"><div class="curr">Qcell Money</div><div class="val">*777#</div></div>
+      <div class="rate-chip" onclick="copyText('*345#','Sierra Leone Commercial copied')" style="cursor:pointer;"><div class="curr">SLCB Mobile</div><div class="val">*345#</div></div>
+      <div class="rate-chip" onclick="copyText('*432#','Rokel Commercial copied')" style="cursor:pointer;"><div class="curr">Rokel Commercial</div><div class="val">*432#</div></div>
+      <div class="rate-chip" onclick="copyText('*567#','GT Bank SL copied')" style="cursor:pointer;"><div class="curr">GTBank Sierra Leone</div><div class="val">*567#</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💸 Send Money to Sierra Leone</div>
+    <div class="card-sub">Estimate how much recipient gets</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end;">
+      <div style="flex:1;"><label class="field-label">Amount</label><input type="number" id="send-amount" value="500" oninput="calcRemit()"></div>
+      <div style="flex:1;"><label class="field-label">From</label><select id="send-currency" onchange="calcRemit()"><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option><option value="EUR">🇪🇺 EUR</option><option value="CAD">🇨🇦 CAD</option></select></div>
+    </div>
+    <div id="remit-grid"></div>
+    <div style="font-size:11px;color:var(--mid);margin-top:10px;">⚠️ Estimates only. Verify on provider's official app.</div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div class="panel" id="panel-news">
+  <div class="card">
+    <div class="card-title">📰 Sierra Leone Today</div>
+    <div class="card-sub">Live headlines from local Sierra Leonean news sources · Updated in real-time</div>
+
+    <!-- Category filter -->
+    <div class="curr-chips" id="news-cat-chips" style="margin-bottom:10px;">
+      <div class="curr-chip active" data-cat="general"  onclick="setNewsCat(this,'general')">🗞️ All News</div>
+      <div class="curr-chip"        data-cat="business" onclick="setNewsCat(this,'business')">💼 Business</div>
+      <div class="curr-chip"        data-cat="sports"   onclick="setNewsCat(this,'sports')">⚽ Sports</div>
+    </div>
+
+    <!-- Source switcher -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+      <span style="font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;">Source:</span>
+      <div class="curr-chips" id="news-source-chips" style="margin-bottom:0;">
+        <div class="curr-chip active" data-source="telegraph"  onclick="setNewsSource(this,'telegraph')">SL Telegraph</div>
+        <div class="curr-chip"        data-source="awoko"      onclick="setNewsSource(this,'awoko')">Awoko</div>
+        <div class="curr-chip"        data-source="concord"    onclick="setNewsSource(this,'concord')">Concord Times</div>
+      </div>
+    </div>
+
+    <div class="loading-row" id="news-loading"><div class="spinner"></div> Loading headlines...</div>
+    <div id="news-list"></div>
+
+    <div id="news-source-bar" style="margin-top:14px;background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.12);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <div style="font-size:11px;color:var(--mid);">📡 Reading from: <strong id="news-source-name" style="color:var(--primary);">SL Telegraph</strong></div>
+      <a id="news-source-link" href="https://www.sierraleonnetelegraph.com" target="_blank" style="font-size:11px;color:var(--primary);font-weight:600;">Visit full site →</a>
+    </div>
+  </div>
+</div>
+
+<!-- LAWS -->
+<div class="panel" id="panel-laws">
+  <div class="card">
+    <div class="card-title">⚖️ Sierra Leone Laws & Your Rights</div>
+    <div class="card-sub">Key laws every Sierra Leonean should know</div>
+    <div class="law-card"><span class="law-tag tag-green">Data Protection</span><h3>🔒 Data Protection Act 2022</h3><ul><li>Right to access, correct and delete your personal data</li><li>Businesses must register with the Data Protection Commission</li><li>Consent required before collecting personal data</li><li>Regulator: Data Protection Commission of Sierra Leone</li></ul></div>
+    <div class="law-card"><span class="law-tag tag-blue">Cybercrime</span><h3>🌐 Cybercrime Act 2021</h3><ul><li>Online fraud, hacking and identity theft are criminal offences</li><li>Cyberstalking and online harassment carry prison sentences</li><li>Spreading false information online can be prosecuted</li><li>Penalties: up to 10 years imprisonment for serious offences</li></ul></div>
+    <div class="law-card"><span class="law-tag tag-gold">Labour</span><h3>👷 Employer & Employee Relations Act</h3><ul><li>National Minimum Wage: Le 800,000/month (2024)</li><li>Max 8 hours/day, 40 hours/week standard</li><li>Maternity leave: 12 weeks with pay</li><li>Annual leave: minimum 21 working days</li></ul></div>
+    <div class="law-card"><span class="law-tag tag-gold">Tax</span><h3>🧾 Tax Laws — Key Points</h3><ul><li>GST (Goods & Services Tax): 15% standard rate</li><li>Corporate tax: 30% standard rate</li><li>PAYE: progressive rates — consult NRA for brackets</li><li>Authority: National Revenue Authority (NRA)</li></ul><a href="https://www.nra.gov.sl" target="_blank" style="color:var(--primary);font-size:11px;">nra.gov.sl →</a></div>
+  </div>
+</div>
+
+<!-- EXAMS -->
+<div class="panel" id="panel-exams">
+  <div class="card">
+    <div class="card-title">📚 Exam Portals — Sierra Leone</div>
+    <div class="card-sub">WAEC, BECE & university admissions</div>
+    <div class="g2" style="margin-bottom:16px;">
+      <a href="https://www.waecsl.org" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">📝</div><div style="font-weight:700;font-size:13px;">WAEC Sierra Leone</div><div style="font-size:11px;color:var(--mid);">WASSCE & BECE results</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Check Results →</div></a>
+      <a href="https://www.usl.edu.sl" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">🏛️</div><div style="font-weight:700;font-size:13px;">University of Sierra Leone</div><div style="font-size:11px;color:var(--mid);">Fourah Bay College & other colleges</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Apply →</div></a>
+      <a href="https://www.njala.edu.sl" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">🏛️</div><div style="font-weight:700;font-size:13px;">Njala University</div><div style="font-size:11px;color:var(--mid);">Agriculture, science & education</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Apply →</div></a>
+      <a href="https://www.ernestbai.edu.sl" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">🏛️</div><div style="font-weight:700;font-size:13px;">EBKUST</div><div style="font-size:11px;color:var(--mid);">Ernest Bai Koroma Univ. of Science & Tech</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Apply →</div></a>
+    </div>
+    <div class="g-auto">
+      <div class="rate-chip"><div class="curr">WASSCE (May/Jun)</div><div class="val">Apr–Jun 2025</div></div>
+      <div class="rate-chip"><div class="curr">BECE 2025</div><div class="val">Aug 2025</div></div>
+      <div class="rate-chip"><div class="curr">WASSCE Nov/Dec</div><div class="val">Oct–Dec 2025</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOLIDAYS -->
+<div class="panel" id="panel-holidays">
+  <div class="card">
+    <div class="card-title">🎉 Sierra Leone Public Holidays</div>
+    <div class="card-sub">Official statutory public holidays · 2025 / 2026</div>
+    <div id="next-holiday-banner" style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:white;border-radius:14px;padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div style="font-size:40px;" id="next-holiday-emoji">🎉</div>
+      <div style="flex:1;"><div style="font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;" id="next-holiday-label">NEXT PUBLIC HOLIDAY</div>
+      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin:4px 0;" id="next-holiday-title">Loading...</div>
+      <div style="font-size:12px;opacity:.75;" id="next-holiday-date"></div></div>
+      <div style="text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:900;line-height:1;" id="next-holiday-days">—</div><div style="font-size:11px;opacity:.8;" id="next-holiday-days-label">days away</div></div>
+    </div>
+    <div id="holiday-calendar" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
+<!-- WEATHER -->
+<div class="panel" id="panel-weather">
+  <div class="card">
+    <div class="card-title">🌤️ Sierra Leone Weather</div>
+    <div class="card-sub">Live weather for major cities · Rainy season: May–Nov</div>
+    <div class="loading-row" id="weather-loading"><div class="spinner"></div> Loading weather...</div>
+    <div class="g-auto" id="weather-cities" style="display:none"></div>
+  </div>
+</div>
+
+<!-- POWER -->
+<div class="panel" id="panel-power">
+  <div class="card">
+    <div class="card-title">⚡ EDSA Power Outage Tracker</div>
+    <div class="card-sub">Report power cuts in Freetown · Real-time community updates</div>
+    <div style="background:rgba(214,48,49,.06);border:1px solid rgba(214,48,49,.15);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);margin-bottom:14px;">🔴 Power outages (load shedding) are common in Freetown. EDSA manages electricity distribution. Report your area status to help neighbours.</div>
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <select id="edsa-area" style="flex:1;min-width:150px;"><option value="">Select your area</option><option>Freetown — West</option><option>Freetown — East End</option><option>Freetown — Central</option><option>Aberdeen</option><option>Congo Town</option><option>Lumley</option><option>Kissy</option><option>Wellington</option><option>Bo</option><option>Kenema</option><option>Makeni</option></select>
+      <select id="edsa-status" style="flex:1;min-width:150px;"><option value="out">🔴 No power (NEPA off)</option><option value="on">🟢 Power is ON</option><option value="partial">🟡 Intermittent</option></select>
+    </div>
+    <button class="btn btn-primary" onclick="reportPower()">📢 Report Power Status</button>
+    <div id="power-reports" style="margin-top:16px;"></div>
+    <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://www.edsa.gov.sl" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">EDSA Official Site →</a>
+      <a href="tel:+23222222601" style="font-size:12px;color:var(--primary);font-weight:600;">📞 EDSA: +232-22-222-601</a>
+    </div>
+  </div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="panel" id="panel-emergency">
+  <div class="card">
+    <div class="card-title">📞 Emergency Numbers — Sierra Leone</div>
+    <div class="card-sub">Tap any number to call · Works across Sierra Leone</div>
+    <div class="emrg-grid">
+      <div class="emrg-card" onclick="copyText('999','Police copied')"><div class="name">🚔 Sierra Leone Police</div><a href="tel:999" class="num">999</a></div>
+      <div class="emrg-card" onclick="copyText('019','Fire copied')"><div class="name">🚒 Fire Brigade</div><a href="tel:019" class="num">019</a></div>
+      <div class="emrg-card" onclick="copyText('117','Ambulance copied')"><div class="name">🚑 Ambulance</div><a href="tel:117" class="num">117</a></div>
+      <div class="emrg-card" onclick="copyText('112','112 copied')"><div class="name">📱 Universal (Mobile)</div><a href="tel:112" class="num">112</a></div>
+      <div class="emrg-card"><div class="name">⚡ EDSA Faults</div><a href="tel:+23222222601" class="num" style="font-size:12px;">+232-22-222-601</a></div>
+      <div class="emrg-card"><div class="name">🏥 PCMH Hospital</div><a href="tel:+23222224438" class="num" style="font-size:12px;">+232-22-224-438</a></div>
+    </div>
+    <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--primary);margin:16px 0 8px;">🏥 Major Hospitals</div>
+    <div class="emrg-grid">
+      <div class="rate-chip"><div class="curr">Connaught Hospital</div><div class="val"><a href="tel:+23222224438" style="color:var(--primary);">+232-22-224-438</a></div></div>
+      <div class="rate-chip"><div class="curr">Princess Christian Maternity</div><div class="val"><a href="tel:+23222225001" style="color:var(--primary);">+232-22-225-001</a></div></div>
+      <div class="rate-chip"><div class="curr">Ola During Children's Hosp.</div><div class="val"><a href="tel:+23222226230" style="color:var(--primary);">+232-22-226-230</a></div></div>
+      <div class="rate-chip"><div class="curr">Rokupa Government Hospital</div><div class="val"><a href="tel:+23222261055" style="color:var(--primary);">+232-22-261-055</a></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NETWORKS -->
+<div class="panel" id="panel-networks">
+  <div class="card">
+    <div class="card-title">📱 Sierra Leone Network Status</div>
+    <div class="card-sub">Africell, Orange & Qcell</div>
+    <div class="g3">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📡</div><div style="font-weight:700;font-size:13px;">Africell</div><div style="font-size:11px;color:var(--mid);margin-top:4px;">4G · Data · Money</div><div style="margin-top:10px;font-size:12px;font-weight:700;color:var(--primary);">✅ Operational</div><a href="https://africell.sl" target="_blank" style="font-size:11px;color:var(--primary);display:block;margin-top:4px;">africell.sl →</a></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📡</div><div style="font-weight:700;font-size:13px;">Orange SL</div><div style="font-size:11px;color:var(--mid);margin-top:4px;">3G/4G · Data · Money</div><div style="margin-top:10px;font-size:12px;font-weight:700;color:var(--primary);">✅ Operational</div><a href="https://orange.sl" target="_blank" style="font-size:11px;color:var(--primary);display:block;margin-top:4px;">orange.sl →</a></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📡</div><div style="font-weight:700;font-size:13px;">Qcell</div><div style="font-size:11px;color:var(--mid);margin-top:4px;">3G · Data · Voice</div><div style="margin-top:10px;font-size:12px;font-weight:700;color:var(--primary);">✅ Operational</div><a href="https://qcell.sl" target="_blank" style="font-size:11px;color:var(--primary);display:block;margin-top:4px;">qcell.sl →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- JOBS -->
+<div class="panel" id="panel-jobs">
+  <div class="card">
+    <div class="card-title">💼 Remote Jobs for Sierra Leoneans</div>
+    <div class="card-sub">Hand-picked remote roles open to Sierra Leonean applicants</div>
+    <div id="jobs-list"></div>
+    <div style="margin-top:16px;"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:10px;">🔗 Top Job Boards</div>
+    <div class="g3">
+      <a href="https://weworkremotely.com" target="_blank" class="job-board-link"><div class="job-board-icon">🌐</div><div class="job-board-name">We Work Remotely</div><div class="job-board-sub">Top remote board</div></a>
+      <a href="https://andela.com/talent" target="_blank" class="job-board-link"><div class="job-board-icon">🚀</div><div class="job-board-name">Andela</div><div class="job-board-sub">Africa tech talent</div></a>
+      <a href="https://www.upwork.com" target="_blank" class="job-board-link"><div class="job-board-icon">💼</div><div class="job-board-name">Upwork</div><div class="job-board-sub">Freelance platform</div></a>
+      <a href="https://arc.dev" target="_blank" class="job-board-link"><div class="job-board-icon">💻</div><div class="job-board-name">Arc.dev</div><div class="job-board-sub">Remote dev jobs</div></a>
+      <a href="https://www.jobs.nhs.uk" target="_blank" class="job-board-link"><div class="job-board-icon">🏥</div><div class="job-board-name">NHS Jobs UK</div><div class="job-board-sub">Healthcare (visa sponsor)</div></a>
+      <a href="https://www.gov.uk/find-a-job" target="_blank" class="job-board-link"><div class="job-board-icon">🇬🇧</div><div class="job-board-name">Find a Job UK</div><div class="job-board-sub">UK Gov official portal</div></a>
+    </div></div>
+  </div>
+</div>
+
+<!-- VISA -->
+<div class="panel" id="panel-visa">
+  <div class="card">
+    <div class="card-title">🛂 Visa-Free Countries — Sierra Leone Passport</div>
+    <div class="card-sub">Sierra Leone passport — Henley Index 2024</div>
+    <div class="g-auto" style="margin-bottom:14px;">
+      <div class="rate-chip"><div class="curr">🌍 Visa-free access</div><div class="val">~45 countries</div></div>
+      <div class="rate-chip"><div class="curr">🏆 Global Ranking</div><div class="val">#87 of 199</div></div>
+      <div class="rate-chip"><div class="curr">🛬 Visa on Arrival</div><div class="val">~20 countries</div></div>
+    </div>
+    <div class="g-auto">
+      <div class="rate-chip"><div class="curr">🌍 ECOWAS (15 states)</div><div class="val">Visa-free</div></div>
+      <div class="rate-chip"><div class="curr">🇷🇼 Rwanda</div><div class="val">Visa on arrival</div></div>
+      <div class="rate-chip"><div class="curr">🇰🇪 Kenya</div><div class="val">eTA</div></div>
+      <div class="rate-chip"><div class="curr">🇿🇦 South Africa</div><div class="val">Visa-free</div></div>
+      <div class="rate-chip"><div class="curr">🇪🇹 Ethiopia</div><div class="val">Visa on arrival</div></div>
+      <div class="rate-chip"><div class="curr">🇹🇷 Turkey</div><div class="val">e-Visa</div></div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--mid);">⚠️ Always verify requirements with the destination country's official embassy before travelling.</div>
+  </div>
+</div>
+
+<!-- FOOTBALL -->
+<div class="panel" id="panel-football">
+  <div class="card">
+    <div class="card-title">⚽ Football — Sierra Leone & International</div>
+    <div class="card-sub">Leone Stars & major international leagues</div>
+    <div class="curr-chips" id="league-chips" style="margin-bottom:12px;">
+      <div class="curr-chip active" data-league="PL" onclick="loadLeague('PL','EPL')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 EPL</div>
+      <div class="curr-chip" data-league="CL" onclick="loadLeague('CL','UCL')">🏆 UCL</div>
+      <div class="curr-chip" data-league="PD" onclick="loadLeague('PD','La Liga')">🇪🇸 La Liga</div>
+    </div>
+    <div class="curr-chips" id="fixture-chips" style="margin-bottom:14px;">
+      <div class="curr-chip active" data-view="results" onclick="switchView('results')">📋 Results</div>
+      <div class="curr-chip" data-view="fixtures" onclick="switchView('fixtures')">📅 Fixtures</div>
+    </div>
+    <div class="loading-row" id="football-loading"><div class="spinner"></div> Loading matches...</div>
+    <div id="football-content"></div>
+    <div style="margin-top:12px;"><a href="https://www.slfootball.com" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">Sierra Leone Football Association →</a></div>
+  </div>
+</div>
+
+<!-- AI CHAT -->
+<div class="panel" id="panel-chat">
+  <div class="card">
+    <div class="card-title">🤖 Ask SaloneHub AI</div>
+    <div class="card-sub">AI assistant for Sierra Leonean questions · Powered by Claude</div>
+    <div style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:14px;padding:16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+      <div style="font-size:32px;">🇸🇱</div>
+      <div style="color:white;"><div style="font-weight:700;font-size:14px;">Hello! I'm SaloneHub AI.</div><div style="font-size:12px;opacity:.85;margin-top:2px;">Ask me anything about Sierra Leone — forex, taxes, laws, culture and more!</div></div>
+    </div>
+    <div id="chat-messages" style="min-height:200px;max-height:400px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;"></div>
+    <div style="display:flex;gap:8px;">
+      <input type="text" id="chat-input" placeholder="Ask about Sierra Leone rates, laws, visa..." style="flex:1;" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-primary" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end panels -->
+
+<footer>
+  🇸🇱 <strong>SaloneHub</strong> — Sierra Leone Daily Dashboard · Rates via ExchangeRate-API · Weather via Open-Meteo · <a href="#">Privacy</a> · <a href="#">Terms</a> · Not financial advice
+</footer>
+
+<div class="toast" id="toast"></div>
+<div id="cookie-banner">
+  <p>🍪 SaloneHub uses cookies to remember your preferences. <a href="#" style="color:#1EB53A;">Learn more</a></p>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button class="btn-accept" onclick="acceptCookies()">Accept</button>
+    <button class="btn-decline" onclick="declineCookies()">Decline</button>
+  </div>
+</div>
+<div id="prefs-overlay" onclick="if(event.target===this)closePrefs()">
+  <div id="prefs-panel">
+    <div class="prefs-header"><h3>⚙️ Your Preferences</h3><button class="prefs-close" onclick="closePrefs()">✕</button></div>
+    <div class="prefs-body">
+      <div class="prefs-section"><div class="prefs-section-title">🌤️ Default City</div><div class="prefs-field"><label>City</label><select id="pref-city"><option>Freetown</option><option>Bo</option><option>Kenema</option><option>Makeni</option><option>Koidu</option></select></div></div>
+      <div class="prefs-section"><div class="prefs-section-title">💱 Default Currency</div><div class="prefs-field"><label>Currency</label><select id="pref-currency"><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option><option value="EUR">🇪🇺 EUR</option></select></div></div>
+      <button class="prefs-save-btn" onclick="savePrefs()">💾 Save Preferences</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SYM='Le ',BASE='SLE',COUNTRY='Sierra Leone',CC='sl';
+const CAT_TABS={
+  money:[{id:'currency',label:'💱 Rates'},{id:'fuel',label:'⛽ Fuel & Prices'},{id:'banking',label:'📲 Mobile Money'}],
+  news:[{id:'news',label:'📰 News'},{id:'laws',label:'⚖️ Laws'},{id:'exams',label:'📚 Exams'},{id:'holidays',label:'🎉 Holidays'}],
+  life:[{id:'weather',label:'🌤️ Weather'},{id:'power',label:'⚡ EDSA Power'},{id:'emergency',label:'📞 Emergency'},{id:'networks',label:'📱 Networks'}],
+  work:[{id:'jobs',label:'💼 Remote Jobs'},{id:'visa',label:'🛂 Visa-Free'}],
+  fun:[{id:'football',label:'⚽ Football'}],
+  ai:[{id:'chat',label:'🤖 AI Chat'}]
+};
+let currentCat='money',rates={},selectedCurr='USD',footballLeague='PL',footballView='results',footData=null;
+
+function switchCat(cat){
+  currentCat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.toggle('active',b.dataset.cat===cat));
+  const tabs=CAT_TABS[cat]||[];
+  document.getElementById('subtab-row').innerHTML=tabs.map(t=>`<div class="curr-chip${t.id===tabs[0].id?' active':''}" onclick="switchTab('${t.id}')">${t.label}</div>`).join('');
+  switchTab(tabs[0]?.id);
+}
+function switchTab(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const p=document.getElementById('panel-'+id);if(p)p.classList.add('active');
+  const tabs=CAT_TABS[currentCat]||[];
+  document.querySelectorAll('.subtab-row .curr-chip').forEach(c=>{const t=tabs.find(x=>x.id===id);c.classList.toggle('active',t&&c.textContent.trim()===t.label);});
+  if(id==='currency'&&!rates.USD)loadRates();
+  if(id==='news')loadNews();
+  if(id==='weather')loadWeather();
+  if(id==='football')loadLeague('PL','EPL');
+  if(id==='jobs')loadJobs();
+  if(id==='holidays')initHolidays();
+}
+
+// GREETING
+(function(){
+  const h=new Date().getHours();
+  document.getElementById('greeting').textContent=(h<12?'🌅 Good morning':h<17?'☀️ Good afternoon':'🌙 Good evening')+', Sierra Leone';
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+})();
+
+// RATES — using SLL (old Leone) since SLE is new and may not be in all APIs; convert
+async function loadRates(){
+  try{
+    document.getElementById('rate-loading').style.display='flex';
+    document.getElementById('rate-body').style.display='none';
+    // Try SLE first, fall back to SLL and divide by 1000
+    let useNew=true;
+    let res=await fetch('https://api.exchangerate-api.com/v4/latest/SLE');
+    let data=await res.json();
+    if(!data.rates?.USD){
+      res=await fetch('https://api.exchangerate-api.com/v4/latest/SLL');
+      data=await res.json();useNew=false;
+    }
+    rates={};
+    const factor=useNew?1:1000;
+    Object.keys(data.rates).forEach(k=>{rates[k]=(1/data.rates[k])*factor;});
+    document.getElementById('rate-loading').style.display='none';
+    document.getElementById('rate-body').style.display='block';
+    updateRateDisplay();updateTicker();updateHeroStats();
+  }catch(e){document.getElementById('rate-loading').innerHTML='⚠️ Could not load rates. Check your connection.';}
+}
+function fmtSLE(v){return v?(SYM+v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')):'—';}
+function updateRateDisplay(){
+  const pairs=[{code:'USD',flag:'🇺🇸'},{code:'GBP',flag:'🇬🇧'},{code:'EUR',flag:'🇪🇺'},{code:'CAD',flag:'🇨🇦'},{code:'NGN',flag:'🇳🇬'},{code:'GHS',flag:'🇬🇭'},{code:'CNY',flag:'🇨🇳'},{code:'ZAR',flag:'🇿🇦'}];
+  document.getElementById('hero-usd').textContent=rates.USD?fmtSLE(rates.USD):'—';
+  document.getElementById('rate-grid').innerHTML=pairs.filter(p=>p.code!=='USD').map(p=>`<div class="rate-chip"><div class="curr">${p.flag} ${p.code}/SLE</div><div class="val">${rates[p.code]?fmtSLE(rates[p.code]):'—'}</div></div>`).join('');
+  buildCurrChips(pairs);
+}
+function buildCurrChips(pairs){document.getElementById('curr-chips').innerHTML=pairs.map(p=>`<div class="curr-chip${p.code===selectedCurr?' active':''}" onclick="selectCurr('${p.code}')">${p.flag} ${p.code}</div>`).join('');}
+function selectCurr(code){selectedCurr=code;document.querySelectorAll('#curr-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.textContent.includes(code)));document.getElementById('conv-label2').textContent=code+' Amount';convertLocal();}
+function convertLocal(){const v=parseFloat(document.getElementById('local-input').value)||0;const r=rates[selectedCurr]||1;document.getElementById('foreign-input').value=(v/r).toFixed(4);document.getElementById('rate-source-line').textContent=`1 SLE = ${(1/r).toFixed(6)} ${selectedCurr}`;}
+function convertForeign(){const v=parseFloat(document.getElementById('foreign-input').value)||0;const r=rates[selectedCurr]||1;document.getElementById('local-input').value=(v*r).toFixed(2);}
+function swapCurr(){convertLocal();}
+function updateTicker(){
+  const m={USD:'usd',GBP:'gbp',EUR:'eur',NGN:'ngn',GHS:'ghs',CNY:'cny'};
+  Object.entries(m).forEach(([c,id])=>{
+    const v=rates[c]?fmtSLE(rates[c]):'—';
+    ['t-'+id,'t-'+id+'2'].forEach(i=>{const el=document.getElementById(i);if(el)el.textContent=v;});
+  });
+}
+function updateHeroStats(){
+  document.getElementById('d-usd').textContent=rates.USD?fmtSLE(rates.USD):'—';
+  document.getElementById('d-gbp').textContent=rates.GBP?fmtSLE(rates.GBP):'—';
+}
+
+// WEATHER
+const CITIES=[{name:'Freetown',lat:8.484,lon:-13.234},{name:'Bo',lat:7.965,lon:-11.738},{name:'Kenema',lat:7.876,lon:-11.191},{name:'Makeni',lat:8.882,lon:-12.048},{name:'Koidu',lat:8.634,lon:-10.969}];
+async function loadWeather(){
+  document.getElementById('weather-loading').style.display='flex';
+  document.getElementById('weather-cities').style.display='none';
+  const con=document.getElementById('weather-cities');con.innerHTML='';
+  for(const c of CITIES){
+    try{
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current_weather=true`);
+      const d=await r.json();
+      const t=Math.round(d.current_weather.temperature),w=d.current_weather.windspeed,wc=d.current_weather.weathercode;
+      const icon=wc<=1?'☀️':wc<=3?'⛅':wc<=67?'🌧️':'⛈️';
+      const desc=wc<=1?'Clear':wc<=3?'Partly Cloudy':wc<=67?'Rainy':'Thunderstorm';
+      con.innerHTML+=`<div class="weather-card"><div class="weather-city">${c.name}</div><div style="font-size:28px;margin:6px 0">${icon}</div><div class="weather-temp">${t}°C</div><div class="weather-desc">${desc}</div><div style="font-size:11px;color:var(--mid);margin-top:6px;">💨 ${w}km/h</div></div>`;
+    }catch(e){con.innerHTML+=`<div class="weather-card"><div class="weather-city">${c.name}</div><div style="font-size:11px;color:var(--mid);margin-top:8px;">Unavailable</div></div>`;}
+  }
+  document.getElementById('weather-loading').style.display='none';
+  document.getElementById('weather-cities').style.display='grid';
+  try{
+    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=8.484&longitude=-13.234&current_weather=true`);
+    const d=await r.json();const t=Math.round(d.current_weather.temperature),wc=d.current_weather.weathercode;
+    document.getElementById('d-weather').textContent=t+'°C';
+    document.getElementById('d-weathersub').textContent=(wc<=1?'Clear':wc<=3?'Partly Cloudy':'Rainy')+' · Freetown';
+  }catch(e){}
+}
+
+// NEWS
+// ══════════════════════════════════════════
+// MULTI-SOURCE LOCAL NEWS READER — SaloneHub
+// All feeds are free, no API key needed
+// ══════════════════════════════════════════
+const SL_NEWS_SOURCES = {
+  telegraph: {
+    name: 'Sierra Leone Telegraph',
+    url:  'https://www.sierraleonnetelegraph.com',
+    feeds: {
+      general:  'https://www.sierraleonnetelegraph.com/feed/',
+      business: 'https://www.sierraleonnetelegraph.com/feed/',
+      sports:   'https://www.sierraleonnetelegraph.com/feed/',
+    }
+  },
+  awoko: {
+    name: 'Awoko Newspaper',
+    url:  'https://www.awoko.org',
+    feeds: {
+      general:  'https://www.awoko.org/feed/',
+      business: 'https://www.awoko.org/category/business/feed/',
+      sports:   'https://www.awoko.org/category/sports/feed/',
+    }
+  },
+  concord: {
+    name: 'Concord Times',
+    url:  'https://www.concordtimessl.com',
+    feeds: {
+      general:  'https://www.concordtimessl.com/feed/',
+      business: 'https://www.concordtimessl.com/feed/',
+      sports:   'https://www.concordtimessl.com/feed/',
+    }
+  },
+};
+
+let currentNewsCat    = 'general';
+let currentNewsSource = 'telegraph';
+
+function setNewsCat(el, cat) {
+  currentNewsCat = cat;
+  document.querySelectorAll('#news-cat-chips .curr-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  loadNews();
+}
+
+function setNewsSource(el, source) {
+  currentNewsSource = source;
+  document.querySelectorAll('#news-source-chips .curr-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const src = SL_NEWS_SOURCES[source];
+  if (src) {
+    document.getElementById('news-source-name').textContent = src.name;
+    document.getElementById('news-source-link').href        = src.url;
+    document.getElementById('news-source-link').textContent = 'Visit ' + src.name + ' →';
+  }
+  loadNews();
+}
+
+function renderNewsItems(items, sourceName) {
+  if (!items?.length) return `<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;">
+    <div style="font-size:28px;margin-bottom:8px;">📭</div>
+    No articles found from ${sourceName} right now.<br>
+    <span style="font-size:11px;">Try a different source or category.</span>
+  </div>`;
+  return items.map(item => {
+    const title   = (item.title || '').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'");
+    const rawDesc = (item.description || item.content || '');
+    const desc    = rawDesc.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').trim().slice(0,140);
+    const url     = item.link || item.url || '#';
+    const pubDate = item.pubDate || item.publishedAt || '';
+    const dateStr = pubDate ? new Date(pubDate).toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'short'}) : '';
+    const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
+    const img = item.thumbnail || item.enclosure?.link || (imgMatch && imgMatch[1]) || '';
+    return `<div class="news-item" style="display:flex;gap:12px;align-items:flex-start;">
+      ${img ? `<img src="${img}" alt="" style="width:72px;height:54px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-top:2px;" onerror="this.style.display='none'">` : ''}
+      <div class="news-content" style="flex:1;min-width:0;">
+        <h4><a href="${url}" target="_blank" rel="noopener" style="text-decoration:none;color:var(--charcoal);">${title}</a></h4>
+        ${desc ? `<p style="margin-bottom:6px;">${desc}${desc.length===140?'…':''}</p>` : ''}
+        <div class="news-meta">
+          <span class="news-source">${sourceName}</span>
+          ${dateStr ? `<span>📅 ${dateStr}</span>` : ''}
+          <a href="${url}" target="_blank" rel="noopener" style="color:var(--primary);font-weight:600;font-size:11px;">Read full story →</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadNews() {
+  const src = SL_NEWS_SOURCES[currentNewsSource];
+  if (!src) return;
+  const feedUrl = src.feeds[currentNewsCat] || src.feeds.general;
+
+  document.getElementById('news-loading').style.display = 'flex';
+  document.getElementById('news-list').innerHTML = '';
+
+  try {
+    const res  = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=15`);
+    const data = await res.json();
+    if (data.status === 'ok' && data.items?.length) {
+      document.getElementById('news-list').innerHTML = renderNewsItems(data.items, src.name);
+    } else {
+      // auto-fallback to next source
+      const keys    = Object.keys(SL_NEWS_SOURCES);
+      const nextKey = keys[(keys.indexOf(currentNewsSource) + 1) % keys.length];
+      if (nextKey !== currentNewsSource) {
+        const next  = SL_NEWS_SOURCES[nextKey];
+        const res2  = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(next.feeds[currentNewsCat]||next.feeds.general)}&count=15`);
+        const data2 = await res2.json();
+        if (data2.items?.length) {
+          document.getElementById('news-list').innerHTML = renderNewsItems(data2.items, next.name);
+          document.getElementById('news-source-name').textContent = next.name;
+          document.getElementById('news-source-link').href = next.url;
+          return;
+        }
+      }
+      document.getElementById('news-list').innerHTML = renderNewsItems([], src.name);
+    }
+  } catch(e) {
+    document.getElementById('news-list').innerHTML = `<div style="color:var(--mid);font-size:13px;padding:16px 0;">
+      ⚠️ Could not load news. Check your connection or
+      <a href="${src.url}" target="_blank" style="color:var(--primary);font-weight:600;">visit ${src.name} directly →</a>
+    </div>`;
+  }
+  document.getElementById('news-loading').style.display = 'none';
+}
+
+// FOOTBALL
+async function loadLeague(code,name){
+  footballLeague=code;
+  document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));
+  document.getElementById('football-loading').style.display='flex';
+  document.getElementById('football-content').innerHTML='';
+  try{
+    const res=await fetch(`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`,{headers:{'X-Auth-Token':''}});
+    const data=await res.json();footData=data.matches||[];renderFootball();
+  }catch(e){document.getElementById('football-loading').style.display='none';document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">Football data unavailable. <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);">BBC Sport →</a></div>';}
+}
+function switchView(v){footballView=v;document.querySelectorAll('#fixture-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.view===v));renderFootball();}
+function renderFootball(){
+  document.getElementById('football-loading').style.display='none';
+  if(!footData?.length){document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">No matches found.</div>';return;}
+  document.getElementById('football-content').innerHTML=footData.slice(0,8).map(m=>`<div class="match-card"><div class="match-teams"><span class="team-name">${m.homeTeam.shortName||m.homeTeam.name}</span><span class="match-score">${m.score?.fullTime?.home??'—'} – ${m.score?.fullTime?.away??'—'}</span><span class="team-name away">${m.awayTeam.shortName||m.awayTeam.name}</span></div><div class="match-meta">${new Date(m.utcDate).toLocaleDateString('en-SL',{day:'numeric',month:'short'})}</div></div>`).join('');
+}
+
+// JOBS
+function loadJobs(){
+  const jobs=[
+    {title:'Frontend Developer',company:'Remote First',salary:'$2K–$4K/mo',tags:['Remote','Tech','New'],desc:'React, TypeScript. Open to West African applicants.',link:'https://weworkremotely.com'},
+    {title:'Customer Success Manager',company:'SaaS Company',salary:'$1.5K–$2.5K/mo',tags:['Remote','Support'],desc:'Help customers succeed. Fluent English required.',link:'https://weworkremotely.com'},
+    {title:'Healthcare Worker UK (NHS)',company:'NHS Trust',salary:'£25K–£35K/yr',tags:['UK','Healthcare','New'],desc:'NHS Skilled Worker visa sponsorship available for Sierra Leonean healthcare workers.',link:'https://www.jobs.nhs.uk'},
+    {title:'Data Analyst',company:'Fintech Startup',salary:'$1.8K–$3K/mo',tags:['Remote','Finance'],desc:'Python/SQL. West Africa-friendly hours.',link:'https://andela.com/talent'},
+  ];
+  document.getElementById('jobs-list').innerHTML=jobs.map(j=>`<div class="job-card"><div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;"><div><div class="job-title">${j.title}</div><div class="job-company">${j.company}</div></div><div class="job-salary">${j.salary}</div></div><div class="job-tags">${j.tags.map(t=>`<span class="job-tag ${t==='New'?'new':t==='Remote'?'remote':'cat'}">${t}</span>`).join('')}</div><p style="font-size:12px;color:var(--mid);margin-bottom:10px;">${j.desc}</p><a href="${j.link}" target="_blank" class="job-apply">Apply →</a></div>`).join('');
+}
+
+// REMIT
+function calcRemit(){
+  const amt=parseFloat(document.getElementById('send-amount').value)||500;
+  const curr=document.getElementById('send-currency').value;
+  const base=rates[curr]||22;
+  const providers=[{name:'Wise',spread:.98,fee:3,icon:'💙'},{name:'WorldRemit',spread:.97,fee:2.99,icon:'🌍'},{name:'MoneyGram',spread:.96,fee:4.99,icon:'💰'},{name:'Western Union',spread:.95,fee:4,icon:'🏦'}];
+  document.getElementById('remit-grid').innerHTML=providers.map(p=>{
+    const recv=((amt-p.fee)*base*p.spread).toFixed(2);
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;"><div><span>${p.icon}</span> <strong style="font-size:13px;">${p.name}</strong><div style="font-size:11px;color:var(--mid);">Fee: ${curr} ${p.fee}</div></div><div style="text-align:right;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--primary);">${SYM}${recv}</div><div style="font-size:10px;color:var(--mid);">Recipient gets</div></div></div>`;
+  }).join('');
+}
+
+// HOLIDAYS
+const SL_HOLIDAYS=[
+  {date:'2025-01-01',name:"New Year's Day",emoji:'🎆'},
+  {date:'2025-01-17',name:"Korle Day (Provincial Day)",emoji:'🌿'},
+  {date:'2025-03-31',name:"Eid al-Fitr (Day 1)",emoji:'🌙'},
+  {date:'2025-04-01',name:"Eid al-Fitr (Day 2)",emoji:'🌙'},
+  {date:'2025-04-18',name:"Good Friday",emoji:'✝️'},
+  {date:'2025-04-21',name:"Easter Monday",emoji:'🐣'},
+  {date:'2025-04-27',name:"Republic Day (Independence Day)",emoji:'🇸🇱'},
+  {date:'2025-05-01',name:"Workers' Day",emoji:'⚒️'},
+  {date:'2025-06-07',name:"Eid al-Adha (Day 1)",emoji:'🐑'},
+  {date:'2025-08-19',name:"Eid el-Maulud",emoji:'🌙'},
+  {date:'2025-12-25',name:"Christmas Day",emoji:'🎄'},
+  {date:'2025-12-26',name:"Boxing Day",emoji:'🎁'},
+  {date:'2026-01-01',name:"New Year's Day",emoji:'🎆'},
+  {date:'2026-03-19',name:"Eid al-Fitr (Day 1)",emoji:'🌙'},
+  {date:'2026-03-20',name:"Eid al-Fitr (Day 2)",emoji:'🌙'},
+  {date:'2026-04-03',name:"Good Friday",emoji:'✝️'},
+  {date:'2026-04-06',name:"Easter Monday",emoji:'🐣'},
+  {date:'2026-04-27',name:"Republic Day (Independence Day)",emoji:'🇸🇱'},
+  {date:'2026-05-01',name:"Workers' Day",emoji:'⚒️'},
+  {date:'2026-05-27',name:"Eid al-Adha (Day 1)",emoji:'🐑'},
+  {date:'2026-11-14',name:"Eid el-Maulud",emoji:'🌙'},
+  {date:'2026-12-25',name:"Christmas Day",emoji:'🎄'},
+  {date:'2026-12-26',name:"Boxing Day",emoji:'🎁'},
+];
+function initHolidays(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const ts=today.toISOString().slice(0,10);
+  const next=SL_HOLIDAYS.filter(h=>h.date>=ts).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  if(next){
+    const days=Math.round((new Date(next.date)-today)/86400000);
+    document.getElementById('next-holiday-emoji').textContent=next.emoji;
+    document.getElementById('next-holiday-title').textContent=next.name;
+    document.getElementById('next-holiday-date').textContent=new Date(next.date).toLocaleDateString('en-SL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('next-holiday-days').textContent=days===0?'TODAY':days;
+    document.getElementById('next-holiday-days-label').textContent=days===0?'🎊':'days away';
+    document.getElementById('d-holiday-days').textContent=days===0?'TODAY':days+'d';
+    document.getElementById('d-holiday-name').textContent=next.emoji+' '+next.name;
+  }
+  let html='',lastY=null;
+  SL_HOLIDAYS.forEach(h=>{
+    const d=new Date(h.date);d.setHours(0,0,0,0);
+    const days=Math.round((d-today)/86400000);
+    const isPast=d<today,isNext=next&&h.date===next.date,isToday=days===0;
+    const yr=h.date.slice(0,4);
+    if(yr!==lastY){if(lastY)html+='</div>';lastY=yr;html+=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--primary);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.8px;">${yr}</div><div>`;}
+    let bg='background:var(--card);border-color:var(--border);',ns='',badge='';
+    if(isToday){bg='background:rgba(214,48,49,.08);border-color:rgba(214,48,49,.3);';ns='color:var(--red);';badge=`<span style="background:var(--red);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;">TODAY 🎉</span>`;}
+    else if(isNext){bg='background:rgba(30,181,58,.08);border-color:rgba(30,181,58,.3);';ns='color:var(--primary);';badge=`<span style="background:var(--primary);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;">${days}d away</span>`;}
+    else if(isPast){bg='opacity:.4;';ns='text-decoration:line-through;color:var(--mid);';badge=`<span style="font-size:11px;color:var(--mid);">Past</span>`;}
+    else{badge=`<span style="font-size:11px;color:var(--mid);">${days}d</span>`;}
+    html+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:12px;border:1px solid transparent;margin-bottom:7px;${bg}"><div style="display:flex;align-items:center;gap:12px;"><span style="font-size:22px;">${h.emoji}</span><div><div style="font-weight:600;font-size:13px;${ns}">${h.name}</div><div style="font-size:11px;color:var(--mid);margin-top:2px;">${new Date(h.date).toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'long'})}</div></div></div>${badge}</div>`;
+  });
+  if(lastY)html+='</div>';
+  document.getElementById('holiday-calendar').innerHTML=html;
+}
+
+// POWER REPORT
+function reportPower(){
+  const area=document.getElementById('edsa-area').value;
+  const status=document.getElementById('edsa-status').value;
+  if(!area){showToast('Please select your area');return;}
+  const r=JSON.parse(localStorage.getItem('sl_power')||'[]');
+  r.unshift({area,status,time:new Date().toISOString()});
+  localStorage.setItem('sl_power',JSON.stringify(r.slice(0,50)));
+  renderPower();
+  showToast(status==='on'?'✅ Power ON reported for '+area:'🔴 Outage reported for '+area);
+}
+function renderPower(){
+  const r=JSON.parse(localStorage.getItem('sl_power')||'[]');
+  const c=document.getElementById('power-reports');
+  if(!r.length){c.innerHTML='';return;}
+  c.innerHTML='<div style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--primary);">📊 Recent Reports</div>'+r.slice(0,8).map(x=>{
+    const icon=x.status==='on'?'🟢':x.status==='partial'?'🟡':'🔴';
+    const mins=Math.round((Date.now()-new Date(x.time))/60000);
+    const ago=mins<1?'Just now':mins<60?mins+'m ago':Math.round(mins/60)+'h ago';
+    return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><span>${icon} ${x.area}</span><span style="color:var(--mid);">${ago}</span></div>`;
+  }).join('');
+}
+
+// AI CHAT
+const chatHist=[];
+async function sendChat(){
+  const inp=document.getElementById('chat-input');const msg=inp.value.trim();if(!msg)return;inp.value='';
+  const el=document.getElementById('chat-messages');
+  el.innerHTML+=`<div style="align-self:flex-end;background:var(--primary);color:white;padding:10px 14px;border-radius:14px 14px 4px 14px;font-size:13px;max-width:80%;">${msg}</div>`;
+  el.innerHTML+=`<div id="typing" style="align-self:flex-start;background:var(--card);border:1px solid var(--border);padding:10px 14px;border-radius:14px 14px 14px 4px;font-size:13px;color:var(--mid);">...</div>`;
+  el.scrollTop=el.scrollHeight;chatHist.push({role:'user',content:msg});
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:`You are SaloneHub AI, a helpful assistant for Sierra Leoneans. Answer questions about Sierra Leone — exchange rates, taxes, laws, culture, travel, daily life. Be concise, friendly and accurate. Today: ${new Date().toLocaleDateString('en-SL')}.`,messages:chatHist})});
+    const data=await res.json();const reply=data.content?.[0]?.text||'Sorry, could not get a response.';
+    chatHist.push({role:'assistant',content:reply});
+    document.getElementById('typing')?.remove();
+    el.innerHTML+=`<div style="align-self:flex-start;background:var(--card);border:1px solid var(--border);padding:10px 14px;border-radius:14px 14px 14px 4px;font-size:13px;max-width:85%;line-height:1.6;">${reply.replace(/\n/g,'<br>')}</div>`;
+    el.scrollTop=el.scrollHeight;
+  }catch(e){document.getElementById('typing')?.remove();el.innerHTML+=`<div style="align-self:flex-start;background:var(--card);border:1px solid var(--border);padding:10px 14px;border-radius:14px;font-size:13px;color:var(--mid);">AI unavailable right now.</div>`;}
+}
+
+// UTILS
+function copyText(t,m){navigator.clipboard.writeText(t).then(()=>showToast('✓ '+m));}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function toggleTheme(){const d=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',d?'light':'dark');document.getElementById('theme-icon').textContent=d?'🌙':'☀️';localStorage.setItem('salonehub_theme',d?'light':'dark');}
+function openPrefs(){document.getElementById('prefs-overlay').classList.add('show');}
+function closePrefs(){document.getElementById('prefs-overlay').classList.remove('show');}
+function savePrefs(){localStorage.setItem('salonehub_prefs',JSON.stringify({city:document.getElementById('pref-city').value,currency:document.getElementById('pref-currency').value}));closePrefs();showToast('✅ Preferences saved!');}
+function acceptCookies(){localStorage.setItem('sl_consent','accepted');document.getElementById('cookie-banner').classList.remove('show');}
+function declineCookies(){localStorage.setItem('sl_consent','declined');document.getElementById('cookie-banner').classList.remove('show');}
+
+// INIT
+const st=localStorage.getItem('salonehub_theme');
+if(st==='dark'||(!st&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.setAttribute('data-theme','dark');document.getElementById('theme-icon').textContent='☀️';}
+if(!localStorage.getItem('sl_consent'))setTimeout(()=>document.getElementById('cookie-banner').classList.add('show'),2000);
+switchCat('money');loadRates();renderPower();initHolidays();
+</script>
+</body>
+</html>
