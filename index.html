@@ -179,13 +179,13 @@ footer strong{color:var(--primary);}
     <span class="ticker-item">🇺🇸 USD/SLE <span class="rate" id="t-usd">—</span></span>
     <span class="ticker-item">🇬🇧 GBP/SLE <span class="rate" id="t-gbp">—</span></span>
     <span class="ticker-item">🇪🇺 EUR/SLE <span class="rate" id="t-eur">—</span></span>
-    <span class="ticker-item">🇳🇬 NGN/SLE <span class="rate" id="t-ngn">—</span></span>
+    <span class="ticker-item">🇬🇲 GMD/SLE <span class="rate" id="t-gmd">—</span></span>
     <span class="ticker-item">🇬🇭 GHS/SLE <span class="rate" id="t-ghs">—</span></span>
     <span class="ticker-item">🇨🇳 CNY/SLE <span class="rate" id="t-cny">—</span></span>
     <span class="ticker-item">🇺🇸 USD/SLE <span class="rate" id="t-usd2">—</span></span>
     <span class="ticker-item">🇬🇧 GBP/SLE <span class="rate" id="t-gbp2">—</span></span>
     <span class="ticker-item">🇪🇺 EUR/SLE <span class="rate" id="t-eur2">—</span></span>
-    <span class="ticker-item">🇳🇬 NGN/SLE <span class="rate" id="t-ngn2">—</span></span>
+    <span class="ticker-item">🇬🇲 GMD/SLE <span class="rate" id="t-gmd2">—</span></span>
     <span class="ticker-item">🇬🇭 GHS/SLE <span class="rate" id="t-ghs2">—</span></span>
   </div></div>
 </div>
@@ -618,7 +618,7 @@ async function loadRates(){
 }
 function fmtSLE(v){return v?(SYM+v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')):'—';}
 function updateRateDisplay(){
-  const pairs=[{code:'USD',flag:'🇺🇸'},{code:'GBP',flag:'🇬🇧'},{code:'EUR',flag:'🇪🇺'},{code:'CAD',flag:'🇨🇦'},{code:'NGN',flag:'🇳🇬'},{code:'GHS',flag:'🇬🇭'},{code:'CNY',flag:'🇨🇳'},{code:'ZAR',flag:'🇿🇦'}];
+  const pairs=[{code:'USD',flag:'🇺🇸'},{code:'GBP',flag:'🇬🇧'},{code:'EUR',flag:'🇪🇺'},{code:'CAD',flag:'🇨🇦'},{code:'GMD',flag:'🇬🇲'},{code:'GHS',flag:'🇬🇭'},{code:'CNY',flag:'🇨🇳'},{code:'ZAR',flag:'🇿🇦'}];
   document.getElementById('hero-usd').textContent=rates.USD?fmtSLE(rates.USD):'—';
   document.getElementById('rate-grid').innerHTML=pairs.filter(p=>p.code!=='USD').map(p=>`<div class="rate-chip"><div class="curr">${p.flag} ${p.code}/SLE</div><div class="val">${rates[p.code]?fmtSLE(rates[p.code]):'—'}</div></div>`).join('');
   buildCurrChips(pairs);
@@ -629,7 +629,7 @@ function convertLocal(){const v=parseFloat(document.getElementById('local-input'
 function convertForeign(){const v=parseFloat(document.getElementById('foreign-input').value)||0;const r=rates[selectedCurr]||1;document.getElementById('local-input').value=(v*r).toFixed(2);}
 function swapCurr(){convertLocal();}
 function updateTicker(){
-  const m={USD:'usd',GBP:'gbp',EUR:'eur',NGN:'ngn',GHS:'ghs',CNY:'cny'};
+  const m={USD:'usd',GBP:'gbp',EUR:'eur',GMD:'gmd',GHS:'ghs',CNY:'cny'};
   Object.entries(m).forEach(([c,id])=>{
     const v=rates[c]?fmtSLE(rates[c]):'—';
     ['t-'+id,'t-'+id+'2'].forEach(i=>{const el=document.getElementById(i);if(el)el.textContent=v;});
