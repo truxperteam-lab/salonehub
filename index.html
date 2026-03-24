@@ -21,7 +21,8 @@
 [data-theme="dark"] .cat-btn{background:rgba(255,255,255,0.05);color:#ccc;}
 [data-theme="dark"] .cat-btn.active{background:var(--primary);color:white;}
 [data-theme="dark"] .curr-chip{color:#ccc;border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);}
-[data-theme="dark"] .curr-chip.active{color:white;background:var(--primary);border-color:var(--primary);}
+[data-theme="dark"] .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
+[data-theme="dark"] #news-cat-chips .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
 [data-theme="dark"] .rate-chip{background:rgba(255,255,255,0.05);}
 [data-theme="dark"] .fuel-card{background:rgba(255,255,255,0.05);}
 [data-theme="dark"] input,[data-theme="dark"] select{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#f0f0f0;}
@@ -691,7 +692,10 @@ const SL_NEWS_SOURCES = [
   ).join('');
 })();
 
-const SL_KEYWORDS = /sierra leone|sierraleone|leonean|freetown|bo town|kenema|makeni|koidu|kailahun|kono|tonkolili|port loko|kambia|bonthe|pujehun|moyamba|leone stars|leone|salone|julius maada bio|bio government|nra sl|edsa|bsl bank|africell|orange sl|qcell|npp|slpp|apc sierra|Leone FC|setco|nassit|slicom|aurora|rokel|sierra rutile|ilmenite|iron ore|ebola|cholera sierra/i;
+const SL_KEYWORDS = /sierra leone|sierraleone|leonean|freetown|bo town|kenema|makeni|koidu|kailahun|kono|tonkolili|port loko|kambia|bonthe|pujehun|moyamba|leone stars|salone|julius maada bio|bio government|nra sl|edsa|bsl bank|africell|orange sl|qcell|npp sierra|slpp|apc sierra|sierra rutile|nassit|slicom|rokel|setco/i;
+
+// Native SL sources — pass ALL their articles through without keyword check
+const SL_NATIVE = new Set(['SL Telegraph','Awoko','Concord Times','Salone Monitor','Politico SL','SL News Online','Standard Times','Sierra Leone Hub']);
 
 let currentNewsCat = 'general';
 
@@ -755,7 +759,7 @@ async function loadNews() {
           const pubDate = item.pubDate || '';
           const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
           const img = item.thumbnail || (imgMatch && imgMatch[1]) || '';
-          if(title) allArticles.push({title, desc, url, pubDate, img, source: src.name, sourceUrl: src.url});
+          if(title) allArticles.push({title, desc, url, pubDate, img, source: src.name, isNative: SL_NATIVE.has(src.name)});
         });
       }
     } catch(e) {}
@@ -779,15 +783,13 @@ async function loadNews() {
     diaspora: /diaspora|abroad|uk|usa|canada|overseas|london|america|travel|passport|visa/i,
   };
   let filtered = allArticles;
-  if(currentNewsCat !== 'general' && catKW[currentNewsCat]) {
-    const cf = allArticles.filter(a => catKW[currentNewsCat].test(a.title + ' ' + a.desc));
-    if(cf.length >= 3) filtered = cf;
-  }
 
-  // Filter for SL relevance on general tab (fallback to all if too few)
-  if(currentNewsCat === 'general') {
-    const slF = filtered.filter(a => SL_KEYWORDS.test(a.title + ' ' + a.desc) || ['SL Telegraph','Awoko','Concord Times','Salone Monitor','Politico SL','SL News Online','Standard Times','Sierra Leone Hub'].includes(a.source));
-    if(slF.length >= 4) filtered = slF;
+  // STRICT: non-native sources (BBC, Africa News) must mention Sierra Leone
+  filtered = filtered.filter(a => a.isNative || SL_KEYWORDS.test(a.title + ' ' + a.desc));
+  // Further category filter on top of SL filter
+  if(currentNewsCat !== 'general' && catKW[currentNewsCat]) {
+    const cf2 = filtered.filter(a => catKW[currentNewsCat].test(a.title + ' ' + a.desc));
+    if(cf2.length >= 2) filtered = cf2;
   }
 
   // Deduplicate by title prefix
