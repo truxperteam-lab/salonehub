@@ -3,9 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SaloneHub — Sierra Leone Daily Dashboard | Forex, News & More</title>
-<meta name="description" content="Sierra Leone #1 daily dashboard. Live SLE exchange rates, fuel prices, news, weather, football and more.">
+<title>SaloneHub — Sierra Leone Daily Dashboard | SLE Rate, Fuel Price, News & More</title>
+<meta name="description" content="Sierra Leone #1 daily dashboard. Live SLE exchange rates, fuel prices, news, weather, football, prayer times, tourism and more — free, updated daily.">
+<meta name="keywords" content="Sierra Leone exchange rate, SLE dollar rate today, fuel price Sierra Leone, Sierra Leone news, leone stars football, Freetown weather, Sierra Leone jobs, WAEC Sierra Leone, SaloneHub">
+<meta name="author" content="SaloneHub">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.sierraleonehub.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SaloneHub">
+<meta property="og:title" content="SaloneHub — Sierra Leone Daily Dashboard">
+<meta property="og:description" content="Live SLE rates, fuel prices, Sierra Leone news, weather, football, prayer times and more. Free & updated daily.">
+<meta property="og:url" content="https://www.sierraleonehub.com/">
+<meta property="og:locale" content="en_SL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SaloneHub — Sierra Leone Daily Dashboard">
+<meta name="twitter:description" content="SLE exchange rates, fuel prices, Sierra Leone news, weather, football & more. Free & updated daily.">
+<meta name="geo.region" content="SL">
+<meta name="geo.placename" content="Sierra Leone">
 <meta name="theme-color" content="#1EB53A">
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ═══  SALONEHUB ADMIN CONTROL PANEL — EDIT THIS SECTION ONLY  ═══ -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+window.SALONEHUB_ALERTS = {
+  power: { active: false, message: "⚡ Widespread power outage reported across Freetown — EDSA load shedding in most areas. Check the Power tab." },
+  security: { active: false, message: "" }
+};
+window.SALONEHUB_FUEL = {
+  petrol: 35, diesel: 32, kerosene: 28, lpg: 180,
+  note: "Freetown avg · NP regulated · Prices vary by area",
+  updated: "Mar 2026"
+};
+window.SALONEHUB_BSL = {
+  mpr: "22.0%", crr: "10%", inflation: "32%",
+  note: "Bank of Sierra Leone rates · As of Q1 2026"
+};
+</script>
+<!-- ═══ END ADMIN CONTROL PANEL ═══ -->
+
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -72,7 +107,8 @@ header{position:relative;z-index:10;padding:14px 36px;display:flex;align-items:c
 .curr-chip{font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;border:1.5px solid var(--border);cursor:pointer;white-space:nowrap;background:var(--card);color:var(--mid);transition:all .15s;}
 .curr-chip.active{background:var(--primary);border-color:var(--primary);color:white;}
 .panels{padding:20px 36px 40px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
-.panel{display:none;}.panel.active{display:block;}
+.panel{display:none;animation:fadeIn .25s ease;}.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 22px;margin-bottom:18px;}
 .card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px;}
 .card-sub{font-size:12px;color:var(--mid);margin-bottom:14px;}
@@ -174,6 +210,16 @@ footer strong{color:var(--primary);}
 </style>
 </head>
 <body>
+<!-- POWER ALERT BANNER -->
+<div id="power-alert-banner" style="display:none;background:#d63031;color:white;padding:10px 20px;font-size:13px;font-weight:600;text-align:center;position:relative;z-index:99;">
+  <span id="power-alert-msg"></span>
+  <button onclick="this.parentElement.style.display='none'" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:white;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:14px;">✕</button>
+</div>
+<!-- SECURITY ALERT BANNER -->
+<div id="security-alert-banner" style="display:none;background:#e67e22;color:white;padding:10px 20px;font-size:13px;font-weight:600;text-align:center;position:relative;z-index:99;">
+  <span id="security-alert-msg"></span>
+  <button onclick="this.parentElement.style.display='none'" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:white;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:14px;">✕</button>
+</div>
 <div class="ticker-bar">
   <span class="ticker-label">🇸🇱 LIVE</span>
   <div class="ticker-wrap"><div class="ticker-track" id="ticker1">
@@ -217,11 +263,12 @@ footer strong{color:var(--primary);}
 </div>
 <div class="tab-nav">
   <div class="cat-row" id="cat-row">
-    <button class="cat-btn active" data-cat="money" onclick="switchCat('money')">💰 Money <span class="cat-count">3</span></button>
+    <button class="cat-btn active" data-cat="money" onclick="switchCat('money')">💰 Money <span class="cat-count">4</span></button>
     <button class="cat-btn" data-cat="news" onclick="switchCat('news')">📰 News & Info <span class="cat-count">4</span></button>
-    <button class="cat-btn" data-cat="life" onclick="switchCat('life')">🌍 Life & Services <span class="cat-count">4</span></button>
-    <button class="cat-btn" data-cat="work" onclick="switchCat('work')">💼 Work & Travel <span class="cat-count">2</span></button>
-    <button class="cat-btn" data-cat="fun" onclick="switchCat('fun')">⚽ Entertainment <span class="cat-count">1</span></button>
+    <button class="cat-btn" data-cat="life" onclick="switchCat('life')">🌍 Life & Services <span class="cat-count">5</span></button>
+    <button class="cat-btn" data-cat="work" onclick="switchCat('work')">💼 Work & Travel <span class="cat-count">3</span></button>
+    <button class="cat-btn" data-cat="explore" onclick="switchCat('explore')">🏖️ Explore SL <span class="cat-count">3</span></button>
+    <button class="cat-btn" data-cat="fun" onclick="switchCat('fun')">⚽ Entertainment <span class="cat-count">2</span></button>
     <button class="cat-btn" data-cat="ai" onclick="switchCat('ai')">🤖 AI Chat <span class="cat-count">1</span></button>
   </div>
   <div class="subtab-row" id="subtab-row"></div>
@@ -259,9 +306,9 @@ footer strong{color:var(--primary);}
     <div class="card-title">⛽ Fuel & Daily Prices — Sierra Leone</div>
     <div class="card-sub">Current prices · NP (National Petroleum) regulated</div>
     <div class="fuel-grid">
-      <div class="fuel-card"><div class="fuel-icon">⛽</div><div class="fuel-name">Petrol (Gasoline)</div><div class="fuel-price">Le 35</div><div class="fuel-sub">Per litre · Freetown avg</div></div>
-      <div class="fuel-card"><div class="fuel-icon">🛢️</div><div class="fuel-name">Diesel (Gasoil)</div><div class="fuel-price">Le 32</div><div class="fuel-sub">Per litre · Freetown avg</div></div>
-      <div class="fuel-card"><div class="fuel-icon">🍳</div><div class="fuel-name">LPG Cooking Gas</div><div class="fuel-price">Le 180</div><div class="fuel-sub">Per kg cylinder</div></div>
+      <div class="fuel-card"><div class="fuel-icon">⛽</div><div class="fuel-name">Petrol (Gasoline)</div><div class="fuel-price" id="price-petrol">Le 35</div><div class="fuel-sub">Per litre · Freetown avg</div></div>
+      <div class="fuel-card"><div class="fuel-icon">🛢️</div><div class="fuel-name">Diesel (Gasoil)</div><div class="fuel-price" id="price-diesel">Le 32</div><div class="fuel-sub">Per litre · Freetown avg</div></div>
+      <div class="fuel-card"><div class="fuel-icon">🍳</div><div class="fuel-name">LPG Cooking Gas</div><div class="fuel-price" id="price-lpg">Le 180</div><div class="fuel-sub">Per kg cylinder</div></div>
       <div class="fuel-card"><div class="fuel-icon">⚡</div><div class="fuel-name">EDSA Electricity</div><div class="fuel-price">Le 3.50</div><div class="fuel-sub">Per kWh · Freetown</div></div>
     </div>
     <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.2);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--mid);">
@@ -529,10 +576,195 @@ footer strong{color:var(--primary);}
   </div>
 </div>
 
+
+<!-- TAX / SALARY CALCULATOR -->
+<div class="panel" id="panel-tax">
+  <div class="card">
+    <div class="card-title">🧮 Income Tax Calculator — Sierra Leone</div>
+    <div class="card-sub">Estimate your PAYE tax based on NRA 2025/2026 brackets</div>
+    <label class="field-label">Annual Gross Salary (SLE)</label>
+    <input type="number" id="tax-salary" placeholder="e.g. 120000" oninput="calcTax()">
+    <div id="tax-result" style="display:none;margin-top:16px;">
+      <div class="g2" style="gap:10px;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;"><div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Annual Tax</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--primary);" id="tax-annual">—</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;"><div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Monthly Tax</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--primary);" id="tax-monthly">—</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;"><div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Net Annual Pay</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#1EB53A;" id="tax-net">—</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;"><div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Effective Rate</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--red);" id="tax-rate">—</div></div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--mid);background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.12);border-radius:10px;padding:10px 14px;">
+      ℹ️ Based on NRA Sierra Leone tax brackets 2025. Consult <a href="https://www.nra.gov.sl" target="_blank" style="color:var(--primary);">nra.gov.sl</a> for official figures.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💰 Salary Benchmarks — Sierra Leone</div>
+    <div class="card-sub">Average salaries by role in Freetown (2025/2026)</div>
+    <div class="g-auto">
+      <div class="rate-chip"><div class="curr">Software Developer</div><div class="val">Le 8K–25K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Medical Doctor</div><div class="val">Le 12K–35K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Bank Officer</div><div class="val">Le 5K–15K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Teacher (Gov't)</div><div class="val">Le 2K–6K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Nurse</div><div class="val">Le 3K–8K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Civil Engineer</div><div class="val">Le 8K–20K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Lawyer</div><div class="val">Le 10K–30K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Accountant</div><div class="val">Le 4K–12K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Security Guard</div><div class="val">Le 800–2K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Driver</div><div class="val">Le 1.5K–4K/mo</div></div>
+      <div class="rate-chip"><div class="curr">Journalist</div><div class="val">Le 2K–8K/mo</div></div>
+      <div class="rate-chip"><div class="curr">NGO/UN Staff</div><div class="val">Le 15K–60K/mo</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--mid);margin-top:10px;padding:8px;background:rgba(0,0,0,.03);border-radius:8px;">ℹ️ Figures are estimates for Freetown 2025/2026. NGO/UN salaries significantly higher. Actual pay varies by employer, experience and sector.</div>
+  </div>
+</div>
+
+<!-- BSL MONETARY POLICY -->
+<div class="panel" id="panel-bsl">
+  <div class="card">
+    <div class="card-title">🏦 BSL Monetary Policy Rates</div>
+    <div class="card-sub">Key rates set by the Bank of Sierra Leone</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
+      <div style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:white;border-radius:14px;padding:18px;text-align:center;">
+        <div style="font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Policy Rate (MPR)</div>
+        <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:900;" id="bsl-mpr">22%</div>
+        <div style="font-size:11px;opacity:.7;margin-top:4px;">Q1 2026</div>
+      </div>
+      <div style="background:rgba(0,114,198,.08);border:1px solid rgba(0,114,198,.2);border-radius:14px;padding:18px;text-align:center;">
+        <div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Cash Reserve Ratio</div>
+        <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:900;color:var(--charcoal);" id="bsl-crr">10%</div>
+        <div style="font-size:11px;color:var(--mid);margin-top:4px;">Commercial banks</div>
+      </div>
+      <div style="background:rgba(214,48,49,.08);border:1px solid rgba(214,48,49,.2);border-radius:14px;padding:18px;text-align:center;">
+        <div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Inflation Rate</div>
+        <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:900;color:#d63031;" id="bsl-inflation">32%</div>
+        <div style="font-size:11px;color:var(--mid);margin-top:4px;">Stats SL 2025</div>
+      </div>
+      <div style="background:rgba(30,181,58,.08);border:1px solid rgba(30,181,58,.2);border-radius:14px;padding:18px;text-align:center;">
+        <div style="font-size:11px;color:var(--mid);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">GDP Growth</div>
+        <div style="font-family:'Syne',sans-serif;font-size:36px;font-weight:900;color:var(--primary);">4.2%</div>
+        <div style="font-size:11px;color:var(--mid);margin-top:4px;">IMF Estimate 2025</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,180,0,.06);border:1px solid rgba(255,180,0,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--mid);margin-bottom:14px;">
+      ⚠️ Always verify on <a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);">bsl.gov.sl</a> before making financial decisions.
+    </div>
+    <div style="font-weight:700;font-size:14px;margin-bottom:10px;font-family:'Syne',sans-serif;">📅 BSL MPC History</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="border-bottom:2px solid var(--border);">
+          <th style="padding:8px;text-align:left;font-size:11px;color:var(--mid);font-weight:600;">Date</th>
+          <th style="padding:8px;text-align:right;font-size:11px;color:var(--mid);font-weight:600;">MPR</th>
+          <th style="padding:8px;text-align:right;font-size:11px;color:var(--mid);font-weight:600;">Change</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 8px;font-weight:600;">Q1 2026</td><td style="padding:10px 8px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;">22.00%</td><td style="padding:10px 8px;text-align:right;color:var(--mid);">—</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 8px;font-weight:600;">Q3 2025</td><td style="padding:10px 8px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;">21.50%</td><td style="padding:10px 8px;text-align:right;color:var(--red);">+50bps</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 8px;font-weight:600;">Q1 2025</td><td style="padding:10px 8px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;">21.00%</td><td style="padding:10px 8px;text-align:right;color:var(--red);">+50bps</td></tr>
+          <tr><td style="padding:10px 8px;font-weight:600;">Q3 2024</td><td style="padding:10px 8px;text-align:right;font-family:'Syne',sans-serif;font-weight:700;">20.50%</td><td style="padding:10px 8px;text-align:right;color:var(--red);">+25bps</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px;text-align:center;"><a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);font-size:13px;font-weight:600;">Visit BSL Official Website →</a></div>
+  </div>
+</div>
+
+<!-- PRAYER TIMES -->
+<div class="panel" id="panel-prayer">
+  <div class="card">
+    <div class="card-title">🕌 Daily Prayer Times — Sierra Leone</div>
+    <div class="card-sub">Islamic prayer times · Sierra Leone is ~77% Muslim</div>
+    <select id="prayer-city" onchange="loadPrayerTimes()" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--charcoal);font-size:14px;margin-bottom:14px;">
+      <option value="Freetown">Freetown</option>
+      <option value="Bo">Bo</option>
+      <option value="Kenema">Kenema</option>
+      <option value="Makeni">Makeni</option>
+      <option value="Koidu">Koidu</option>
+      <option value="Port Loko">Port Loko</option>
+      <option value="Kambia">Kambia</option>
+    </select>
+    <div class="loading-row" id="prayer-loading"><div class="spinner"></div> Loading prayer times...</div>
+    <div id="prayer-grid" style="display:none;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:14px;">
+        <div style="background:linear-gradient(135deg,#0d2b18,#1a4d2e);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🌙</div><div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Fajr</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;" id="pt-fajr">--:--</div></div>
+        <div style="background:linear-gradient(135deg,#1a2e4d,#0d1f3c);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🌅</div><div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Sunrise</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;" id="pt-sunrise">--:--</div></div>
+        <div style="background:linear-gradient(135deg,#2e1a00,#4d2d00);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">☀️</div><div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Dhuhr</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;" id="pt-dhuhr">--:--</div></div>
+        <div style="background:linear-gradient(135deg,#2e2200,#4d3800);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🌤️</div><div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Asr</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;" id="pt-asr">--:--</div></div>
+        <div style="background:linear-gradient(135deg,#1a0d2e,#2e1a4d);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🌇</div><div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Maghrib</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;" id="pt-maghrib">--:--</div></div>
+        <div style="background:linear-gradient(135deg,#0d1a2e,#1a2e4d);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:20px;margin-bottom:4px;">🌃</div><div style="font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Isha</div><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;" id="pt-isha">--:--</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--mid);text-align:center;" id="prayer-date-label"></div>
+      <div style="font-size:11px;color:var(--mid);text-align:center;margin-top:4px;">Method: Muslim World League · Times are approximate</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOURISM -->
+<div class="panel" id="panel-tourism">
+  <div class="card">
+    <div class="card-title">🏖️ Sierra Leone Tourism Guide</div>
+    <div class="card-sub">Discover amazing places to visit across Sierra Leone</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;" id="tourism-type-chips">
+      <div class="curr-chip active" data-type="all" onclick="filterTourism(this,'all')">🗺️ All</div>
+      <div class="curr-chip" data-type="beach" onclick="filterTourism(this,'beach')">🏖️ Beaches</div>
+      <div class="curr-chip" data-type="nature" onclick="filterTourism(this,'nature')">🌿 Nature</div>
+      <div class="curr-chip" data-type="history" onclick="filterTourism(this,'history')">🏛️ History</div>
+      <div class="curr-chip" data-type="adventure" onclick="filterTourism(this,'adventure')">🧗 Adventure</div>
+    </div>
+    <div id="tourism-list"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">💡 Essential Sierra Leone Travel Tips</div>
+    <div class="card-sub">Smart tips for visiting Sierra Leone</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="font-size:20px;flex-shrink:0;">✈️</div><div><div style="font-weight:700;font-size:13px;margin-bottom:2px;">Entry Requirements</div><div style="font-size:12px;color:var(--mid);">ECOWAS citizens enter visa-free. Most others require a visa. Yellow fever vaccination certificate required. Check <a href="https://immigration.gov.sl" target="_blank" style="color:var(--primary);">immigration.gov.sl</a>.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="font-size:20px;flex-shrink:0;">💰</div><div><div style="font-weight:700;font-size:13px;margin-bottom:2px;">Money & Payments</div><div style="font-size:12px;color:var(--mid);">New Leone (SLE) is the currency. USD/GBP accepted at hotels. ATMs in Freetown only. Carry cash outside Freetown. Orange Money & Africell MoMo widely used.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="font-size:20px;flex-shrink:0;">🌧️</div><div><div style="font-weight:700;font-size:13px;margin-bottom:2px;">Best Time to Visit</div><div style="font-size:12px;color:var(--mid);">Dry season (Nov–Apr) is best. Rainy season (May–Oct) can cause road closures. Beaches best Dec–Mar.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="font-size:20px;flex-shrink:0;">🚗</div><div><div style="font-weight:700;font-size:13px;margin-bottom:2px;">Getting Around</div><div style="font-size:12px;color:var(--mid);">Poda-podas (minibuses) are cheapest. Taxis and Okadas available. 4WD recommended upcountry. Freetown–Lungi ferry or helicopter for airport access.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="font-size:20px;flex-shrink:0;">🏥</div><div><div style="font-weight:700;font-size:13px;margin-bottom:2px;">Health & Safety</div><div style="font-size:12px;color:var(--mid);">Take malaria prophylaxis. Drink bottled water only. Connaught Hospital in Freetown for emergencies. Travel insurance strongly recommended.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- KRIO PHRASE OF THE DAY -->
+<div class="panel" id="panel-krio">
+  <div class="card">
+    <div class="card-title">🗣️ Krio Phrase of the Day</div>
+    <div class="card-sub">Learn Sierra Leone Krio — the national lingua franca</div>
+    <div id="krio-card" style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:white;border-radius:16px;padding:24px;margin-bottom:16px;text-align:center;">
+      <div style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">KRIO PHRASE</div>
+      <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;" id="krio-phrase">Aw di bodi?</div>
+      <div style="font-size:16px;opacity:.9;margin-bottom:6px;" id="krio-meaning">How are you? / How's the body?</div>
+      <div style="font-size:13px;opacity:.75;" id="krio-usage">Used as a casual greeting among friends</div>
+    </div>
+    <button onclick="nextKrio()" style="width:100%;background:var(--primary);color:white;border:none;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:16px;">Next Phrase 🔀</button>
+    <div class="card-title" style="font-size:14px;margin-bottom:10px;">📚 Common Krio Phrases</div>
+    <div style="display:flex;flex-direction:column;gap:8px;" id="krio-list"></div>
+  </div>
+</div>
+
+<!-- UK JOBS FOR SIERRA LEONEANS -->
+<div class="panel" id="panel-ukjobs">
+  <div class="card">
+    <div class="card-title">🇬🇧 UK Jobs for Sierra Leoneans</div>
+    <div class="card-sub">Visa-sponsored roles open to Sierra Leonean applicants</div>
+    <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.2);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);margin-bottom:14px;">
+      🇬🇧 The UK has a strong Sierra Leonean diaspora. Many roles below offer Skilled Worker Visa sponsorship. Sierra Leone passport holders can work in the UK with the right visa.
+    </div>
+    <div class="g2" style="margin-bottom:14px;">
+      <a href="https://www.jobs.nhs.uk" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">🏥</div><div style="font-weight:700;font-size:13px;">NHS Jobs UK</div><div style="font-size:11px;color:var(--mid);">Healthcare · Visa sponsored</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Browse NHS Jobs →</div></a>
+      <a href="https://www.gov.uk/find-a-job" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">🇬🇧</div><div style="font-weight:700;font-size:13px;">UK Gov Find a Job</div><div style="font-size:11px;color:var(--mid);">Official UK job portal</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Browse Jobs →</div></a>
+      <a href="https://www.reed.co.uk" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">📋</div><div style="font-weight:700;font-size:13px;">Reed UK</div><div style="font-size:11px;color:var(--mid);">Jobs across all sectors</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Browse Jobs →</div></a>
+      <a href="https://uk.indeed.com" target="_blank" style="text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:block;"><div style="font-size:24px;margin-bottom:6px;">🔍</div><div style="font-weight:700;font-size:13px;">Indeed UK</div><div style="font-size:11px;color:var(--mid);">Thousands of listings</div><div style="color:var(--primary);font-size:11px;margin-top:6px;font-weight:600;">Browse Jobs →</div></a>
+    </div>
+    <div style="background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.12);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);">
+      💡 <strong>Tip:</strong> Search "Skilled Worker Visa sponsor" on UK job boards. Healthcare (NHS), social care, engineering, and IT are the most common sponsored sectors for Sierra Leoneans.
+    </div>
+  </div>
+</div>
+
 </div><!-- end panels -->
 
 <footer>
-  🇸🇱 <strong>SaloneHub</strong> — Sierra Leone Daily Dashboard · Rates via ExchangeRate-API · Weather via Open-Meteo · <a href="#">Privacy</a> · <a href="#">Terms</a> · Not financial advice
+  🇸🇱 <strong>SaloneHub</strong> — Sierra Leone Daily Dashboard · Rates via ExchangeRate-API · Weather via Open-Meteo · Prayer times via Aladhan API · News via RSS feeds · <a href="#">Privacy</a> · <a href="#">Terms</a> · Not financial advice · <a href="https://www.sierraleonehub.com">sierraleonehub.com</a>
 </footer>
 
 <div class="toast" id="toast"></div>
@@ -547,8 +779,9 @@ footer strong{color:var(--primary);}
   <div id="prefs-panel">
     <div class="prefs-header"><h3>⚙️ Your Preferences</h3><button class="prefs-close" onclick="closePrefs()">✕</button></div>
     <div class="prefs-body">
-      <div class="prefs-section"><div class="prefs-section-title">🌤️ Default City</div><div class="prefs-field"><label>City</label><select id="pref-city"><option>Freetown</option><option>Bo</option><option>Kenema</option><option>Makeni</option><option>Koidu</option></select></div></div>
-      <div class="prefs-section"><div class="prefs-section-title">💱 Default Currency</div><div class="prefs-field"><label>Currency</label><select id="pref-currency"><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option><option value="EUR">🇪🇺 EUR</option></select></div></div>
+      <div class="prefs-section"><div class="prefs-section-title">🌤️ Default City</div><div class="prefs-field"><label>City</label><select id="pref-city"><option>Freetown</option><option>Bo</option><option>Kenema</option><option>Makeni</option><option>Koidu</option><option>Port Loko</option><option>Kambia</option><option>Bonthe</option></select></div></div>
+      <div class="prefs-section"><div class="prefs-section-title">💱 Default Currency</div><div class="prefs-field"><label>Currency</label><select id="pref-currency"><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option><option value="EUR">🇪🇺 EUR</option><option value="GMD">🇬🇲 GMD</option><option value="GHS">🇬🇭 GHS</option></select></div></div>
+      <div class="prefs-section"><div class="prefs-section-title">🕌 Prayer City</div><div class="prefs-field"><label>City for Prayer Times</label><select id="pref-prayer-city"><option>Freetown</option><option>Bo</option><option>Kenema</option><option>Makeni</option><option>Koidu</option></select></div></div>
       <button class="prefs-save-btn" onclick="savePrefs()">💾 Save Preferences</button>
     </div>
   </div>
@@ -557,11 +790,12 @@ footer strong{color:var(--primary);}
 <script>
 const SYM='Le ',BASE='SLE',COUNTRY='Sierra Leone',CC='sl';
 const CAT_TABS={
-  money:[{id:'currency',label:'💱 Rates'},{id:'fuel',label:'⛽ Fuel & Prices'},{id:'banking',label:'📲 Mobile Money'}],
+  money:[{id:'currency',label:'💱 Rates'},{id:'fuel',label:'⛽ Fuel & Prices'},{id:'banking',label:'📲 Mobile Money'},{id:'bsl',label:'🏦 BSL Rates'}],
   news:[{id:'news',label:'📰 News'},{id:'laws',label:'⚖️ Laws'},{id:'exams',label:'📚 Exams'},{id:'holidays',label:'🎉 Holidays'}],
-  life:[{id:'weather',label:'🌤️ Weather'},{id:'power',label:'⚡ EDSA Power'},{id:'emergency',label:'📞 Emergency'},{id:'networks',label:'📱 Networks'}],
-  work:[{id:'jobs',label:'💼 Remote Jobs'},{id:'visa',label:'🛂 Visa-Free'}],
-  fun:[{id:'football',label:'⚽ Football'}],
+  life:[{id:'weather',label:'🌤️ Weather'},{id:'power',label:'⚡ EDSA Power'},{id:'emergency',label:'📞 Emergency'},{id:'networks',label:'📱 Networks'},{id:'prayer',label:'🕌 Prayer Times'}],
+  work:[{id:'jobs',label:'💼 Remote Jobs'},{id:'visa',label:'🛂 Visa-Free'},{id:'ukjobs',label:'🇬🇧 UK Jobs'},{id:'tax',label:'🧮 Tax & Salary'}],
+  explore:[{id:'tourism',label:'🏖️ Tourism'},{id:'krio',label:'🗣️ Krio Phrases'},{id:'football',label:'⚽ Football'}],
+  fun:[{id:'football',label:'⚽ Football'},{id:'krio',label:'🗣️ Krio'}],
   ai:[{id:'chat',label:'🤖 AI Chat'}]
 };
 let currentCat='money',rates={},selectedCurr='USD',footballLeague='PL',footballView='results',footData=null;
@@ -584,6 +818,9 @@ function switchTab(id){
   if(id==='football')loadLeague('PL','EPL');
   if(id==='jobs')loadJobs();
   if(id==='holidays')initHolidays();
+  if(id==='prayer')loadPrayerTimes();
+  if(id==='tourism'){renderTourism();}
+  if(id==='krio'){renderKrioCard();renderKrioList();}
 }
 
 // GREETING
@@ -1006,11 +1243,174 @@ function savePrefs(){localStorage.setItem('salonehub_prefs',JSON.stringify({city
 function acceptCookies(){localStorage.setItem('sl_consent','accepted');document.getElementById('cookie-banner').classList.remove('show');}
 function declineCookies(){localStorage.setItem('sl_consent','declined');document.getElementById('cookie-banner').classList.remove('show');}
 
+// ── ALERT BANNERS ──────────────────────────────────────────────
+(function(){
+  if(window.SALONEHUB_ALERTS?.power?.active){
+    const b=document.getElementById('power-alert-banner');
+    const m=document.getElementById('power-alert-msg');
+    if(b&&m){m.textContent=window.SALONEHUB_ALERTS.power.message;b.style.display='block';}
+  }
+  if(window.SALONEHUB_ALERTS?.security?.active){
+    const b=document.getElementById('security-alert-banner');
+    const m=document.getElementById('security-alert-msg');
+    if(b&&m){m.textContent=window.SALONEHUB_ALERTS.security.message;b.style.display='block';}
+  }
+})();
+
+// ── TAX CALCULATOR ──────────────────────────────────────────────
+function calcTax(){
+  const gross=parseFloat(document.getElementById('tax-salary').value)||0;
+  if(!gross){document.getElementById('tax-result').style.display='none';return;}
+  // NRA Sierra Leone PAYE brackets (approximate 2025)
+  let tax=0;
+  const brackets=[{up:12000,rate:0},{up:24000,rate:.15},{up:48000,rate:.20},{up:Infinity,rate:.30}];
+  let prev=0;
+  for(const b of brackets){
+    if(gross<=prev)break;
+    const slice=Math.min(gross,b.up)-prev;
+    tax+=slice*b.rate;
+    prev=b.up;
+    if(gross<=b.up)break;
+  }
+  const net=gross-tax;
+  const fmt=v=>'Le '+v.toLocaleString('en-SL',{minimumFractionDigits:0,maximumFractionDigits:0});
+  document.getElementById('tax-annual').textContent=fmt(tax);
+  document.getElementById('tax-monthly').textContent=fmt(tax/12);
+  document.getElementById('tax-net').textContent=fmt(net);
+  document.getElementById('tax-rate').textContent=(tax/gross*100).toFixed(1)+'%';
+  document.getElementById('tax-result').style.display='block';
+}
+
+// ── PRAYER TIMES ──────────────────────────────────────────────
+async function loadPrayerTimes(){
+  const city=document.getElementById('prayer-city')?.value||'Freetown';
+  const coords={Freetown:{lat:8.484,lon:-13.234},Bo:{lat:7.965,lon:-11.738},Kenema:{lat:7.876,lon:-11.191},Makeni:{lat:8.882,lon:-12.048},Koidu:{lat:8.634,lon:-10.969},'Port Loko':{lat:8.878,lon:-12.870},Kambia:{lat:9.125,lon:-12.918}};
+  const c=coords[city]||coords.Freetown;
+  document.getElementById('prayer-loading').style.display='flex';
+  document.getElementById('prayer-grid').style.display='none';
+  try{
+    const today=new Date();
+    const url=`https://api.aladhan.com/v1/timings/${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}?latitude=${c.lat}&longitude=${c.lon}&method=3`;
+    const r=await fetch(url);const d=await r.json();
+    const t=d.data.timings;
+    document.getElementById('pt-fajr').textContent=t.Fajr;
+    document.getElementById('pt-sunrise').textContent=t.Sunrise;
+    document.getElementById('pt-dhuhr').textContent=t.Dhuhr;
+    document.getElementById('pt-asr').textContent=t.Asr;
+    document.getElementById('pt-maghrib').textContent=t.Maghrib;
+    document.getElementById('pt-isha').textContent=t.Isha;
+    document.getElementById('prayer-date-label').textContent=today.toLocaleDateString('en-SL',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+city;
+    document.getElementById('prayer-loading').style.display='none';
+    document.getElementById('prayer-grid').style.display='block';
+  }catch(e){document.getElementById('prayer-loading').innerHTML='<span style="color:var(--mid);font-size:13px;">Could not load prayer times. Check connection.</span>';}
+}
+
+// ── TOURISM ──────────────────────────────────────────────────────
+const SL_PLACES=[
+  {name:'Lumley Beach',region:'Freetown',type:'beach',desc:'The most popular beach in Freetown — golden sand, beach bars and vibrant nightlife. Great for sunset walks.',emoji:'🏖️',tip:'Best visited Dec–Mar. Avoid swimming after heavy rain.'},
+  {name:'Tokeh Beach',region:'Southern',type:'beach',desc:'Pristine white-sand beach 40km from Freetown. Crystal-clear water, fewer crowds. Perfect for a day trip.',emoji:'🌊',tip:'30–45 min drive from Freetown. Bring your own supplies.'},
+  {name:'Bureh Beach',region:'Southern',type:'beach',desc:'One of West Africa's best surf beaches. Consistent waves year-round, surf camps available.',emoji:'🏄',tip:'Ideal for surfers. Accommodation available on the beach.'},
+  {name:'Banana Islands',region:'Southern',type:'beach',desc:'Three stunning islands (Dublin, Mes-Meheux, Ricketts) accessible by boat. Snorkelling and diving paradise.',emoji:'🏝️',tip:'Take a boat from Kent village (~45 min). Best Apr–Oct.'},
+  {name:'Tacugama Chimpanzee Sanctuary',region:'Freetown',type:'nature',desc:'Award-winning sanctuary rescuing orphaned chimps in the Western Area Forest Reserve. Guided tours available.',emoji:'🐒',tip:'Book tours in advance at tacugama.com. Family-friendly.'},
+  {name:'Outamba-Kilimi National Park',region:'Northern',type:'nature',desc:'Sierra Leone's largest national park. Hippos, chimps, elephants and over 200 bird species.',emoji:'🐘',tip:'Best Nov–Apr. Hire a local guide. Basic accommodation available.'},
+  {name:'Tiwai Island Wildlife Sanctuary',region:'Southern',type:'nature',desc:'Pygmy hippos, Diana monkeys and 135 bird species on a river island. One of Africa's most biodiverse spots.',emoji:'🦛',tip:'2-hour drive from Freetown. Book guides in advance.'},
+  {name:'Bunce Island',region:'Freetown',type:'history',desc:'Historic British slave trading post. One of the most significant slave trade sites in West Africa. Now a national monument.',emoji:'⛓️',tip:'40-min boat from Freetown. Guided tours essential for context.'},
+  {name:'Cotton Tree',region:'Freetown',type:'history',desc:'Ancient tree in central Freetown, symbol of the city's founding by freed slaves in 1787. National landmark.',emoji:'🌳',tip:'Easy to visit on foot. Located in central Freetown near law courts.'},
+  {name:'Sierra Leone National Museum',region:'Freetown',type:'history',desc:'Exhibits on pre-colonial kingdoms, the slave trade, civil war history and traditional cultures.',emoji:'🏛️',tip:'Located on Siaka Stevens Street, Freetown. Nominal entrance fee.'},
+  {name:'Mount Bintumani (Loma Mountains)',region:'Northern',type:'adventure',desc:'Highest peak in West Africa west of Mount Cameroon at 1,945m. Stunning trekking through forest.',emoji:'⛰️',tip:'Challenging multi-day trek. Hire local guide. Best Nov–Mar.'},
+  {name:'Gola Rainforest National Park',region:'Eastern',type:'adventure',desc:'Critically endangered rainforest on the Liberia border. Home to pygmy hippos, chimpanzees and rare birds.',emoji:'🌿',tip:'Remote. Arrange permits via RSPB/Conservation Society of SL.'},
+];
+
+let tourismFilter='all';
+function filterTourism(el,type){
+  tourismFilter=type;
+  document.querySelectorAll('#tourism-type-chips .curr-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderTourism();
+}
+function renderTourism(){
+  const places=tourismFilter==='all'?SL_PLACES:SL_PLACES.filter(p=>p.type===tourismFilter);
+  document.getElementById('tourism-list').innerHTML=places.map(p=>`
+    <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border);">
+      <div style="font-size:32px;flex-shrink:0;width:48px;text-align:center;">${p.emoji}</div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+          <div style="font-weight:700;font-size:14px;">${p.name}</div>
+          <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(30,181,58,.1);color:var(--primary);">${p.region}</span>
+          <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(0,114,198,.1);color:var(--blue);">${p.type}</span>
+        </div>
+        <div style="font-size:12px;color:var(--mid);line-height:1.6;margin-bottom:6px;">${p.desc}</div>
+        <div style="font-size:11px;background:rgba(30,181,58,.06);border:1px solid rgba(30,181,58,.12);border-radius:8px;padding:6px 10px;">💡 ${p.tip}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── KRIO PHRASES ──────────────────────────────────────────────────
+const KRIO_PHRASES=[
+  {phrase:'Aw di bodi?',meaning:'How are you? (lit. How's the body?)',usage:'Casual greeting among friends'},
+  {phrase:'I bodi fayn',meaning:'I'm fine / My body is fine',usage:'Response to "Aw di bodi?"'},
+  {phrase:'Aw yu du?',meaning:'How do you do? / How are you?',usage:'Polite formal greeting'},
+  {phrase:'Tenki',meaning:'Thank you',usage:'Everyday expression of gratitude'},
+  {phrase:'Tru tru',meaning:'Truly / Really? / No kidding!',usage:'Expressing surprise or emphasis'},
+  {phrase:'Kushe',meaning:'Hello / Hi',usage:'Basic greeting, any time of day'},
+  {phrase:'Kushe wa?',meaning:'Hello there! / What's up?',usage:'Friendly informal greeting'},
+  {phrase:'E dey go',meaning:'It's going / Things are moving along',usage:'Response meaning things are okay'},
+  {phrase:'Dem pikin',meaning:'The children / Those kids',usage:'Referring to children'},
+  {phrase:'Una',meaning:'You all / All of you (plural)',usage:'Second person plural pronoun'},
+  {phrase:'Na so',meaning:'That's it / That's how it is / Yes, exactly',usage:'Agreement or confirmation'},
+  {phrase:'Wetin?',meaning:'What? / What is it?',usage:'Asking what something is'},
+  {phrase:'Wey yu dey go?',meaning:'Where are you going?',usage:'Casual inquiry about destination'},
+  {phrase:'Dat na tif man!',meaning:'That's a thief!',usage:'Warning about a thief'},
+  {phrase:'Salone',meaning:'Sierra Leone (affectionate short form)',usage:'Common informal name for the country'},
+  {phrase:'Bra / Sista',meaning:'Brother / Sister (term of address)',usage:'Friendly address to anyone'},
+  {phrase:'Nar mek so',meaning:'Don't do that / Stop it',usage:'Telling someone to stop a behaviour'},
+  {phrase:'Wan wan',meaning:'One by one / Slowly slowly',usage:'Take it easy, don't rush'},
+];
+
+let krioIndex=0;
+function renderKrioCard(){
+  const p=KRIO_PHRASES[krioIndex];
+  document.getElementById('krio-phrase').textContent=p.phrase;
+  document.getElementById('krio-meaning').textContent=p.meaning;
+  document.getElementById('krio-usage').textContent=p.usage;
+}
+function nextKrio(){
+  krioIndex=(krioIndex+Math.floor(Math.random()*KRIO_PHRASES.length-1)+1)%KRIO_PHRASES.length;
+  renderKrioCard();
+}
+function renderKrioList(){
+  const el=document.getElementById('krio-list');
+  if(!el)return;
+  el.innerHTML=KRIO_PHRASES.slice(0,10).map(p=>`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;gap:10px;">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--primary);flex-shrink:0;">${p.phrase}</div>
+      <div style="text-align:right;"><div style="font-size:12px;font-weight:600;">${p.meaning.split('(')[0].trim()}</div><div style="font-size:11px;color:var(--mid);margin-top:2px;">${p.usage}</div></div>
+    </div>`).join('');
+}
+
+// ── BSL RATES — populate from admin panel ──────────────────────
+(function(){
+  if(window.SALONEHUB_BSL){
+    const m=document.getElementById('bsl-mpr');const c=document.getElementById('bsl-crr');const i=document.getElementById('bsl-inflation');
+    if(m)m.textContent=window.SALONEHUB_BSL.mpr;
+    if(c)c.textContent=window.SALONEHUB_BSL.crr;
+    if(i)i.textContent=window.SALONEHUB_BSL.inflation;
+  }
+  // ── FUEL PRICES from admin panel ──
+  if(window.SALONEHUB_FUEL){
+    const f=window.SALONEHUB_FUEL;
+    const p=document.getElementById('price-petrol');const d=document.getElementById('price-diesel');const l=document.getElementById('price-lpg');
+    if(p)p.textContent='Le '+f.petrol;
+    if(d)d.textContent='Le '+f.diesel;
+    if(l)l.textContent='Le '+f.lpg;
+  }
+})();
+
 // INIT
 const st=localStorage.getItem('salonehub_theme');
 if(st==='dark'||(!st&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.setAttribute('data-theme','dark');document.getElementById('theme-icon').textContent='☀️';}
 if(!localStorage.getItem('sl_consent'))setTimeout(()=>document.getElementById('cookie-banner').classList.add('show'),2000);
-switchCat('money');loadRates();renderPower();initHolidays();
+switchCat('money');loadRates();renderPower();initHolidays();renderKrioList();renderTourism();
 </script>
 </body>
 </html>
