@@ -349,28 +349,93 @@ footer strong{color:var(--primary);}
 
 <!-- BANKING / MOBILE MONEY -->
 <div class="panel" id="panel-banking">
+
+  <!-- TRANSFER COMPARISON -->
   <div class="card">
-    <div class="card-title">📲 Mobile Money — Sierra Leone</div>
-    <div class="card-sub">Tap to copy · Works without internet</div>
-    <div class="g-auto">
-      <div class="rate-chip" onclick="copyText('*144#','Africell MoMo copied')" style="cursor:pointer;"><div class="curr">Africell Money</div><div class="val">*144#</div></div>
-      <div class="rate-chip" onclick="copyText('*554#','Orange Money copied')" style="cursor:pointer;"><div class="curr">Orange Money SL</div><div class="val">*554#</div></div>
-      <div class="rate-chip" onclick="copyText('*777#','Qcell copied')" style="cursor:pointer;"><div class="curr">Qcell Money</div><div class="val">*777#</div></div>
-      <div class="rate-chip" onclick="copyText('*345#','SLCB copied')" style="cursor:pointer;"><div class="curr">SLCB Mobile</div><div class="val">*345#</div></div>
-      <div class="rate-chip" onclick="copyText('*432#','Rokel Commercial copied')" style="cursor:pointer;"><div class="curr">Rokel Commercial</div><div class="val">*432#</div></div>
-      <div class="rate-chip" onclick="copyText('*567#','GT Bank SL copied')" style="cursor:pointer;"><div class="curr">GTBank Sierra Leone</div><div class="val">*567#</div></div>
+    <div class="card-title">💸 International Money Transfer to Sierra Leone</div>
+    <div class="card-sub">Compare rates, fees & speed for sending money to Sierra Leone</div>
+
+    <!-- Amount + currency selector -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div>
+        <label class="field-label">Amount to Send</label>
+        <input type="number" id="send-amount" value="200" oninput="calcRemit()" placeholder="e.g. 200">
+      </div>
+      <div>
+        <label class="field-label">From Currency</label>
+        <select id="send-currency" onchange="calcRemit()">
+          <option value="USD">🇺🇸 USD — US Dollar</option>
+          <option value="GBP" selected>🇬🇧 GBP — British Pound</option>
+          <option value="EUR">🇪🇺 EUR — Euro</option>
+          <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+          <option value="AED">🇦🇪 AED — UAE Dirham</option>
+          <option value="SAR">🇸🇦 SAR — Saudi Riyal</option>
+        </select>
+      </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-title">💸 Send Money to Sierra Leone</div>
-    <div class="card-sub">Estimate how much recipient gets</div>
-    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end;">
-      <div style="flex:1;"><label class="field-label">Amount</label><input type="number" id="send-amount" value="500" oninput="calcRemit()"></div>
-      <div style="flex:1;"><label class="field-label">From</label><select id="send-currency" onchange="calcRemit()"><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option><option value="EUR">🇪🇺 EUR</option><option value="CAD">🇨🇦 CAD</option></select></div>
-    </div>
+
+    <!-- Provider comparison cards -->
     <div id="remit-grid"></div>
-    <div style="font-size:11px;color:var(--mid);margin-top:10px;">⚠️ Estimates only. Verify on provider's official app.</div>
+
+    <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.25);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--mid);margin-top:4px;">
+      ⚠️ <strong>Important:</strong> Rates shown are <strong>estimates only</strong>. Providers like Wise & LemFi may offer rates above BSL rate. Always verify the exact rate on the provider's official app before sending. SaloneHub is not responsible for any financial loss.
+    </div>
   </div>
+
+  <!-- BANK TRANSFER LIMITS -->
+  <div class="card">
+    <div class="card-title">💳 Bank Transfer Limits — Sierra Leone</div>
+    <div class="card-sub">BSL / Bank daily transfer limits by account tier</div>
+    <div class="g-auto" style="margin-bottom:12px;">
+      <div class="rate-chip"><div class="curr">🔴 Tier 1 (No NCP/ID)</div><div class="val">Le 500K/day</div></div>
+      <div class="rate-chip"><div class="curr">🟡 Tier 2 (NCP only)</div><div class="val">Le 2M/day</div></div>
+      <div class="rate-chip"><div class="curr">🟢 Tier 3 (Full KYC)</div><div class="val">Le 10M/day</div></div>
+      <div class="rate-chip"><div class="curr">📱 Mobile Money</div><div class="val">Le 5M/day</div></div>
+      <div class="rate-chip"><div class="curr">🏧 ATM Withdrawal</div><div class="val">Le 2M/day</div></div>
+      <div class="rate-chip"><div class="curr">💳 POS Cash Out</div><div class="val">Le 1M/day</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--mid);">ℹ️ Limits vary by bank. Contact your bank for exact limits. Verify with <a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);">BSL →</a></div>
+  </div>
+
+  <!-- MOBILE MONEY USSD CODES -->
+  <div class="card">
+    <div class="card-title">📲 Mobile Money USSD Codes</div>
+    <div class="card-sub">Tap any code to copy · Works without internet</div>
+
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--primary);margin:8px 0 8px;text-transform:uppercase;letter-spacing:.6px;">📡 Africell Money</div>
+    <div class="g-auto" style="margin-bottom:14px;">
+      <div class="rate-chip" onclick="copyText('*144#','Copied!')" style="cursor:pointer;"><div class="curr">Main Menu</div><div class="val">*144#</div></div>
+      <div class="rate-chip" onclick="copyText('*144*1#','Copied!')" style="cursor:pointer;"><div class="curr">Send Money</div><div class="val">*144*1#</div></div>
+      <div class="rate-chip" onclick="copyText('*144*5#','Copied!')" style="cursor:pointer;"><div class="curr">Check Balance</div><div class="val">*144*5#</div></div>
+      <div class="rate-chip" onclick="copyText('*144*3#','Copied!')" style="cursor:pointer;"><div class="curr">Buy Airtime</div><div class="val">*144*3#</div></div>
+    </div>
+
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--primary);margin:8px 0 8px;text-transform:uppercase;letter-spacing:.6px;">🟠 Orange Money SL</div>
+    <div class="g-auto" style="margin-bottom:14px;">
+      <div class="rate-chip" onclick="copyText('*554#','Copied!')" style="cursor:pointer;"><div class="curr">Main Menu</div><div class="val">*554#</div></div>
+      <div class="rate-chip" onclick="copyText('*554*1#','Copied!')" style="cursor:pointer;"><div class="curr">Send Money</div><div class="val">*554*1#</div></div>
+      <div class="rate-chip" onclick="copyText('*554*5#','Copied!')" style="cursor:pointer;"><div class="curr">Check Balance</div><div class="val">*554*5#</div></div>
+      <div class="rate-chip" onclick="copyText('*554*3#','Copied!')" style="cursor:pointer;"><div class="curr">Buy Airtime</div><div class="val">*554*3#</div></div>
+    </div>
+
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--primary);margin:8px 0 8px;text-transform:uppercase;letter-spacing:.6px;">🔵 Qcell Money</div>
+    <div class="g-auto" style="margin-bottom:14px;">
+      <div class="rate-chip" onclick="copyText('*777#','Copied!')" style="cursor:pointer;"><div class="curr">Main Menu</div><div class="val">*777#</div></div>
+      <div class="rate-chip" onclick="copyText('*777*1#','Copied!')" style="cursor:pointer;"><div class="curr">Send Money</div><div class="val">*777*1#</div></div>
+      <div class="rate-chip" onclick="copyText('*777*6#','Copied!')" style="cursor:pointer;"><div class="curr">Check Balance</div><div class="val">*777*6#</div></div>
+    </div>
+
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--primary);margin:8px 0 8px;text-transform:uppercase;letter-spacing:.6px;">🏦 Bank USSD Codes</div>
+    <div class="g-auto">
+      <div class="rate-chip" onclick="copyText('*345#','Copied!')" style="cursor:pointer;"><div class="curr">SLCB Mobile</div><div class="val">*345#</div></div>
+      <div class="rate-chip" onclick="copyText('*432#','Copied!')" style="cursor:pointer;"><div class="curr">Rokel Commercial</div><div class="val">*432#</div></div>
+      <div class="rate-chip" onclick="copyText('*567#','Copied!')" style="cursor:pointer;"><div class="curr">GTBank SL</div><div class="val">*567#</div></div>
+      <div class="rate-chip" onclick="copyText('*919#','Copied!')" style="cursor:pointer;"><div class="curr">UBA Sierra Leone</div><div class="val">*919#</div></div>
+      <div class="rate-chip" onclick="copyText('*901#','Copied!')" style="cursor:pointer;"><div class="curr">Access Bank SL</div><div class="val">*901#</div></div>
+      <div class="rate-chip" onclick="copyText('*326#','Copied!')" style="cursor:pointer;"><div class="curr">Ecobank SL</div><div class="val">*326#</div></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- CRYPTO -->
@@ -1350,13 +1415,43 @@ function loadJobs(){
   document.getElementById('jobs-list').innerHTML=jobs.map(j=>`<div class="job-card"><div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;"><div><div class="job-title">${j.title}</div><div class="job-company">${j.company}</div></div><div class="job-salary">${j.salary}</div></div><div class="job-tags">${j.tags.map(t=>`<span class="job-tag ${t==='New'?'new':t==='Remote'?'remote':'cat'}">${t}</span>`).join('')}</div><p style="font-size:12px;color:var(--mid);margin-bottom:10px;">${j.desc}</p><a href="${j.link}" target="_blank" class="job-apply">Apply →</a></div>`).join('');
 }
 
-// REMIT
+// MONEY TRANSFER — Sierra Leone specific providers
 function calcRemit(){
-  const amt=parseFloat(document.getElementById('send-amount').value)||500;
+  const amt=parseFloat(document.getElementById('send-amount').value)||200;
   const curr=document.getElementById('send-currency').value;
-  const base=rates[curr]||22;
-  const providers=[{name:'Wise',spread:.98,fee:3,icon:'💙'},{name:'WorldRemit',spread:.97,fee:2.99,icon:'🌍'},{name:'MoneyGram',spread:.96,fee:4.99,icon:'💰'},{name:'Western Union',spread:.95,fee:4,icon:'🏦'}];
-  document.getElementById('remit-grid').innerHTML=providers.map(p=>{const recv=((amt-p.fee)*base*p.spread).toFixed(2);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;"><div><span>${p.icon}</span> <strong style="font-size:13px;">${p.name}</strong><div style="font-size:11px;color:var(--mid);">Fee: ${curr} ${p.fee}</div></div><div style="text-align:right;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--primary);">${SYM}${recv}</div><div style="font-size:10px;color:var(--mid);">Recipient gets</div></div></div>`;}).join('');
+  const base=rates[curr]||24.57;
+
+  // Sierra Leone remittance providers with realistic spreads & fees
+  const providers=[
+    {name:'Wise',icon:'💙',color:'#00B9FF',spread:.994,fee:curr==='GBP'?2.50:3.00,speed:'1–2 hours',link:'https://wise.com/send-money/sierra-leone',tag:'Best rate'},
+    {name:'LemFi',icon:'🟣',color:'#6C3BE4',spread:.990,fee:0,speed:'Minutes',link:'https://www.lemfi.com',tag:'No fees'},
+    {name:'WorldRemit',icon:'🌍',color:'#00A651',spread:.982,fee:curr==='GBP'?1.99:2.99,speed:'Minutes',link:'https://www.worldremit.com/en/sierra-leone',tag:'Fast'},
+    {name:'Remitly',icon:'🔵',color:'#1A56DB',spread:.980,fee:curr==='GBP'?1.99:3.99,speed:'Minutes',link:'https://www.remitly.com/gb/en/sierra-leone',tag:'Popular'},
+    {name:'MoneyGram',icon:'🟠',color:'#E85D04',spread:.972,fee:4.99,speed:'Minutes',link:'https://www.moneygram.com',tag:'Cash pickup'},
+    {name:'Western Union',icon:'🟡',color:'#FFCC00',spread:.965,fee:curr==='GBP'?3.90:4.99,speed:'Minutes',link:'https://www.westernunion.com/sl/en/home.html',tag:'Widely available'},
+  ];
+
+  document.getElementById('remit-grid').innerHTML=providers.map((p,i)=>{
+    const recv=((amt-p.fee)*base*p.spread);
+    const recvFmt=recv>0?('Le '+recv.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')):'—';
+    const isBest=i===0;
+    return `<a href="${p.link}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1.5px solid ${isBest?'var(--primary)':'var(--border)'};border-radius:14px;margin-bottom:10px;text-decoration:none;color:var(--charcoal);background:${isBest?'rgba(30,181,58,.04)':'var(--card)'};transition:all .2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='${isBest?'var(--primary)':'var(--border)'}'">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:${p.color}18;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${p.icon}</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-weight:700;font-size:14px;">${p.name}</span>
+            <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;background:${isBest?'rgba(30,181,58,.12)':'rgba(0,0,0,.06)'};color:${isBest?'var(--primary)':'var(--mid)'};">${p.tag}</span>
+          </div>
+          <div style="font-size:11px;color:var(--mid);margin-top:2px;">Fee: ${p.fee===0?'<span style="color:var(--primary);font-weight:600;">Free</span>':curr+' '+p.fee.toFixed(2)} · ⚡ ${p.speed}</div>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--primary);">${recvFmt}</div>
+        <div style="font-size:10px;color:var(--mid);">recipient gets</div>
+      </div>
+    </a>`;
+  }).join('');
 }
 
 // HOLIDAYS
@@ -1718,6 +1813,8 @@ setTimeout(async()=>{
     }
   }catch(e){}
 },1200);
+// Auto-calc remit once rates are ready
+setTimeout(()=>calcRemit(),2000);
 </script>
 </body>
 </html>
