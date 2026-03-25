@@ -6,6 +6,10 @@
 <title>SaloneHub — Sierra Leone Daily Dashboard | Forex, News & More</title>
 <meta name="description" content="Sierra Leone #1 daily dashboard. Live SLE exchange rates, fuel prices, news, weather, football and more.">
 <meta name="theme-color" content="#1EB53A">
+<!-- Favicon: Sierra Leone flag colours inline SVG -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231EB53A'/%3E%3Crect y='10.67' width='32' height='10.67' fill='%23FFFFFF'/%3E%3Crect y='21.33' width='32' height='10.67' fill='%230072C6'/%3E%3Ctext x='16' y='22' font-size='14' text-anchor='middle' font-family='Arial' fill='%231EB53A'%3E&#x1F1F8;&#x1F1F1;%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" sizes="32x32" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231EB53A'/%3E%3Crect y='10.67' width='32' height='10.67' fill='%23FFFFFF'/%3E%3Crect y='21.33' width='32' height='10.67' fill='%230072C6'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%231EB53A'/%3E%3Crect y='60' width='180' height='60' fill='%23FFFFFF'/%3E%3Crect y='120' width='180' height='60' fill='%230072C6'/%3E%3Ctext x='90' y='110' font-size='72' text-anchor='middle' font-family='Arial'%3E&#x1F1F8;&#x1F1F1;%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -132,7 +136,9 @@ header{position:relative;z-index:10;padding:14px 36px;display:flex;align-items:c
 .job-tag.remote{background:rgba(30,181,58,.1);color:var(--primary);}
 .job-tag.cat{background:rgba(0,114,198,.1);color:var(--blue);}
 .job-tag.new{background:rgba(0,114,198,.15);color:#004a8a;}
-.job-apply{background:var(--primary);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;}
+.job-apply{background:var(--primary);color:white !important;border:none;padding:8px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none !important;display:inline-block;letter-spacing:.3px;}
+.job-apply:hover{background:var(--primary-light);color:white !important;transform:translateY(-1px);}
+[data-theme="dark"] .job-apply{background:var(--primary);color:#000 !important;font-weight:800;}
 .job-board-link{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 12px;text-decoration:none;color:var(--charcoal);transition:all .2s;}
 .job-board-link:hover{border-color:var(--primary);transform:translateY(-2px);}
 .job-board-icon{font-size:28px;margin-bottom:6px;}
@@ -307,7 +313,7 @@ footer strong{color:var(--primary);}
       <div class="fuel-card"><div class="fuel-icon">⚡</div><div class="fuel-name">EDSA Electricity</div><div class="fuel-price">Le 3.50</div><div class="fuel-sub">Per kWh · Freetown</div></div>
     </div>
     <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.2);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--mid);">
-      ⛽ Prices regulated by <strong>National Petroleum</strong> · Vary by region · <a href="https://www.npa.gov.sl" target="_blank" style="color:var(--primary);">Verify with NP →</a>
+      ⛽ Prices regulated by <strong>National Petroleum</strong> · Vary by region · <a href="https://www.nppsl.gov.sl" target="_blank" style="color:var(--primary);">Verify with NP →</a>
     </div>
   </div>
   <div class="card">
@@ -344,13 +350,69 @@ footer strong{color:var(--primary);}
   </div>
   <div class="card">
     <div class="card-title">💸 Send Money to Sierra Leone</div>
-    <div class="card-sub">Estimate how much recipient gets</div>
-    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end;">
-      <div style="flex:1;"><label class="field-label">Amount</label><input type="number" id="send-amount" value="500" oninput="calcRemit()"></div>
-      <div style="flex:1;"><label class="field-label">From</label><select id="send-currency" onchange="calcRemit()"><option value="USD">🇺🇸 USD</option><option value="GBP">🇬🇧 GBP</option><option value="EUR">🇪🇺 EUR</option><option value="CAD">🇨🇦 CAD</option></select></div>
+    <div class="card-sub">Best apps for sending money to Freetown · Compare rates & fees</div>
+
+    <!-- Top SL-specific transfer apps -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
+      <a href="https://www.sendwave.com/sl" target="_blank" rel="noopener" style="text-decoration:none;background:linear-gradient(135deg,#1EB53A,#0d8a2a);color:white;border-radius:14px;padding:14px;text-align:center;display:block;">
+        <div style="font-size:24px;margin-bottom:6px;">🌊</div>
+        <div style="font-weight:800;font-size:13px;">Sendwave</div>
+        <div style="font-size:10px;opacity:.85;margin-top:3px;">Zero fees · Best rate</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;">Top Pick 🏆</div>
+      </a>
+      <a href="https://www.lemfi.com" target="_blank" rel="noopener" style="text-decoration:none;background:linear-gradient(135deg,#00b894,#007a63);color:white;border-radius:14px;padding:14px;text-align:center;display:block;">
+        <div style="font-size:24px;margin-bottom:6px;">💚</div>
+        <div style="font-weight:800;font-size:13px;">LemFi</div>
+        <div style="font-size:10px;opacity:.85;margin-top:3px;">Zero fees · Fast</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;">Popular 🇸🇱</div>
+      </a>
+      <a href="https://wise.com/send-money/sierra-leone" target="_blank" rel="noopener" style="text-decoration:none;background:linear-gradient(135deg,#0072C6,#004a8a);color:white;border-radius:14px;padding:14px;text-align:center;display:block;">
+        <div style="font-size:24px;margin-bottom:6px;">💙</div>
+        <div style="font-weight:800;font-size:13px;">Wise</div>
+        <div style="font-size:10px;opacity:.85;margin-top:3px;">Low fees · Transparent</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;">Trusted ✅</div>
+      </a>
+      <a href="https://www.worldremit.com/en/sierra-leone" target="_blank" rel="noopener" style="text-decoration:none;background:linear-gradient(135deg,#e17055,#c0392b);color:white;border-radius:14px;padding:14px;text-align:center;display:block;">
+        <div style="font-size:24px;margin-bottom:6px;">🌍</div>
+        <div style="font-weight:800;font-size:13px;">WorldRemit</div>
+        <div style="font-size:10px;opacity:.85;margin-top:3px;">Bank · MoMo · Cash</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;">Wide options</div>
+      </a>
+      <a href="https://www.remitly.com" target="_blank" rel="noopener" style="text-decoration:none;background:linear-gradient(135deg,#6c5ce7,#4a3db5);color:white;border-radius:14px;padding:14px;text-align:center;display:block;">
+        <div style="font-size:24px;margin-bottom:6px;">🔵</div>
+        <div style="font-weight:800;font-size:13px;">Remitly</div>
+        <div style="font-size:10px;opacity:.85;margin-top:3px;">Fast delivery</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;">Bank transfer</div>
+      </a>
+      <a href="https://chippercash.com" target="_blank" rel="noopener" style="text-decoration:none;background:linear-gradient(135deg,#fdcb6e,#e17055);color:white;border-radius:14px;padding:14px;text-align:center;display:block;">
+        <div style="font-size:24px;margin-bottom:6px;">🦊</div>
+        <div style="font-weight:800;font-size:13px;">Chipper Cash</div>
+        <div style="font-size:10px;opacity:.85;margin-top:3px;">Africa-first app</div>
+        <div style="margin-top:8px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 8px;font-size:11px;font-weight:700;">Mobile money</div>
+      </a>
     </div>
-    <div id="remit-grid"></div>
-    <div style="font-size:11px;color:var(--mid);margin-top:10px;">⚠️ Estimates only. Verify on provider's official app.</div>
+
+    <!-- Rate estimator -->
+    <div style="background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.15);border-radius:12px;padding:14px;margin-bottom:12px;">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px;">🧮 Estimate How Much Recipient Gets</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;">
+        <div style="flex:1;min-width:120px;"><label class="field-label">Amount to Send</label><input type="number" id="send-amount" value="500" oninput="calcRemit()" style="font-size:16px;font-weight:700;"></div>
+        <div style="flex:1;min-width:120px;"><label class="field-label">From Currency</label>
+          <select id="send-currency" onchange="calcRemit()">
+            <option value="GBP">🇬🇧 GBP — British Pound</option>
+            <option value="USD">🇺🇸 USD — US Dollar</option>
+            <option value="EUR">🇪🇺 EUR — Euro</option>
+            <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+            <option value="AED">🇦🇪 AED — UAE Dirham</option>
+          </select>
+        </div>
+      </div>
+      <div id="remit-grid"></div>
+    </div>
+
+    <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.15);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--mid);line-height:1.7;">
+      ⚠️ <strong>Sendwave</strong> and <strong>LemFi</strong> are currently the most popular apps for sending money to Sierra Leone with zero fees. Rates change in real-time — always verify the exact rate on each app before sending. SaloneHub is not responsible for any financial loss.
+    </div>
   </div>
 </div>
 
@@ -501,14 +563,13 @@ footer strong{color:var(--primary);}
     <div style="background:rgba(214,48,49,.06);border:1px solid rgba(214,48,49,.15);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);margin-bottom:14px;">🔴 Power outages (load shedding) are common in Freetown. EDSA manages electricity distribution. Report your area status to help neighbours.</div>
     <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
       <select id="edsa-area" style="flex:1;min-width:150px;"><option value="">Select your area</option><option>Freetown — West</option><option>Freetown — East End</option><option>Freetown — Central</option><option>Aberdeen</option><option>Congo Town</option><option>Lumley</option><option>Kissy</option><option>Wellington</option><option>Bo</option><option>Kenema</option><option>Makeni</option></select>
-      <select id="edsa-status" style="flex:1;min-width:150px;"><option value="out">🔴 No power (EDSA off)</option><option value="on">🟢 Power is ON</option><option value="partial">🟡 Intermittent</option></select>
+      <select id="edsa-status" style="flex:1;min-width:150px;"><option value="out">🔴 No power (NEPA off)</option><option value="on">🟢 Power is ON</option><option value="partial">🟡 Intermittent</option></select>
     </div>
     <button class="btn btn-primary" onclick="reportPower()">📢 Report Power Status</button>
     <div id="power-reports" style="margin-top:16px;"></div>
     <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="https://www.edsa.sl" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">EDSA Official Site →</a>
-      <a href="mailto:info@edsa.sl" style="font-size:12px;color:var(--primary);font-weight:600;">✉️ info@edsa.sl</a>
-      <a href="tel:672" style="font-size:12px;color:var(--primary);font-weight:600;">📞 EDSA Toll Free: 672</a>
+      <a href="https://www.edsa.gov.sl" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">EDSA Official Site →</a>
+      <a href="tel:+23222222601" style="font-size:12px;color:var(--primary);font-weight:600;">📞 EDSA: +232-22-222-601</a>
     </div>
   </div>
 </div>
@@ -523,7 +584,7 @@ footer strong{color:var(--primary);}
       <div class="emrg-card" onclick="copyText('019','Fire copied')"><div class="name">🚒 Fire Brigade</div><a href="tel:019" class="num">019</a></div>
       <div class="emrg-card" onclick="copyText('117','Ambulance copied')"><div class="name">🚑 Ambulance</div><a href="tel:117" class="num">117</a></div>
       <div class="emrg-card" onclick="copyText('112','112 copied')"><div class="name">📱 Universal (Mobile)</div><a href="tel:112" class="num">112</a></div>
-      <div class="emrg-card"><div class="name">⚡ EDSA Faults</div><a href="tel:672" class="num">672</a></div>
+      <div class="emrg-card"><div class="name">⚡ EDSA Faults</div><a href="tel:+23222222601" class="num" style="font-size:12px;">+232-22-222-601</a></div>
       <div class="emrg-card"><div class="name">🏥 PCMH Hospital</div><a href="tel:+23222224438" class="num" style="font-size:12px;">+232-22-224-438</a></div>
     </div>
     <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--primary);margin:16px 0 8px;">🏥 Major Hospitals</div>
@@ -807,8 +868,8 @@ async function loadRates(){
   const SLE_URLS=['https://open.er-api.com/v6/latest/SLE','https://api.exchangerate-api.com/v4/latest/SLE','https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sle.json'];
   for(const url of SLE_URLS){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),6000);const res=await fetch(url,{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.sle||data.conversion_rates;if(fx&&fx.USD&&parseFloat(fx.USD)>0){usdToSle=1/parseFloat(fx.USD);break;}}catch(e){}}
   if(usdToSle===USD_TO_SLE_FALLBACK){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),6000);const res=await fetch('https://open.er-api.com/v6/latest/SLL',{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.conversion_rates;if(fx&&fx.USD&&parseFloat(fx.USD)>0){usdToSle=(1/parseFloat(fx.USD))/1000;}}catch(e){}}
-  if(usdRates){rates={};rates.USD=usdToSle;['GBP','EUR','CAD','CHF','CNY','ZAR','GMD','GHS','XOF','AED','SAR'].forEach(c=>{if(usdRates[c])rates[c]=(1/usdRates[c])*usdToSle;});document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='BSL indicative · Updated '+new Date().toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit'})+' · '+new Date().toLocaleDateString('en-SL',{day:'numeric',month:'short',year:'numeric'});updateRateDisplay();updateTicker();updateHeroStats();}
-  else{rates={USD:24.57,GBP:31.50,EUR:26.80,CAD:18.10,CNY:3.40,ZAR:1.34,GMD:0.33,GHS:1.85,};document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='⚠️ Showing cached BSL rates · Live data unavailable';updateRateDisplay();updateTicker();updateHeroStats();}
+  if(usdRates){rates={};rates.USD=usdToSle;['GBP','EUR','CAD','CHF','CNY','ZAR','GMD','GHS','XOF','AED','SAR','NGN'].forEach(c=>{if(usdRates[c])rates[c]=(1/usdRates[c])*usdToSle;});document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='BSL indicative · Updated '+new Date().toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit'})+' · '+new Date().toLocaleDateString('en-SL',{day:'numeric',month:'short',year:'numeric'});updateRateDisplay();updateTicker();updateHeroStats();}
+  else{rates={USD:24.57,GBP:31.50,EUR:26.80,CAD:18.10,CNY:3.40,ZAR:1.34,GMD:0.33,GHS:1.85,NGN:0.016};document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='⚠️ Showing cached BSL rates · Live data unavailable';updateRateDisplay();updateTicker();updateHeroStats();}
 }
 function fmtSLE(v){return v?(SYM+v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')):'—';}
 function updateRateDisplay(){
@@ -1010,7 +1071,7 @@ function calcRemit(){
   const amt=parseFloat(document.getElementById('send-amount').value)||500;
   const curr=document.getElementById('send-currency').value;
   const base=rates[curr]||22;
-  const providers=[{name:'Wise',spread:.98,fee:3,icon:'💙'},{name:'WorldRemit',spread:.97,fee:2.99,icon:'🌍'},{name:'MoneyGram',spread:.96,fee:4.99,icon:'💰'},{name:'Western Union',spread:.95,fee:4,icon:'🏦'}];
+  const providers=[{name:'Sendwave',spread:.995,fee:0,icon:'🌊'},{name:'LemFi',spread:.992,fee:0,icon:'💚'},{name:'Wise',spread:.990,fee:2.5,icon:'💙'},{name:'WorldRemit',spread:.985,fee:1.99,icon:'🌍'},{name:'Remitly',spread:.983,fee:2.99,icon:'🔵'},{name:'Western Union',spread:.975,fee:4,icon:'🏦'}];
   document.getElementById('remit-grid').innerHTML=providers.map(p=>{const recv=((amt-p.fee)*base*p.spread).toFixed(2);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;"><div><span>${p.icon}</span> <strong style="font-size:13px;">${p.name}</strong><div style="font-size:11px;color:var(--mid);">Fee: ${curr} ${p.fee}</div></div><div style="text-align:right;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--primary);">${SYM}${recv}</div><div style="font-size:10px;color:var(--mid);">Recipient gets</div></div></div>`;}).join('');
 }
 
@@ -1192,7 +1253,7 @@ const LEGAL_CONTENT={
 <p>SaloneHub provides information for general informational purposes only. While we strive for accuracy:</p>
 <ul style="padding-left:18px;margin-top:8px;margin-bottom:8px;">
   <li>Exchange rates are <strong>indicative only</strong> — always verify with your bank or the <a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);">Bank of Sierra Leone</a></li>
-  <li>Fuel prices may lag behind official National Petroleum updates</li>
+  <li>Fuel prices may lag behind official NP/NNPC updates</li>
   <li>Market prices are community estimates and may not reflect current reality</li>
   <li>Weather data is sourced from Open-Meteo and may be approximate</li>
   <li>News articles are sourced from third-party publishers — we do not edit or verify their content</li>
