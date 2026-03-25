@@ -19,7 +19,8 @@
 [data-theme="dark"] header{background:rgba(15,17,23,.95);}
 [data-theme="dark"] .card{background:rgba(255,255,255,0.05);border-color:rgba(30,181,58,0.12);}
 [data-theme="dark"] .cat-btn{background:rgba(255,255,255,0.05);color:#ccc;}
-[data-theme="dark"] .cat-btn.active{background:var(--primary);color:white;}
+[data-theme="dark"] .cat-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
+[data-theme="dark"] .cat-btn:hover:not(.active){background:rgba(30,181,58,.12);color:var(--primary);}
 [data-theme="dark"] .curr-chip{color:#ccc;border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);}
 [data-theme="dark"] .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
 [data-theme="dark"] #news-cat-chips .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
@@ -64,10 +65,11 @@ header{position:relative;z-index:10;padding:14px 36px;display:flex;align-items:c
 .digest-stat .dv{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
 .digest-stat .ds{font-size:10px;opacity:.7;margin-top:2px;}
 .tab-nav{position:relative;z-index:9;background:rgba(246,255,250,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
-.cat-row{display:flex;gap:4px;padding:10px 20px 0;overflow-x:auto;scrollbar-width:none;}
+.cat-row{display:flex;gap:6px;padding:8px 20px;overflow-x:auto;scrollbar-width:none;align-items:center;}
 .cat-row::-webkit-scrollbar{display:none;}
-.cat-btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;white-space:nowrap;background:transparent;color:var(--mid);transition:all .2s;}
-.cat-btn.active{background:white;color:var(--primary);border-color:var(--border);border-bottom-color:white;margin-bottom:-1px;}
+.cat-btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:8px 18px;border-radius:100px;border:1.5px solid transparent;cursor:pointer;white-space:nowrap;background:transparent;color:var(--mid);transition:all .2s;margin-bottom:6px;}
+.cat-btn.active{background:var(--primary);color:white;border-color:var(--primary);box-shadow:0 2px 12px rgba(30,181,58,.35);}
+.cat-btn:hover:not(.active){background:rgba(30,181,58,.07);color:var(--primary);border-color:rgba(30,181,58,.2);}
 .cat-count{font-size:10px;background:rgba(30,181,58,.1);color:var(--primary);padding:1px 6px;border-radius:100px;margin-left:4px;}
 .subtab-row{display:flex;gap:6px;padding:8px 20px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--border);}
 .curr-chip{font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;border:1.5px solid var(--border);cursor:pointer;white-space:nowrap;background:var(--card);color:var(--mid);transition:all .15s;}
@@ -763,7 +765,7 @@ function switchTab(id){
   document.querySelectorAll('.subtab-row .curr-chip').forEach(c=>{const t=tabs.find(x=>x.id===id);c.classList.toggle('active',t&&c.textContent.trim()===t.label);});
   if(id==='currency'&&!rates.USD)loadRates();
   if(id==='news')loadNews();
-  if(id==='weather')loadWeather();
+  if(id==='weather'){const wc=document.getElementById('weather-cities');if(!wc||wc.style.display==='none'||wc.innerHTML==='')loadWeather();}
   if(id==='football')loadLeague('PL','EPL');
   if(id==='jobs')loadJobs();
   if(id==='holidays')initHolidays();
@@ -1091,8 +1093,21 @@ switchCat('money');
 loadRates();
 setTimeout(()=>renderPower(),200);
 setTimeout(()=>initHolidays(),400);
-// preload remit on banking tab open
-setTimeout(()=>{if(rates.USD)calcRemit();},3000);
+// Prefetch weather for banner stat (runs silently in background)
+setTimeout(()=>loadWeather(),600);
+// Prefetch BTC price for banner stat
+setTimeout(async()=>{
+  try{
+    const res=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+    const data=await res.json();
+    const usdToSle=rates.USD||24.57;
+    const btcSle=Math.round((data.bitcoin?.usd||0)*usdToSle);
+    if(btcSle>0){
+      document.getElementById('d-btc').textContent='Le'+btcSle.toLocaleString();
+      document.getElementById('t-btc').textContent='Le'+btcSle.toLocaleString();
+    }
+  }catch(e){}
+},1200);
 </script>
 </body>
 </html>
