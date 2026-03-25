@@ -18,12 +18,6 @@
 [data-theme="dark"] body{background:#0f1117;color:#f0f0f0;}
 [data-theme="dark"] header{background:rgba(15,17,23,.95);}
 [data-theme="dark"] .card{background:rgba(255,255,255,0.05);border-color:rgba(30,181,58,0.12);}
-[data-theme="dark"] .cat-btn{background:rgba(255,255,255,0.05);color:#ccc;}
-[data-theme="dark"] .cat-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
-[data-theme="dark"] .cat-btn:hover:not(.active){background:rgba(30,181,58,.12);color:var(--primary);}
-[data-theme="dark"] .curr-chip{color:#ccc;border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);}
-[data-theme="dark"] .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
-[data-theme="dark"] #news-cat-chips .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
 [data-theme="dark"] .rate-chip{background:rgba(255,255,255,0.05);}
 [data-theme="dark"] .fuel-card{background:rgba(255,255,255,0.05);}
 [data-theme="dark"] input,[data-theme="dark"] select{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#f0f0f0;}
@@ -65,6 +59,14 @@ header{position:relative;z-index:10;padding:14px 36px;display:flex;align-items:c
 .digest-stat .dv{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
 .digest-stat .ds{font-size:10px;opacity:.7;margin-top:2px;}
 .tab-nav{position:relative;z-index:9;background:rgba(246,255,250,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+[data-theme="dark"] .tab-nav{background:rgba(15,17,23,.97);border-bottom-color:rgba(30,181,58,.15);}
+[data-theme="dark"] .subtab-row{background:rgba(15,17,23,.97);border-top-color:rgba(30,181,58,.15);}
+[data-theme="dark"] .cat-count{background:rgba(30,181,58,.18);color:var(--primary);}
+[data-theme="dark"] .cat-btn{background:transparent;color:#aaa;border-color:transparent;}
+[data-theme="dark"] .cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 2px 14px rgba(40,212,72,.4);}
+[data-theme="dark"] .cat-btn:hover:not(.active){background:rgba(30,181,58,.12);color:var(--primary);border-color:rgba(30,181,58,.3);}
+[data-theme="dark"] .curr-chip{color:#bbb;border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);}
+[data-theme="dark"] .curr-chip.active{color:white!important;background:var(--primary)!important;border-color:var(--primary)!important;}
 .cat-row{display:flex;gap:6px;padding:8px 20px;overflow-x:auto;scrollbar-width:none;align-items:center;}
 .cat-row::-webkit-scrollbar{display:none;}
 .cat-btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:8px 18px;border-radius:100px;border:1.5px solid transparent;cursor:pointer;white-space:nowrap;background:transparent;color:var(--mid);transition:all .2s;margin-bottom:6px;}
@@ -918,7 +920,7 @@ async function loadNews(){
 }
 
 // FOOTBALL
-async function loadLeague(code,name){footballLeague=code;document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));document.getElementById('football-loading').style.display='flex';document.getElementById('football-content').innerHTML='';try{const res=await fetch(`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`,{headers:{'X-Auth-Token':''}});const data=await res.json();footData=data.matches||[];renderFootball();}catch(e){document.getElementById('football-loading').style.display='none';document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">Football data unavailable. <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);">BBC Sport →</a></div>';}}
+async function loadLeague(code,name){footballLeague=code;document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));document.getElementById('football-loading').style.display='flex';document.getElementById('football-content').innerHTML='';try{const res=await fetch(`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`,{headers:{'X-Auth-Token':'40aa3852a8e942dbaa91d6f70e99b517'}});const data=await res.json();footData=data.matches||[];renderFootball();}catch(e){document.getElementById('football-loading').style.display='none';document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">Football data unavailable. <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);">BBC Sport →</a></div>';}}
 function switchView(v){footballView=v;document.querySelectorAll('#fixture-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.view===v));renderFootball();}
 function renderFootball(){document.getElementById('football-loading').style.display='none';if(!footData?.length){document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">No matches found.</div>';return;}document.getElementById('football-content').innerHTML=footData.slice(0,8).map(m=>`<div class="match-card"><div class="match-teams"><span class="team-name">${m.homeTeam.shortName||m.homeTeam.name}</span><span class="match-score">${m.score?.fullTime?.home??'—'} – ${m.score?.fullTime?.away??'—'}</span><span class="team-name away">${m.awayTeam.shortName||m.awayTeam.name}</span></div><div class="match-meta">${new Date(m.utcDate).toLocaleDateString('en-SL',{day:'numeric',month:'short'})}</div></div>`).join('');}
 
