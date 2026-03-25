@@ -601,7 +601,7 @@ select:focus,input:focus{border-color:var(--green);}
 #prefs-welcome.show{display:flex;align-items:center;gap:12px;}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 /* ── SECURITY ALERT BANNER ─────────────────────────────── */
-#power-alert-bar{display:flex;background:linear-gradient(135deg,#b7791f,#F5A623);color:white;padding:9px 20px;font-size:12px;font-weight:600;align-items:center;justify-content:center;gap:10px;text-align:center;flex-wrap:wrap;z-index:99;border-bottom:2px solid rgba(0,0,0,.1);}
+#power-alert-bar{display:none;background:linear-gradient(135deg,#b7791f,#F5A623);color:white;padding:9px 20px;font-size:12px;font-weight:600;align-items:center;justify-content:center;gap:10px;text-align:center;flex-wrap:wrap;z-index:99;border-bottom:2px solid rgba(0,0,0,.1);}
 #power-alert-bar a{color:white;text-decoration:underline;font-weight:700;}
 #security-alert-bar{display:none;background:linear-gradient(135deg,#c0392b,#e74c3c);
   color:white;padding:10px 20px;text-align:center;font-size:12px;font-weight:600;
@@ -3770,13 +3770,42 @@ async function loadLeague(leagueCode, leagueName){
       : 'https://api.football-data.org/v4/competitions/'+leagueCode+'/matches?status=FINISHED';
 
     let data = null;
+    // Try with token directly
     try{
       const r = await fetch(url, {headers:fHeaders, signal:AbortSignal.timeout(8000)});
       if(r.ok) data = await r.json();
     }catch(e){}
+    // Fallback: inject token into URL for proxy (proxy may strip headers)
     if(!data){
-      const r2 = await fetch('/api/proxy?url='+encodeURIComponent(url), {headers:fHeaders, signal:AbortSignal.timeout(8000)});
-      if(r2.ok) data = await r2.json();
+      try{
+        const tokenUrl = url + (url.includes('?')?'&':'?') + 'token=' + FBALL_TOKEN;
+        const r2 = await fetch('/api/proxy?url='+encodeURIComponent(url), {signal:AbortSignal.timeout(8000)});
+        if(r2.ok) data = await r2.json();
+      }catch(e){}
+    }
+    // Final fallback: TheSportsDB (no key needed)
+    if(!data || !data.matches){
+      const sportsDbLeague = {PL:4328,PD:4335,BL1:4331,SA:4332,FL1:4334,CL:4480};
+      const lid = sportsDbLeague[leagueCode]||4328;
+      const sdbUrl = isFixtures
+        ? 'https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id='+lid
+        : 'https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id='+lid;
+      try{
+        const r3 = await fetch(sdbUrl, {signal:AbortSignal.timeout(8000)});
+        if(r3.ok){
+          const d3 = await r3.json();
+          if(d3.events?.length){
+            // Convert TheSportsDB format to football-data format
+            data = {matches: d3.events.map(e=>({
+              utcDate: e.dateEvent+'T'+( e.strTime||'15:00:00')+'Z',
+              homeTeam:{name:e.strHomeTeam,shortName:e.strHomeTeam},
+              awayTeam:{name:e.strAwayTeam,shortName:e.strAwayTeam},
+              score:{fullTime:{home:e.intHomeScore!==null?parseInt(e.intHomeScore):null,
+                              away:e.intAwayScore!==null?parseInt(e.intAwayScore):null}}
+            }))};
+          }
+        }
+      }catch(e){}
     }
 
     const matches = (data?.matches || []);
@@ -5453,7 +5482,7 @@ setTimeout(()=>{
 const CACHE_RATES = 'salonehub_cached_rates';
 const CACHE_NEWS  = 'salonehub_cached_news';
 const CACHE_FOOTY = 'salonehub_cached_football';
-const CACHE_VERSION = '2026-03-21';
+const CACHE_VERSION = '2026-03-25';
 const CACHE_MAX_AGE = 4 * 60 * 60 * 1000;
 
 (function clearStaleCache(){
