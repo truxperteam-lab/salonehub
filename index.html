@@ -5151,9 +5151,8 @@ function initTourismTab(){
 // ── CHECK SECURITY ALERTS ──────────────────
 (function checkSecurityAlerts(){
   const activeAlerts = [
-    {title:'BSL warns of fake banking apps — verify before downloading', severity:'high'},
-    {title:'ACC: Fake investment platforms targeting Sierra Leoneans', severity:'high'},
-    {title:'NCC Alert: SIM swap fraud on the rise', severity:'medium'},
+    // Add active alerts here when needed, e.g.:
+    // {title:'BSL warns of fake banking apps', severity:'high'},
   ];
   const high = activeAlerts.find(a=>a.severity==='high');
   if(high){

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About SaloneHub — Sierra Leone's Free Daily Dashboard</title>
+<meta name="description" content="Learn how SaloneHub works — Sierra Leone's free daily dashboard for exchange rates, fuel prices, news, remote jobs, weather and more. Built for Sierra Leoneans at home and abroad.">
+<link rel="canonical" href="https://www.sierraleonehub.com/about.html">
+<meta property="og:title" content="About SaloneHub — Sierra Leone's Free Daily Dashboard">
+<meta property="og:description" content="SaloneHub is a free website built for Sierra Leoneans. Live Leone rates, fuel prices, news, remote jobs, weather and more — no sign-up needed.">
+<meta name="theme-color" content="#1EB53A">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1EB53A;
+  --green-dark: #0c7a2e;
+  --green-light: #25d366;
+  --blue: #0072C6;
+  --gold: #F5A623;
+  --cream: #FFFBF2;
+  --charcoal: #1A1A1A;
+  --mid: #5A5A5A;
+  --border: rgba(30,181,58,0.14);
+  --card: rgba(255,255,255,0.95);
+  --shadow: 0 4px 24px rgba(0,0,0,0.07);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--charcoal); line-height:1.7; }
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: radial-gradient(ellipse at 10% 10%, rgba(30,181,58,.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 90% 90%, rgba(0,114,198,.07) 0%, transparent 50%);
+}
+
+/* NAV */
+nav { position:sticky; top:0; z-index:100; background:rgba(255,251,242,.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--charcoal); }
+.logo-flag { width:30px; height:30px; border-radius:50%; overflow:hidden; display:flex; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.fl { width:33%; background:var(--green); }
+.fm { width:34%; background:#fff; }
+.fr { width:33%; background:var(--blue); }
+.logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; }
+.logo-text span { color:var(--green); }
+.nav-link { background:var(--green); color:white; text-decoration:none; padding:8px 20px; border-radius:100px; font-size:13px; font-weight:600; transition:all .2s; }
+.nav-link:hover { background:var(--green-light); }
+
+/* HERO */
+.hero { position:relative; z-index:1; background:linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, #25d366 100%); color:white; padding:64px 24px 80px; text-align:center; overflow:hidden; }
+.hero::after { content:'🇸🇱'; position:absolute; font-size:200px; opacity:.05; right:-20px; top:-20px; pointer-events:none; }
+.hero-badge { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25); padding:5px 16px; border-radius:100px; font-size:12px; font-weight:600; letter-spacing:.5px; margin-bottom:20px; }
+.hero h1 { font-family:'Syne',sans-serif; font-size:clamp(28px,5vw,48px); font-weight:900; line-height:1.15; margin-bottom:16px; }
+.hero p { font-size:clamp(15px,2vw,18px); opacity:.88; max-width:560px; margin:0 auto 28px; }
+.hero-cta { display:inline-flex; align-items:center; gap:8px; background:white; color:var(--green-dark); text-decoration:none; padding:12px 28px; border-radius:100px; font-weight:700; font-size:15px; box-shadow:0 4px 20px rgba(0,0,0,.15); transition:transform .2s; }
+.hero-cta:hover { transform:translateY(-2px); }
+
+/* CONTENT */
+.container { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:0 20px 60px; }
+
+.intro-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:36px; box-shadow:var(--shadow); margin-top:-36px; margin-bottom:40px; }
+.intro-card h2 { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; color:var(--green); margin-bottom:14px; }
+.intro-card p { font-size:15px; color:var(--mid); margin-bottom:12px; }
+.intro-card p:last-child { margin-bottom:0; }
+.intro-card strong { color:var(--charcoal); }
+
+.stats-bar { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:12px; margin-bottom:48px; }
+.stat { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 14px; text-align:center; box-shadow:var(--shadow); }
+.stat-num { font-family:'Syne',sans-serif; font-weight:900; font-size:26px; color:var(--green); line-height:1; margin-bottom:4px; }
+.stat-label { font-size:11px; color:var(--mid); font-weight:600; }
+
+.section-title { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; color:var(--charcoal); margin-bottom:6px; }
+.section-sub { font-size:14px; color:var(--mid); margin-bottom:24px; }
+
+/* STEPS */
+.steps { display:flex; flex-direction:column; gap:16px; margin-bottom:48px; }
+.step { display:flex; gap:18px; align-items:flex-start; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px 22px; box-shadow:var(--shadow); }
+.step-num { font-family:'Syne',sans-serif; font-weight:900; font-size:28px; color:var(--green); opacity:.25; flex-shrink:0; width:36px; line-height:1; }
+.step-content h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:16px; margin-bottom:6px; }
+.step-content p { font-size:13px; color:var(--mid); line-height:1.65; }
+
+/* AUDIENCE */
+.audience { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:48px; }
+.audience-card { border-radius:18px; padding:28px; box-shadow:var(--shadow); }
+.audience-card.salone { background:linear-gradient(135deg, var(--green-dark), var(--green)); color:white; }
+.audience-card.diaspora { background:linear-gradient(135deg, #0f2d5a, #0072C6); color:white; }
+.audience-card h3 { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; margin-bottom:14px; }
+.audience-card ul { list-style:none; font-size:13px; line-height:2; opacity:.9; }
+.audience-card ul li::before { content:'✅ '; }
+
+/* FEATURES */
+.features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin-bottom:48px; }
+.feature-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:var(--shadow); transition:border-color .2s,transform .2s; }
+.feature-card:hover { border-color:var(--green); transform:translateY(-2px); }
+.feature-icon { font-size:28px; margin-bottom:10px; }
+.feature-card h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; margin-bottom:6px; }
+.feature-card p { font-size:12px; color:var(--mid); line-height:1.6; }
+.feature-tag { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:100px; margin-bottom:8px; }
+.tag-home { background:rgba(30,181,58,.1); color:var(--green); }
+.tag-diaspora { background:rgba(0,114,198,.1); color:var(--blue); }
+.tag-both { background:rgba(245,166,35,.12); color:#b7791f; }
+
+/* FAQ */
+.faq { margin-bottom:48px; }
+.faq-item { background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden; box-shadow:var(--shadow); }
+.faq-q { padding:18px 20px; font-family:'Syne',sans-serif; font-weight:700; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; user-select:none; }
+.faq-q::after { content:'▼'; font-size:11px; color:var(--green); flex-shrink:0; transition:transform .2s; }
+.faq-item.open .faq-q::after { transform:rotate(180deg); }
+.faq-a { display:none; padding:14px 20px 18px; font-size:13px; color:var(--mid); line-height:1.7; border-top:1px solid var(--border); }
+.faq-item.open .faq-a { display:block; }
+
+/* INSTALL */
+.install-card { background:linear-gradient(135deg,#1a1a2e,#16213e); color:white; border-radius:20px; padding:36px; margin-bottom:48px; box-shadow:var(--shadow); text-align:center; }
+.install-card h2 { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; margin-bottom:10px; }
+.install-card p { font-size:14px; opacity:.8; margin-bottom:24px; max-width:480px; margin-left:auto; margin-right:auto; }
+.install-steps { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; text-align:left; }
+.install-step { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:16px; }
+.install-step .num { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:var(--gold); margin-bottom:6px; }
+.install-step p { font-size:12px; opacity:.8; margin:0; }
+
+/* CTA */
+.cta-bottom { background:linear-gradient(135deg,var(--green-dark),var(--green)); color:white; border-radius:20px; padding:48px 36px; text-align:center; margin-bottom:40px; box-shadow:0 8px 32px rgba(30,181,58,.25); }
+.cta-bottom h2 { font-family:'Syne',sans-serif; font-weight:900; font-size:clamp(22px,4vw,32px); margin-bottom:12px; }
+.cta-bottom p { opacity:.88; margin-bottom:24px; font-size:15px; }
+.cta-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-white { background:white; color:var(--green-dark); text-decoration:none; padding:12px 28px; border-radius:100px; font-weight:700; font-size:14px; transition:transform .2s; }
+.btn-white:hover { transform:translateY(-2px); }
+.btn-outline { background:rgba(255,255,255,.15); color:white; text-decoration:none; padding:12px 28px; border-radius:100px; font-weight:600; font-size:14px; border:1px solid rgba(255,255,255,.3); }
+
+footer { text-align:center; padding:24px; font-size:12px; color:var(--mid); border-top:1px solid var(--border); }
+footer a { color:var(--green); text-decoration:none; }
+
+@media(max-width:600px){
+  .audience { grid-template-columns:1fr; }
+  .intro-card { padding:24px 20px; margin-top:-24px; }
+  .hero { padding:48px 20px 60px; }
+  .cta-bottom { padding:36px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-flag"><div class="fl"></div><div class="fm"></div><div class="fr"></div></div>
+    <div class="logo-text">Salone<span>Hub</span></div>
+  </a>
+  <a href="/" class="nav-link">← Back to SaloneHub</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">🇸🇱 Free · No Sign-up · Built for Sierra Leoneans</div>
+  <h1>What is SaloneHub<br>and how does it work?</h1>
+  <p>Everything a Sierra Leonean needs every day — live Leone rates, news, jobs, weather and more. All in one free website.</p>
+  <a href="/" class="hero-cta">🚀 Open SaloneHub Now</a>
+</div>
+
+<div class="container">
+
+  <div class="intro-card">
+    <h2>🇸🇱 What is SaloneHub?</h2>
+    <p>SaloneHub is a <strong>free website built specifically for Sierra Leoneans</strong> — whether you live in Sierra Leone or abroad. Think of it as your personal Sierra Leonean daily briefing page.</p>
+    <p>Every time you open it, you instantly see the <strong>live dollar to leone rate</strong>, current fuel prices, today's Sierra Leonean news, weather across all provinces, football scores, and much more — without signing up, downloading an app, or paying anything.</p>
+    <p>It was built because Sierra Leoneans have to visit multiple different websites just to get basic daily information. SaloneHub puts it all in one place, for free, forever.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Features & Tools</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">SL News Sources</div></div>
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label">Cities Weather</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Currencies</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Cost to Use</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Sign-ups Needed</div></div>
+  </div>
+
+  <div class="section-title">⚙️ How does it work?</div>
+  <div class="section-sub">Simple — just open and use.</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Open the website on your phone or computer</h3>
+        <p>Go to <strong>sierraleonehub.com</strong> on any browser — Chrome, Safari, Firefox. Works on all phones and computers. No app download needed.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Your daily briefing loads instantly</h3>
+        <p>At the top you see a scrolling ticker with live exchange rates — dollar, pound, euro, dirham and more. Below is a banner showing today's dollar rate, pound rate, Freetown weather and Bitcoin price at a glance.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Tap the tabs to find what you need</h3>
+        <p>The site is organised into <strong>6 main categories</strong>: Money, News & Info, Life & Services, Work & Travel, Entertainment, and AI Chat. Tap Money to see exchange rates, fuel prices, tax calculator, money transfer comparison and more.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h3>Everything updates automatically</h3>
+        <p>Exchange rates update daily from BSL, news updates every visit, weather updates live, and football scores refresh automatically. You always see the latest information.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h3>Save it to your home screen for one-tap access</h3>
+        <p>On Android: tap ⋮ menu → "Add to Home screen". On iPhone: tap the Share button → "Add to Home Screen". After that, tap the SaloneHub icon on your phone like any app — completely free.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">👥 Who is SaloneHub for?</div>
+  <div class="section-sub">Built for two groups of Sierra Leoneans.</div>
+
+  <div class="audience">
+    <div class="audience-card salone">
+      <h3>🇸🇱 Sierra Leoneans at Home</h3>
+      <ul>
+        <li>Check daily dollar/leone rate</li>
+        <li>See current fuel & diesel prices</li>
+        <li>Read Sierra Leonean news</li>
+        <li>Check weather for your province</li>
+        <li>Report EDSA power outages</li>
+        <li>Compare Orange, Africell, QCell bundles</li>
+        <li>Find hospitals near you</li>
+        <li>Check BECE, WASSCE, NPSE results</li>
+        <li>Calculate your income tax (NRA)</li>
+        <li>Find remote jobs paid in USD</li>
+      </ul>
+    </div>
+    <div class="audience-card diaspora">
+      <h3>🌍 Sierra Leoneans Abroad</h3>
+      <ul>
+        <li>Compare money transfer apps (Wise, WorldRemit, MoneyGram)</li>
+        <li>See live pound, euro, dollar rates</li>
+        <li>Find UK NHS jobs with visa sponsorship</li>
+        <li>Canada Express Entry information</li>
+        <li>Stay updated on Sierra Leonean news</li>
+        <li>Check BECE/WASSCE news for family</li>
+        <li>Find universities abroad</li>
+        <li>See crypto prices in Leone</li>
+        <li>Visa-free countries for SL passport</li>
+        <li>Sierra Leonean public holidays</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">📋 What's inside SaloneHub?</div>
+  <div class="section-sub">All free, all in one place.</div>
+
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-tag tag-both">💱 Money</div>
+      <div class="feature-icon">📊</div>
+      <h3>Live SLE Exchange Rates</h3>
+      <p>BSL indicative rates for USD, GBP, EUR, AED, CAD, CNY, GHS, GMD. Updated daily. Includes a Leone converter.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-diaspora">💸 Money</div>
+      <div class="feature-icon">💸</div>
+      <h3>Money Transfer Comparison</h3>
+      <p>Compare Wise, WorldRemit, MoneyGram, Western Union side by side. See who gives the best rate when sending money to Sierra Leone.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-home">⛽ Life</div>
+      <div class="feature-icon">⛽</div>
+      <h3>Fuel & Market Prices</h3>
+      <p>Current petrol, diesel, kerosene and cooking gas prices. Plus Freetown market food prices.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">📰 News</div>
+      <div class="feature-icon">📰</div>
+      <h3>Sierra Leonean News</h3>
+      <p>Live headlines from SL Telegraph, Awoko, Concord Times, Cocorioko, BBC Africa (SL stories) and 5 more sources.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">🌤️ Life</div>
+      <div class="feature-icon">🌤️</div>
+      <h3>Weather — All Provinces</h3>
+      <p>Live weather for Freetown, Bo, Kenema, Makeni, Koidu, Bonthe, Port Loko, Kambia and more — all 4 provinces covered.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-home">⚡ Life</div>
+      <div class="feature-icon">⚡</div>
+      <h3>EDSA Power Outage Reporter</h3>
+      <p>Report power cuts in your area. See reports by EDSA district — North, South, Bo, East, Kenema, Makeni.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">💼 Work</div>
+      <div class="feature-icon">💼</div>
+      <h3>Remote Jobs for Sierra Leoneans</h3>
+      <p>Remote roles in tech, design, marketing, writing and finance — open to Sierra Leoneans, salaries in USD, updated daily.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-diaspora">🇬🇧 Work</div>
+      <div class="feature-icon">🏥</div>
+      <h3>UK & Canada Jobs</h3>
+      <p>NHS jobs with Skilled Worker visa sponsorship. Canada Express Entry pathways explained simply.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-home">🧮 Money</div>
+      <div class="feature-icon">🧮</div>
+      <h3>NRA Income Tax Calculator</h3>
+      <p>Enter your annual salary and instantly see your tax, net take-home pay and effective rate based on Sierra Leone NRA 2026 brackets.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">₿ Money</div>
+      <div class="feature-icon">₿</div>
+      <h3>Crypto Prices in Leone</h3>
+      <p>BTC, ETH, USDT, BNB, Solana, XRP and more — all converted to SLE at the live BSL rate.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">⚽ Fun</div>
+      <div class="feature-icon">⚽</div>
+      <h3>Football Scores & Fixtures</h3>
+      <p>Premier League, La Liga, Bundesliga, Serie A, Champions League — results and upcoming fixtures.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-home">📱 Money</div>
+      <div class="feature-icon">📱</div>
+      <h3>Mobile Money & Networks</h3>
+      <p>Orange Money, Africell Money, QMoney USSD codes. Network status for Orange SL, Africell, QCell.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-home">🏥 Life</div>
+      <div class="feature-icon">🏥</div>
+      <h3>Hospital Finder</h3>
+      <p>Find hospitals, clinics and pharmacies near you anywhere in Sierra Leone — powered by OpenStreetMap.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">🎓 News</div>
+      <div class="feature-icon">🎓</div>
+      <h3>Education & Exam News</h3>
+      <p>Live BECE, WASSCE, NPSE news. Direct links to check results. University admissions info.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-diaspora">🛂 Travel</div>
+      <div class="feature-icon">🛂</div>
+      <h3>Visa-Free Countries</h3>
+      <p>Countries Sierra Leoneans can visit without a visa — including all ECOWAS countries with free movement.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-tag tag-both">🤖 AI</div>
+      <div class="feature-icon">🤖</div>
+      <h3>Ask SaloneHub AI</h3>
+      <p>An AI assistant that knows Sierra Leonean context — ask about tax, laws, business, culture, exchange rates and more.</p>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <div class="section-title">❓ Frequently Asked Questions</div>
+    <div class="section-sub">Quick answers to common questions.</div>
+
+    <div class="faq-item open">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is SaloneHub really free?</div>
+      <div class="faq-a">Yes, 100% free. No paid plan, no subscription, no hidden charges. Every feature on the site is free to use forever.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need to sign up or create an account?</div>
+      <div class="faq-a">No. You do not need to sign up, create an account, or give any personal information. Just open the website and start using it.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How accurate are the exchange rates?</div>
+      <div class="faq-a">The rates shown are BSL (Bank of Sierra Leone) indicative cross-rates calculated from international forex data. They are updated daily. Always verify with your bank before any financial transaction. The New Leone (SLE) rate is clearly shown — note that 1 SLE = 1,000 old Leones (SLL) following Sierra Leone's 2022 redenomination.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I add it to my phone like an app?</div>
+      <div class="faq-a">On Android: Open Chrome, go to sierraleonehub.com, tap the ⋮ menu, tap "Add to Home screen". On iPhone: Open Safari, tap the Share button, tap "Add to Home Screen". You will then see a SaloneHub icon on your home screen — tap it to open instantly, just like any app. It is free and takes less than 30 seconds.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Who built SaloneHub?</div>
+      <div class="faq-a">SaloneHub was built to give Sierra Leoneans — at home and abroad — one free place to get all the daily information they need. It started as a personal project and grew into a full platform. It is continuously improved based on user feedback.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I report a problem or suggest a feature?</div>
+      <div class="faq-a">Use the AI Chat tab on the site and type "I want to report a problem" or "I suggest adding..." — or reach us on Twitter/X at @SaloneHubLive.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is my data private?</div>
+      <div class="faq-a">Yes. SaloneHub does not collect personal data. Your preferences (like your province or favourite currency) are saved only on your own device — never sent to any server. Only general page visit analytics (Google Analytics) are used, with no personal information collected.</div>
+    </div>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="install-card">
+    <h2>📱 Add SaloneHub to Your Phone</h2>
+    <p>Use it like an app — no download needed, completely free. Takes less than 30 seconds.</p>
+    <div class="install-steps">
+      <div class="install-step"><div class="num">Android</div><p>Open Chrome → tap ⋮ menu → "Add to Home screen" → tap Add</p></div>
+      <div class="install-step"><div class="num">iPhone</div><p>Open Safari → tap Share button → "Add to Home Screen" → tap Add</p></div>
+      <div class="install-step"><div class="num">Result</div><p>SaloneHub icon on your home screen. One tap to open — just like any app.</p></div>
+    </div>
+  </div>
+
+  <div class="cta-bottom">
+    <h2>Ready to use SaloneHub?</h2>
+    <p>Free, no sign-up, works on any phone. Sierra Leone's daily dashboard — all in one place.</p>
+    <div class="cta-buttons">
+      <a href="/" class="btn-white">🇸🇱 Open SaloneHub</a>
+      <a href="https://wa.me/?text=Check%20out%20SaloneHub%20%F0%9F%87%B8%F0%9F%87%B1%20%E2%80%94%20Sierra%20Leone's%20free%20daily%20dashboard%21%20sierraleonehub.com" target="_blank" rel="noopener noreferrer" class="btn-outline">💬 Share on WhatsApp</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  🇸🇱 <strong>SaloneHub</strong> — Sierra Leone's Free Daily Dashboard ·
+  <a href="/">Home</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a>
+</footer>
+
+<script>
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+</script>
+</body>
+</html>
