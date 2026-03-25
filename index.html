@@ -713,8 +713,19 @@ footer strong{color:var(--primary);}
 </div><!-- end panels -->
 
 <footer>
-  🇸🇱 <strong>SaloneHub</strong> — Sierra Leone Daily Dashboard · Rates via ExchangeRate-API · Weather via Open-Meteo · <a href="#">Privacy</a> · <a href="#">Terms</a> · Not financial advice
+  🇸🇱 <strong>SaloneHub</strong> — Sierra Leone Daily Dashboard · Rates via ExchangeRate-API · Weather via Open-Meteo · <a href="#" onclick="openModal('privacy');return false;">Privacy</a> · <a href="#" onclick="openModal('terms');return false;">Terms</a> · Not financial advice
 </footer>
+
+<!-- PRIVACY & TERMS MODAL -->
+<div id="legal-overlay" onclick="if(event.target===this)closeLegal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--cream);border-radius:20px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.4);">
+    <div style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:white;padding:18px 24px;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;" id="legal-title">Privacy Policy</div>
+      <button onclick="closeLegal()" style="background:rgba(255,255,255,.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;">✕</button>
+    </div>
+    <div id="legal-body" style="padding:24px;font-size:13px;line-height:1.8;color:var(--charcoal);"></div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 <div id="cookie-banner">
@@ -919,8 +930,42 @@ async function loadNews(){
   document.getElementById('news-list').innerHTML=final.map((item)=>{const{tag,color}=detectSLTag(item.title,item.desc);const ago=getTimeAgoSL(item.pubDate);return`<div class="news-item" style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;" onclick="window.open('${item.url}','_blank','noopener')">${item.img?`<img src="${item.img}" alt="" style="width:70px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-top:2px;" onerror="this.style.display='none'">`:`<div style="width:70px;height:52px;border-radius:8px;background:rgba(30,181,58,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🇸🇱</div>`}<div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:${color}18;color:${color};">${tag}</span><span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(30,181,58,.08);color:var(--primary);">${item.source}</span>${ago?`<span style="font-size:10px;color:var(--mid);">${ago}</span>`:''}</div><div style="font-weight:700;font-size:13px;line-height:1.4;margin-bottom:4px;color:var(--charcoal);">${item.title}</div>${item.desc?`<div style="font-size:12px;color:var(--mid);line-height:1.5;">${item.desc}${item.desc.length>=160?'…':''}</div>`:''}<div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--primary);">Read full story →</div></div></div>`;}).join('');
 }
 
-// FOOTBALL
-async function loadLeague(code,name){footballLeague=code;document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));document.getElementById('football-loading').style.display='flex';document.getElementById('football-content').innerHTML='';try{const res=await fetch(`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`,{headers:{'X-Auth-Token':'40aa3852a8e942dbaa91d6f70e99b517'}});const data=await res.json();footData=data.matches||[];renderFootball();}catch(e){document.getElementById('football-loading').style.display='none';document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">Football data unavailable. <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);">BBC Sport →</a></div>';}}
+// FOOTBALL — uses allorigins CORS proxy to bypass browser CORS restrictions on football-data.org
+const FOOTBALL_TOKEN='40aa3852a8e942dbaa91d6f70e99b517';
+async function loadLeague(code,name){
+  footballLeague=code;
+  document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));
+  document.getElementById('football-loading').style.display='flex';
+  document.getElementById('football-content').innerHTML='';
+  const apiUrl=`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`;
+  // Try direct first, then CORS proxy fallbacks
+  const attempts=[
+    ()=>fetch(apiUrl,{headers:{'X-Auth-Token':FOOTBALL_TOKEN}}),
+    ()=>fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`,{headers:{}}),
+    ()=>fetch(`https://corsproxy.io/?${encodeURIComponent(apiUrl)}`,{headers:{'X-Auth-Token':FOOTBALL_TOKEN}}),
+  ];
+  for(const attempt of attempts){
+    try{
+      const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),10000);
+      const res=await attempt();
+      let data;
+      const text=await res.text();
+      // allorigins wraps in {contents:'...'}
+      try{const wrapper=JSON.parse(text);data=wrapper.contents?JSON.parse(wrapper.contents):wrapper;}catch(e){continue;}
+      if(data?.matches?.length){footData=data.matches;renderFootball();return;}
+      if(data?.matches){footData=[];renderFootball();return;}
+    }catch(e){}
+  }
+  document.getElementById('football-loading').style.display='none';
+  document.getElementById('football-content').innerHTML=`<div style="color:var(--mid);font-size:13px;padding:12px 0;">
+    ⚽ Live football data temporarily unavailable.
+    <div style="margin-top:8px;display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);font-weight:600;">BBC Sport →</a>
+      <a href="https://www.slfootball.com" target="_blank" style="color:var(--primary);font-weight:600;">Leone Stars →</a>
+      <a href="https://www.flashscore.com" target="_blank" style="color:var(--primary);font-weight:600;">Flashscore →</a>
+    </div>
+  </div>`;
+}
 function switchView(v){footballView=v;document.querySelectorAll('#fixture-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.view===v));renderFootball();}
 function renderFootball(){document.getElementById('football-loading').style.display='none';if(!footData?.length){document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">No matches found.</div>';return;}document.getElementById('football-content').innerHTML=footData.slice(0,8).map(m=>`<div class="match-card"><div class="match-teams"><span class="team-name">${m.homeTeam.shortName||m.homeTeam.name}</span><span class="match-score">${m.score?.fullTime?.home??'—'} – ${m.score?.fullTime?.away??'—'}</span><span class="team-name away">${m.awayTeam.shortName||m.awayTeam.name}</span></div><div class="match-meta">${new Date(m.utcDate).toLocaleDateString('en-SL',{day:'numeric',month:'short'})}</div></div>`).join('');}
 
@@ -1074,7 +1119,92 @@ async function sendChat(){
   }catch(e){document.getElementById('typing')?.remove();el.innerHTML+=`<div style="align-self:flex-start;background:var(--card);border:1px solid var(--border);padding:10px 14px;border-radius:14px;font-size:13px;color:var(--mid);">AI unavailable right now.</div>`;}
 }
 
-// UTILS
+// PRIVACY & TERMS MODALS
+const LEGAL_CONTENT={
+  privacy:{
+    title:'🔒 Privacy Policy',
+    body:`<p style="color:var(--mid);font-size:11px;margin-bottom:16px;">Last updated: March 2026</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">1. Who We Are</h3>
+<p>SaloneHub ("we", "our", "us") is a Sierra Leone daily dashboard website providing exchange rates, news, weather, and other information services at <strong>sierraleonehub.com</strong>. We are not a financial institution, news agency or government body.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">2. Data We Collect</h3>
+<p>SaloneHub does <strong>not</strong> collect, store or sell personal data. Specifically:</p>
+<ul style="padding-left:18px;margin-top:8px;margin-bottom:8px;">
+  <li>We do <strong>not</strong> require account registration or login</li>
+  <li>We do <strong>not</strong> collect your name, email, phone number or location</li>
+  <li>We do <strong>not</strong> use advertising networks or tracking pixels</li>
+  <li>We do <strong>not</strong> sell data to third parties</li>
+</ul>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">3. Cookies & Local Storage</h3>
+<p>We use your browser's <strong>localStorage</strong> only to remember your preferences (dark/light mode, default city, default currency) and power outage reports you submit. This data <strong>never leaves your device</strong> and is not transmitted to any server.</p>
+<p style="margin-top:8px;">You can clear this at any time via your browser settings (Settings → Clear browsing data → Cached data).</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">4. Third-Party Services</h3>
+<p>SaloneHub fetches data from the following external APIs. Their own privacy policies apply:</p>
+<ul style="padding-left:18px;margin-top:8px;margin-bottom:8px;">
+  <li><strong>ExchangeRate-API</strong> (exchangerate-api.com) — currency rates</li>
+  <li><strong>Open-Meteo</strong> (open-meteo.com) — weather data</li>
+  <li><strong>CoinGecko</strong> (coingecko.com) — cryptocurrency prices</li>
+  <li><strong>RSS2JSON</strong> (rss2json.com) — news feeds</li>
+  <li><strong>Football-Data.org</strong> — football scores</li>
+  <li><strong>Google Fonts</strong> — typography (may log your IP)</li>
+  <li><strong>Anthropic Claude API</strong> — AI Chat feature only, when used</li>
+</ul>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">5. AI Chat</h3>
+<p>When you use the SaloneHub AI Chat, your messages are sent to Anthropic's Claude API for processing. Do <strong>not</strong> share personally identifiable information, passwords or sensitive financial details in the chat. Anthropic's <a href="https://www.anthropic.com/privacy" target="_blank" style="color:var(--primary);">Privacy Policy</a> applies to those interactions.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">6. Sierra Leone Data Protection Act 2022</h3>
+<p>We comply with the Sierra Leone Data Protection Act 2022. As we do not collect personal data, most obligations do not apply. Should this change, we will update this policy and notify users prominently.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">7. Children</h3>
+<p>SaloneHub is a general-purpose information site suitable for all ages. We do not knowingly collect data from children under 13.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">8. Contact</h3>
+<p>For privacy enquiries: <a href="mailto:hello@sierraleonehub.com" style="color:var(--primary);">hello@sierraleonehub.com</a></p>
+<div style="background:rgba(30,181,58,.06);border:1px solid rgba(30,181,58,.2);border-radius:10px;padding:12px 14px;margin-top:20px;font-size:12px;color:var(--mid);">🇸🇱 SaloneHub is a community service. We are not affiliated with the Government of Sierra Leone, the Bank of Sierra Leone, or any official body.</div>`
+  },
+  terms:{
+    title:'📋 Terms of Use',
+    body:`<p style="color:var(--mid);font-size:11px;margin-bottom:16px;">Last updated: March 2026</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">1. Acceptance</h3>
+<p>By using SaloneHub ("the Site"), you agree to these Terms of Use. If you do not agree, please discontinue use of the Site.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">2. Information Accuracy</h3>
+<p>SaloneHub provides information for general informational purposes only. While we strive for accuracy:</p>
+<ul style="padding-left:18px;margin-top:8px;margin-bottom:8px;">
+  <li>Exchange rates are <strong>indicative only</strong> — always verify with your bank or the <a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);">Bank of Sierra Leone</a></li>
+  <li>Fuel prices may lag behind official NP/NNPC updates</li>
+  <li>Market prices are community estimates and may not reflect current reality</li>
+  <li>Weather data is sourced from Open-Meteo and may be approximate</li>
+  <li>News articles are sourced from third-party publishers — we do not edit or verify their content</li>
+</ul>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">3. No Financial Advice</h3>
+<p><strong>SaloneHub is NOT a financial advisor.</strong> Nothing on this site constitutes financial, investment, tax or legal advice. Exchange rates, crypto prices, salary benchmarks and tax calculators are for educational reference only. Always consult a qualified professional before making financial decisions.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">4. No Medical Advice</h3>
+<p>Hospital listings and emergency numbers are provided as a convenience. In a medical emergency, call <strong>117</strong> (Ambulance) or <strong>999</strong> (Police). SaloneHub is not liable for outdated contact information.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">5. AI Chat Disclaimer</h3>
+<p>The SaloneHub AI is powered by Anthropic Claude and may occasionally produce inaccurate or outdated responses. Do not rely solely on AI responses for important decisions. Always verify critical information from official sources.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">6. Intellectual Property</h3>
+<p>The SaloneHub name, logo and original content are our property. News articles remain the property of their respective publishers. Flag emojis and currency data are used under their respective open licences.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">7. Limitation of Liability</h3>
+<p>SaloneHub and its operators are not liable for any loss, damage or harm arising from use of or reliance on information on this site, including but not limited to financial loss from acting on exchange rate data, harm from reliance on medical information, or any technical errors.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">8. External Links</h3>
+<p>We link to external websites for convenience. We are not responsible for the content, privacy practices or availability of those sites.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">9. Changes to Terms</h3>
+<p>We may update these Terms at any time. Continued use of the Site after changes constitutes acceptance of the new Terms.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">10. Governing Law</h3>
+<p>These Terms are governed by the laws of Sierra Leone.</p>
+<h3 style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin:16px 0 8px;color:var(--primary);">11. Contact</h3>
+<p>For enquiries: <a href="mailto:hello@sierraleonehub.com" style="color:var(--primary);">hello@sierraleonehub.com</a></p>
+<div style="background:rgba(30,181,58,.06);border:1px solid rgba(30,181,58,.2);border-radius:10px;padding:12px 14px;margin-top:20px;font-size:12px;color:var(--mid);">🇸🇱 SaloneHub is a community service operated independently. We are not affiliated with the Government of Sierra Leone or any official body.</div>`
+  }
+};
+function openModal(type){
+  const c=LEGAL_CONTENT[type];
+  document.getElementById('legal-title').textContent=c.title;
+  document.getElementById('legal-body').innerHTML=c.body;
+  const o=document.getElementById('legal-overlay');
+  o.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeLegal(){
+  document.getElementById('legal-overlay').style.display='none';
+  document.body.style.overflow='';
+}
 function copyText(t,m){navigator.clipboard.writeText(t).then(()=>showToast('✓ '+m));}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 function toggleTheme(){const d=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',d?'light':'dark');document.getElementById('theme-icon').textContent=d?'🌙':'☀️';localStorage.setItem('salonehub_theme',d?'light':'dark');}
