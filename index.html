@@ -34,6 +34,7 @@
 [data-theme="dark"] .digest-stat .dv{color:#f0f0f0;}
 [data-theme="dark"] .news-content h4{color:#f0f0f0;}[data-theme="dark"] .news-content p{color:#bbb;}
 [data-theme="dark"] .emrg-card .name{color:#f0f0f0;}[data-theme="dark"] .emrg-card .num{color:var(--primary);}
+[data-theme="dark"] .recipe-card{background:rgba(255,255,255,0.05);border-color:rgba(30,181,58,0.12);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 8% 15%,rgba(30,181,58,.07) 0%,transparent 50%),radial-gradient(ellipse at 92% 85%,rgba(0,114,198,.06) 0%,transparent 50%);}
@@ -57,7 +58,7 @@ header{position:relative;z-index:10;padding:14px 36px;display:flex;align-items:c
 .digest-banner{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,var(--primary-light) 100%);padding:28px 36px;color:white;position:relative;z-index:1;}
 .digest-banner h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:6px;}
 .digest-banner p{font-size:13px;opacity:.85;margin-bottom:18px;}
-.digest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:700px;}
+.digest-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:900px;}
 .digest-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 14px;}
 .digest-stat .dl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;}
 .digest-stat .dv{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
@@ -150,6 +151,36 @@ input:focus,select:focus{border-color:var(--primary);}
 .weather-city{font-weight:700;font-size:13px;margin-bottom:4px;}
 .weather-temp{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--primary);}
 .weather-desc{font-size:12px;color:var(--mid);margin-top:4px;}
+/* Recipe styles */
+.recipe-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all .2s;}
+.recipe-card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.recipe-emoji{font-size:36px;margin-bottom:8px;}
+.recipe-name{font-weight:700;font-size:14px;margin-bottom:4px;}
+.recipe-desc{font-size:12px;color:var(--mid);}
+.recipe-detail{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-top:16px;display:none;}
+.recipe-detail.open{display:block;}
+.recipe-ing li{font-size:13px;color:var(--mid);padding:4px 0;border-bottom:1px solid var(--border);}
+.recipe-step{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.recipe-step-num{background:var(--primary);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+/* Tax Calculator */
+.tax-result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px;}
+.tax-result-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;}
+.tax-result-label{font-size:11px;color:var(--mid);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.tax-result-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--primary);}
+/* Hospital finder */
+.hospital-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
+.hospital-name{font-weight:700;font-size:14px;margin-bottom:4px;}
+.hospital-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:rgba(30,181,58,.1);color:var(--primary);display:inline-block;margin-bottom:6px;}
+.hospital-addr{font-size:12px;color:var(--mid);}
+/* Traffic */
+.traffic-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:var(--charcoal);transition:all .2s;}
+.traffic-card:hover{border-color:var(--primary);transform:translateY(-2px);}
+/* Bank status */
+.bank-status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.bank-status-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
+.bank-status-icon{font-size:24px;margin-bottom:6px;}
+.bank-status-name{font-weight:700;font-size:12px;margin-bottom:4px;}
+.bank-status-indicator{font-size:11px;font-weight:700;}
 footer{text-align:center;padding:22px;border-top:1px solid var(--border);font-size:11px;color:var(--mid);position:relative;z-index:1;}
 footer a{color:var(--blue);text-decoration:none;}
 footer strong{color:var(--primary);}
@@ -170,10 +201,12 @@ footer strong{color:var(--primary);}
 .prefs-section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--primary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border);}
 .prefs-field label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px;}
 .prefs-save-btn{width:100%;background:var(--primary);color:white;border:none;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.curr-chips{display:flex;flex-wrap:wrap;gap:6px;}
 @media(max-width:600px){header{padding:12px 16px;}.digest-banner{padding:18px 16px;}.digest-grid{grid-template-columns:1fr 1fr;}.panels{padding:14px 12px 32px;}.g2,.g3{grid-template-columns:1fr;}.converter{grid-template-columns:1fr auto 1fr;}}
 </style>
 </head>
 <body>
+<!-- TICKER -->
 <div class="ticker-bar">
   <span class="ticker-label">🇸🇱 LIVE</span>
   <div class="ticker-wrap"><div class="ticker-track" id="ticker1">
@@ -183,6 +216,7 @@ footer strong{color:var(--primary);}
     <span class="ticker-item">🇬🇲 GMD/SLE <span class="rate" id="t-gmd">—</span></span>
     <span class="ticker-item">🇬🇭 GHS/SLE <span class="rate" id="t-ghs">—</span></span>
     <span class="ticker-item">🇨🇳 CNY/SLE <span class="rate" id="t-cny">—</span></span>
+    <span class="ticker-item">₿ BTC <span class="rate" id="t-btc">—</span></span>
     <span class="ticker-item">🇺🇸 USD/SLE <span class="rate" id="t-usd2">—</span></span>
     <span class="ticker-item">🇬🇧 GBP/SLE <span class="rate" id="t-gbp2">—</span></span>
     <span class="ticker-item">🇪🇺 EUR/SLE <span class="rate" id="t-eur2">—</span></span>
@@ -209,6 +243,9 @@ footer strong{color:var(--primary);}
     <div class="digest-stat"><div class="dl">Dollar Rate</div><div class="dv" id="d-usd">—</div><div class="ds">BSL Rate</div></div>
     <div class="digest-stat"><div class="dl">Pound Rate</div><div class="dv" id="d-gbp">—</div><div class="ds">BSL Rate</div></div>
     <div class="digest-stat"><div class="dl">Freetown Weather</div><div class="dv" id="d-weather">—</div><div class="ds" id="d-weathersub">Loading...</div></div>
+    <div class="digest-stat" style="cursor:pointer;" onclick="switchCat('money');setTimeout(()=>switchTab('crypto'),150)">
+      <div class="dl">₿ Bitcoin</div><div class="dv" id="d-btc">—</div><div class="ds">Live · SLE</div>
+    </div>
     <div class="digest-stat" style="cursor:pointer;" onclick="switchCat('news');setTimeout(()=>switchTab('holidays'),150)">
       <div class="dl">Next Holiday 🎉</div><div class="dv" id="d-holiday-days">—</div>
       <div class="ds" id="d-holiday-name" style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Loading...</div>
@@ -217,17 +254,18 @@ footer strong{color:var(--primary);}
 </div>
 <div class="tab-nav">
   <div class="cat-row" id="cat-row">
-    <button class="cat-btn active" data-cat="money" onclick="switchCat('money')">💰 Money <span class="cat-count">3</span></button>
-    <button class="cat-btn" data-cat="news" onclick="switchCat('news')">📰 News & Info <span class="cat-count">4</span></button>
-    <button class="cat-btn" data-cat="life" onclick="switchCat('life')">🌍 Life & Services <span class="cat-count">4</span></button>
-    <button class="cat-btn" data-cat="work" onclick="switchCat('work')">💼 Work & Travel <span class="cat-count">2</span></button>
-    <button class="cat-btn" data-cat="fun" onclick="switchCat('fun')">⚽ Entertainment <span class="cat-count">1</span></button>
+    <button class="cat-btn active" data-cat="money" onclick="switchCat('money')">💰 Money <span class="cat-count">4</span></button>
+    <button class="cat-btn" data-cat="news" onclick="switchCat('news')">📰 News & Info <span class="cat-count">5</span></button>
+    <button class="cat-btn" data-cat="life" onclick="switchCat('life')">🌍 Life & Services <span class="cat-count">6</span></button>
+    <button class="cat-btn" data-cat="work" onclick="switchCat('work')">💼 Work & Travel <span class="cat-count">3</span></button>
+    <button class="cat-btn" data-cat="fun" onclick="switchCat('fun')">⚽ Entertainment <span class="cat-count">3</span></button>
     <button class="cat-btn" data-cat="ai" onclick="switchCat('ai')">🤖 AI Chat <span class="cat-count">1</span></button>
   </div>
   <div class="subtab-row" id="subtab-row"></div>
 </div>
 <div class="panels">
 
+<!-- ══════════════ MONEY PANELS ══════════════ -->
 <!-- CURRENCY -->
 <div class="panel active" id="panel-currency">
   <div class="card">
@@ -270,7 +308,7 @@ footer strong{color:var(--primary);}
   </div>
   <div class="card">
     <div class="card-title">🛒 Market Prices — Freetown</div>
-    <div class="card-sub">Average food prices in Freetown markets</div>
+    <div class="card-sub">Average food prices in Freetown markets · As of 2025</div>
     <div class="g-auto">
       <div class="rate-chip"><div class="curr">🍚 Rice (25kg bag)</div><div class="val">Le 350</div></div>
       <div class="rate-chip"><div class="curr">🌽 Cassava (kg)</div><div class="val">Le 8</div></div>
@@ -280,11 +318,13 @@ footer strong{color:var(--primary);}
       <div class="rate-chip"><div class="curr">🥖 Bread (loaf)</div><div class="val">Le 15</div></div>
       <div class="rate-chip"><div class="curr">🐟 Fresh Fish (kg)</div><div class="val">Le 80</div></div>
       <div class="rate-chip"><div class="curr">🥬 Tomatoes (kg)</div><div class="val">Le 25</div></div>
+      <div class="rate-chip"><div class="curr">🫘 Groundnuts (kg)</div><div class="val">Le 30</div></div>
+      <div class="rate-chip"><div class="curr">🌾 Pepper (kg)</div><div class="val">Le 35</div></div>
     </div>
   </div>
 </div>
 
-<!-- BANKING -->
+<!-- BANKING / MOBILE MONEY -->
 <div class="panel" id="panel-banking">
   <div class="card">
     <div class="card-title">📲 Mobile Money — Sierra Leone</div>
@@ -293,7 +333,7 @@ footer strong{color:var(--primary);}
       <div class="rate-chip" onclick="copyText('*144#','Africell MoMo copied')" style="cursor:pointer;"><div class="curr">Africell Money</div><div class="val">*144#</div></div>
       <div class="rate-chip" onclick="copyText('*554#','Orange Money copied')" style="cursor:pointer;"><div class="curr">Orange Money SL</div><div class="val">*554#</div></div>
       <div class="rate-chip" onclick="copyText('*777#','Qcell copied')" style="cursor:pointer;"><div class="curr">Qcell Money</div><div class="val">*777#</div></div>
-      <div class="rate-chip" onclick="copyText('*345#','Sierra Leone Commercial copied')" style="cursor:pointer;"><div class="curr">SLCB Mobile</div><div class="val">*345#</div></div>
+      <div class="rate-chip" onclick="copyText('*345#','SLCB copied')" style="cursor:pointer;"><div class="curr">SLCB Mobile</div><div class="val">*345#</div></div>
       <div class="rate-chip" onclick="copyText('*432#','Rokel Commercial copied')" style="cursor:pointer;"><div class="curr">Rokel Commercial</div><div class="val">*432#</div></div>
       <div class="rate-chip" onclick="copyText('*567#','GT Bank SL copied')" style="cursor:pointer;"><div class="curr">GTBank Sierra Leone</div><div class="val">*567#</div></div>
     </div>
@@ -310,33 +350,64 @@ footer strong{color:var(--primary);}
   </div>
 </div>
 
+<!-- CRYPTO -->
+<div class="panel" id="panel-crypto">
+  <div class="card">
+    <div class="card-title">₿ Crypto Prices — in SLE</div>
+    <div class="card-sub">Live prices via CoinGecko · Converted to New Leone</div>
+    <div class="loading-row" id="crypto-loading"><div class="spinner"></div> Fetching crypto prices...</div>
+    <div id="crypto-grid" class="rate-grid" style="display:none"></div>
+    <div style="margin-top:12px;font-size:11px;color:var(--mid);">⚠️ Crypto prices are highly volatile. Not financial advice.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🧮 PAYE Tax Calculator — Sierra Leone</div>
+    <div class="card-sub">Estimate personal income tax (NRA 2025/2026)</div>
+    <div>
+      <label class="field-label">Annual Gross Salary (SLE)</label>
+      <input type="number" id="tax-salary" placeholder="e.g. 36000000" oninput="calcTax()">
+    </div>
+    <div class="tax-result-grid" id="tax-results" style="display:none">
+      <div class="tax-result-item"><div class="tax-result-label">Annual Tax</div><div class="tax-result-val" id="tr-annual">—</div></div>
+      <div class="tax-result-item"><div class="tax-result-label">Monthly Tax</div><div class="tax-result-val" id="tr-monthly">—</div></div>
+      <div class="tax-result-item"><div class="tax-result-label">Net Annual</div><div class="tax-result-val" id="tr-net">—</div></div>
+      <div class="tax-result-item"><div class="tax-result-label">Effective Rate</div><div class="tax-result-val" id="tr-rate">—</div></div>
+    </div>
+    <div style="margin-top:14px;"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px;color:var(--primary);">💼 Salary Benchmark — Freetown 2025</div>
+    <div class="g-auto">
+      <div class="rate-chip"><div class="curr">Software Engineer</div><div class="val" style="font-size:12px;">Le 2M–8M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Medical Doctor</div><div class="val" style="font-size:12px;">Le 3M–7M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Nurse / Midwife</div><div class="val" style="font-size:12px;">Le 1.5M–4M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Teacher</div><div class="val" style="font-size:12px;">Le 800K–2M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Accountant</div><div class="val" style="font-size:12px;">Le 2M–5M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Bank Officer</div><div class="val" style="font-size:12px;">Le 2M–6M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Civil Engineer</div><div class="val" style="font-size:12px;">Le 2.5M–6M/mo</div></div>
+      <div class="rate-chip"><div class="curr">Driver</div><div class="val" style="font-size:12px;">Le 600K–1.5M/mo</div></div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:var(--mid);">ℹ️ Market averages for Freetown 2025. Actual salaries vary by employer and sector.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ NEWS PANELS ══════════════ -->
 <!-- NEWS -->
 <div class="panel" id="panel-news">
   <div class="card">
     <div class="card-title">📰 Sierra Leone Today</div>
-    <div class="card-sub">Live headlines from 10 Sierra Leonean news sources · Merged &amp; sorted by latest</div>
-
-    <!-- Category filter -->
-    <div class="curr-chips" id="news-cat-chips" style="margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;">
-      <div class="curr-chip active" data-cat="general"  onclick="setNewsCat(this,'general')">&#x1F5DE;&#xFE0F; All News</div>
-      <div class="curr-chip"        data-cat="politics" onclick="setNewsCat(this,'politics')">&#x1F3DB; Politics</div>
-      <div class="curr-chip"        data-cat="business" onclick="setNewsCat(this,'business')">&#x1F4BC; Business</div>
-      <div class="curr-chip"        data-cat="sports"   onclick="setNewsCat(this,'sports')">&#x26BD; Sports</div>
-      <div class="curr-chip"        data-cat="diaspora" onclick="setNewsCat(this,'diaspora')">&#x1F30D; Diaspora</div>
+    <div class="card-sub">Live headlines from 10 Sierra Leonean news sources · Merged & sorted by latest</div>
+    <div class="curr-chips" id="news-cat-chips" style="margin-bottom:10px;">
+      <div class="curr-chip active" data-cat="general" onclick="setNewsCat(this,'general')">🗞️ All News</div>
+      <div class="curr-chip" data-cat="politics" onclick="setNewsCat(this,'politics')">🏛 Politics</div>
+      <div class="curr-chip" data-cat="business" onclick="setNewsCat(this,'business')">💼 Business</div>
+      <div class="curr-chip" data-cat="sports" onclick="setNewsCat(this,'sports')">⚽ Sports</div>
+      <div class="curr-chip" data-cat="diaspora" onclick="setNewsCat(this,'diaspora')">🌍 Diaspora</div>
     </div>
-
-    <!-- Active sources display -->
     <div style="background:rgba(30,181,58,.05);border:1px solid rgba(30,181,58,.12);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
-      <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;">&#x1F4E1; Reading from all sources simultaneously</div>
+      <div style="font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;">📡 Reading from all sources simultaneously</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;" id="news-source-badges"></div>
     </div>
-
     <div class="loading-row" id="news-loading"><div class="spinner"></div> Loading headlines from all sources...</div>
     <div id="news-list"></div>
-
-    <div style="margin-top:14px;font-size:11px;color:var(--mid);text-align:center;">
-      Aggregating <strong style="color:var(--primary);">10 verified Sierra Leone news sources</strong> in real-time &middot; Click any story to read full article
-    </div>
+    <div style="margin-top:14px;font-size:11px;color:var(--mid);text-align:center;">Aggregating <strong style="color:var(--primary);">10 verified Sierra Leone news sources</strong> in real-time · Click any story to read full article</div>
   </div>
 </div>
 
@@ -349,6 +420,7 @@ footer strong{color:var(--primary);}
     <div class="law-card"><span class="law-tag tag-blue">Cybercrime</span><h3>🌐 Cybercrime Act 2021</h3><ul><li>Online fraud, hacking and identity theft are criminal offences</li><li>Cyberstalking and online harassment carry prison sentences</li><li>Spreading false information online can be prosecuted</li><li>Penalties: up to 10 years imprisonment for serious offences</li></ul></div>
     <div class="law-card"><span class="law-tag tag-gold">Labour</span><h3>👷 Employer & Employee Relations Act</h3><ul><li>National Minimum Wage: Le 800,000/month (2024)</li><li>Max 8 hours/day, 40 hours/week standard</li><li>Maternity leave: 12 weeks with pay</li><li>Annual leave: minimum 21 working days</li></ul></div>
     <div class="law-card"><span class="law-tag tag-gold">Tax</span><h3>🧾 Tax Laws — Key Points</h3><ul><li>GST (Goods & Services Tax): 15% standard rate</li><li>Corporate tax: 30% standard rate</li><li>PAYE: progressive rates — consult NRA for brackets</li><li>Authority: National Revenue Authority (NRA)</li></ul><a href="https://www.nra.gov.sl" target="_blank" style="color:var(--primary);font-size:11px;">nra.gov.sl →</a></div>
+    <div class="law-card"><span class="law-tag tag-blue">Website Compliance</span><h3>📋 What Every Sierra Leonean Website Must Have</h3><ul><li>✅ <strong>Privacy Policy</strong> — explains data collection & use</li><li>✅ <strong>Terms & Conditions</strong> — rules for using your site</li><li>✅ <strong>Disclaimer</strong> — especially for financial or medical info</li><li>✅ <strong>Contact details</strong> — physical address or email</li><li>✅ If collecting payments: use BSL-licensed payment gateways</li></ul></div>
   </div>
 </div>
 
@@ -387,6 +459,26 @@ footer strong{color:var(--primary);}
   </div>
 </div>
 
+<!-- SIERRA LEONE HISTORY & FACTS -->
+<div class="panel" id="panel-about">
+  <div class="card">
+    <div class="card-title">🇸🇱 Sierra Leone — Quick Facts</div>
+    <div class="card-sub">Key facts about the land of lions</div>
+    <div class="g-auto" style="margin-bottom:14px;">
+      <div class="rate-chip"><div class="curr">🏛️ Capital</div><div class="val">Freetown</div></div>
+      <div class="rate-chip"><div class="curr">👥 Population</div><div class="val">~8.8M</div></div>
+      <div class="rate-chip"><div class="curr">💰 Currency</div><div class="val">Leone (SLE)</div></div>
+      <div class="rate-chip"><div class="curr">📅 Independence</div><div class="val">Apr 27, 1961</div></div>
+      <div class="rate-chip"><div class="curr">🌐 Internet TLD</div><div class="val">.sl</div></div>
+      <div class="rate-chip"><div class="curr">📞 Calling Code</div><div class="val">+232</div></div>
+      <div class="rate-chip"><div class="curr">🕐 Time Zone</div><div class="val">GMT (WAT)</div></div>
+      <div class="rate-chip"><div class="curr">🗣️ Language</div><div class="val">English (official)</div></div>
+    </div>
+    <div class="law-card"><span class="law-tag tag-green">Notable</span><h3>🦁 About Sierra Leone</h3><ul><li>Name means "Lion Mountains" in Portuguese</li><li>Home to the deepest natural harbour in Africa (Freetown)</li><li>One of the world's top diamond producers</li><li>UNESCO World Heritage Site: Bunce Island (slave fort)</li><li>Famous for its beaches: Lumley, Tokeh, Bureh</li><li>Krio is widely spoken alongside over 16 ethnic languages</li></ul></div>
+  </div>
+</div>
+
+<!-- ══════════════ LIFE & SERVICES PANELS ══════════════ -->
 <!-- WEATHER -->
 <div class="panel" id="panel-weather">
   <div class="card">
@@ -452,6 +544,43 @@ footer strong{color:var(--primary);}
   </div>
 </div>
 
+<!-- HOSPITALS -->
+<div class="panel" id="panel-hospitals">
+  <div class="card">
+    <div class="card-title">🏥 Find Hospitals & Clinics</div>
+    <div class="card-sub">Major healthcare facilities in Sierra Leone</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+      <input type="text" id="hospital-search" placeholder="Search by city or hospital name..." style="flex:1;" oninput="filterHospitals()">
+    </div>
+    <div class="curr-chips" style="margin-bottom:12px;" id="hospital-type-chips">
+      <div class="curr-chip active" onclick="setHospType(this,'all')">🏥 All</div>
+      <div class="curr-chip" onclick="setHospType(this,'government')">🏨 Government</div>
+      <div class="curr-chip" onclick="setHospType(this,'private')">🩺 Private</div>
+      <div class="curr-chip" onclick="setHospType(this,'missionary')">✝️ Missionary</div>
+    </div>
+    <div id="hospitals-list"></div>
+  </div>
+</div>
+
+<!-- TRAFFIC -->
+<div class="panel" id="panel-traffic">
+  <div class="card">
+    <div class="card-title">🚦 Freetown & Major Town Traffic</div>
+    <div class="card-sub">Live traffic — opens Google Maps</div>
+    <div class="g2" style="margin-bottom:12px;">
+      <a href="https://www.google.com/maps/@8.484,-13.234,13z/data=!5m1!1e1" target="_blank" class="traffic-card"><div style="font-size:36px;margin-bottom:8px;">🌊</div><div style="font-weight:700;font-size:15px;">Freetown Traffic</div><div style="font-size:12px;color:var(--primary);margin-top:8px;font-weight:600;">View Live Map →</div></a>
+      <a href="https://www.google.com/maps/@7.965,-11.738,13z/data=!5m1!1e1" target="_blank" class="traffic-card"><div style="font-size:36px;margin-bottom:8px;">🏙️</div><div style="font-weight:700;font-size:15px;">Bo Traffic</div><div style="font-size:12px;color:var(--primary);margin-top:8px;font-weight:600;">View Live Map →</div></a>
+    </div>
+    <div class="g3">
+      <a href="https://www.google.com/maps/@7.876,-11.191,13z/data=!5m1!1e1" target="_blank" class="traffic-card" style="padding:12px;"><div style="font-size:24px;">🌿</div><div style="font-weight:700;font-size:13px;">Kenema</div><div style="font-size:11px;color:var(--primary);">View →</div></a>
+      <a href="https://www.google.com/maps/@8.882,-12.048,13z/data=!5m1!1e1" target="_blank" class="traffic-card" style="padding:12px;"><div style="font-size:24px;">🏘️</div><div style="font-weight:700;font-size:13px;">Makeni</div><div style="font-size:11px;color:var(--primary);">View →</div></a>
+      <a href="https://www.google.com/maps/@8.634,-10.969,13z/data=!5m1!1e1" target="_blank" class="traffic-card" style="padding:12px;"><div style="font-size:24px;">💎</div><div style="font-weight:700;font-size:13px;">Koidu</div><div style="font-size:11px;color:var(--primary);">View →</div></a>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--mid);">ℹ️ Traffic data powered by Google Maps · Live conditions may vary</div>
+  </div>
+</div>
+
+<!-- ══════════════ WORK & TRAVEL PANELS ══════════════ -->
 <!-- JOBS -->
 <div class="panel" id="panel-jobs">
   <div class="card">
@@ -480,27 +609,47 @@ footer strong{color:var(--primary);}
       <div class="rate-chip"><div class="curr">🏆 Global Ranking</div><div class="val">#87 of 199</div></div>
       <div class="rate-chip"><div class="curr">🛬 Visa on Arrival</div><div class="val">~20 countries</div></div>
     </div>
-    <div class="g-auto">
-      <div class="rate-chip"><div class="curr">🌍 ECOWAS (15 states)</div><div class="val">Visa-free</div></div>
-      <div class="rate-chip"><div class="curr">🇷🇼 Rwanda</div><div class="val">Visa on arrival</div></div>
-      <div class="rate-chip"><div class="curr">🇰🇪 Kenya</div><div class="val">eTA</div></div>
-      <div class="rate-chip"><div class="curr">🇿🇦 South Africa</div><div class="val">Visa-free</div></div>
-      <div class="rate-chip"><div class="curr">🇪🇹 Ethiopia</div><div class="val">Visa on arrival</div></div>
-      <div class="rate-chip"><div class="curr">🇹🇷 Turkey</div><div class="val">e-Visa</div></div>
+    <div class="curr-chips" style="margin-bottom:10px;" id="visa-type-chips">
+      <div class="curr-chip active" onclick="filterVisa(this,'all')">🌍 All</div>
+      <div class="curr-chip" onclick="filterVisa(this,'free')">✅ Visa-Free</div>
+      <div class="curr-chip" onclick="filterVisa(this,'arrival')">🛬 On Arrival</div>
+      <div class="curr-chip" onclick="filterVisa(this,'evisa')">💻 eVisa</div>
     </div>
+    <div id="visa-list" class="g-auto"></div>
     <div style="margin-top:12px;font-size:11px;color:var(--mid);">⚠️ Always verify requirements with the destination country's official embassy before travelling.</div>
   </div>
 </div>
 
+<!-- DIASPORA -->
+<div class="panel" id="panel-diaspora">
+  <div class="card">
+    <div class="card-title">🌍 Sierra Leone Diaspora</div>
+    <div class="card-sub">Resources for Sierra Leoneans living abroad</div>
+    <div class="law-card"><span class="law-tag tag-green">UK Salone Community</span><h3>🇬🇧 Sierra Leoneans in the UK</h3><ul><li>Estimated 100,000+ Sierra Leoneans in the UK</li><li>High concentration in South London (Peckham, Stockwell, Brixton)</li><li>Sierra Leone High Commission UK: <a href="tel:+442074994605" style="color:var(--primary);">+44 207-499-4605</a></li><li>Website: <a href="http://www.slhc-uk.org.uk" target="_blank" style="color:var(--primary);">slhc-uk.org.uk →</a></li></ul></div>
+    <div class="law-card"><span class="law-tag tag-blue">USA Salone Community</span><h3>🇺🇸 Sierra Leoneans in the USA</h3><ul><li>Large communities in New York, New Jersey, Atlanta and Houston</li><li>Sierra Leone Embassy USA: <a href="tel:+12026632376" style="color:var(--primary);">+1 202-663-2376</a></li><li>Website: <a href="https://www.embassyofsierraleone.net" target="_blank" style="color:var(--primary);">embassyofsierraleone.net →</a></li></ul></div>
+    <div class="law-card"><span class="law-tag tag-gold">Returning Home</span><h3>🏡 Planning to Return to Sierra Leone?</h3><ul><li>NaCSA (National Commission for Social Action) supports returnees</li><li>Bring valid SL passport or NCP (National Civil Registration)</li><li>Customs allowances: personal effects duty-free up to a limit</li><li>Contact NASSIT for pension enquiries: <a href="https://www.nassit.gov.sl" target="_blank" style="color:var(--primary);">nassit.gov.sl →</a></li></ul></div>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;margin-bottom:10px;">💸 Top Remittance Services to Sierra Leone</div>
+    <div class="g3">
+      <a href="https://wise.com" target="_blank" class="job-board-link"><div class="job-board-icon">💙</div><div class="job-board-name">Wise</div><div class="job-board-sub">Low fees · Fast</div></a>
+      <a href="https://www.worldremit.com" target="_blank" class="job-board-link"><div class="job-board-icon">🌍</div><div class="job-board-name">WorldRemit</div><div class="job-board-sub">Wide coverage</div></a>
+      <a href="https://www.moneygram.com" target="_blank" class="job-board-link"><div class="job-board-icon">💰</div><div class="job-board-name">MoneyGram</div><div class="job-board-sub">Cash pickup</div></a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ENTERTAINMENT PANELS ══════════════ -->
 <!-- FOOTBALL -->
 <div class="panel" id="panel-football">
   <div class="card">
-    <div class="card-title">⚽ Football — Sierra Leone & International</div>
+    <div class="card-title">⚽ Football — Leone Stars & International</div>
     <div class="card-sub">Leone Stars & major international leagues</div>
     <div class="curr-chips" id="league-chips" style="margin-bottom:12px;">
       <div class="curr-chip active" data-league="PL" onclick="loadLeague('PL','EPL')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 EPL</div>
       <div class="curr-chip" data-league="CL" onclick="loadLeague('CL','UCL')">🏆 UCL</div>
       <div class="curr-chip" data-league="PD" onclick="loadLeague('PD','La Liga')">🇪🇸 La Liga</div>
+      <div class="curr-chip" data-league="BL1" onclick="loadLeague('BL1','Bundesliga')">🇩🇪 Bundesliga</div>
+      <div class="curr-chip" data-league="SA" onclick="loadLeague('SA','Serie A')">🇮🇹 Serie A</div>
+      <div class="curr-chip" data-league="FL1" onclick="loadLeague('FL1','Ligue 1')">🇫🇷 Ligue 1</div>
     </div>
     <div class="curr-chips" id="fixture-chips" style="margin-bottom:14px;">
       <div class="curr-chip active" data-view="results" onclick="switchView('results')">📋 Results</div>
@@ -509,6 +658,34 @@ footer strong{color:var(--primary);}
     <div class="loading-row" id="football-loading"><div class="spinner"></div> Loading matches...</div>
     <div id="football-content"></div>
     <div style="margin-top:12px;"><a href="https://www.slfootball.com" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">Sierra Leone Football Association →</a></div>
+  </div>
+</div>
+
+<!-- SALONE RECIPES -->
+<div class="panel" id="panel-recipes">
+  <div class="card">
+    <div class="card-title">🍲 Salone Recipe Finder</div>
+    <div class="card-sub">Traditional Sierra Leonean recipes</div>
+    <div class="curr-chips" id="recipe-chips" style="margin-bottom:12px;">
+      <div class="curr-chip active" onclick="filterRecipes(this,'all')">🍽️ All</div>
+      <div class="curr-chip" onclick="filterRecipes(this,'soup')">🍲 Soups & Stews</div>
+      <div class="curr-chip" onclick="filterRecipes(this,'rice')">🍚 Rice Dishes</div>
+      <div class="curr-chip" onclick="filterRecipes(this,'snack')">🥘 Snacks</div>
+      <div class="curr-chip" onclick="filterRecipes(this,'drink')">🥤 Drinks</div>
+    </div>
+    <div id="recipe-grid" class="g3"></div>
+    <div id="recipe-detail"></div>
+  </div>
+</div>
+
+<!-- SALONE MUSIC & CULTURE -->
+<div class="panel" id="panel-culture">
+  <div class="card">
+    <div class="card-title">🎵 Salone Music & Culture</div>
+    <div class="card-sub">Sierra Leonean artists, genres and culture</div>
+    <div class="law-card"><span class="law-tag tag-green">Music</span><h3>🎤 Sierra Leonean Music Scene</h3><ul><li><strong>Afrobeats SL:</strong> Blending Krio lyrics with Afrobeats rhythms</li><li><strong>Notable Artists:</strong> Drizilik, DRRTYWULVZ, Emmerson, Star Zee</li><li><strong>Popular Genres:</strong> Afrobeats, Salone music, Hip-hop Krio, Highlife</li><li><strong>Annual Events:</strong> Sierra Leone Music Awards, Freetown Music Festival</li></ul></div>
+    <div class="law-card"><span class="law-tag tag-blue">Culture & Food</span><h3>🌴 Salone Culture Highlights</h3><ul><li><strong>Bundu / Sande Society:</strong> Female initiation society (UNESCO heritage)</li><li><strong>Poro Society:</strong> Male initiation society</li><li><strong>National Dish:</strong> Plasas (cassava leaf stew with rice)</li><li><strong>Krio Language:</strong> English-based creole spoken widely in Freetown</li><li><strong>Oktoba Fest:</strong> Annual Freetown cultural festival</li></ul></div>
+    <div class="law-card"><span class="law-tag tag-gold">Tourism</span><h3>🏖️ Top Sierra Leone Tourism Spots</h3><ul><li>🏖️ Lumley Beach, Freetown</li><li>🌊 Tokeh Beach & Bureh Beach</li><li>🐠 Banana Islands — snorkelling paradise</li><li>🦁 Outamba-Kilimi National Park</li><li>⛵ Tacugama Chimpanzee Sanctuary</li><li>🏛️ Bunce Island Historic Slave Fort</li></ul></div>
   </div>
 </div>
 
@@ -554,17 +731,23 @@ footer strong{color:var(--primary);}
   </div>
 </div>
 
+<!-- OFFLINE BANNER -->
+<div id="offline-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#d63031;color:white;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;z-index:9999;">
+  📡 You are offline — showing cached data · Some features may be unavailable
+</div>
+
 <script>
 const SYM='Le ',BASE='SLE',COUNTRY='Sierra Leone',CC='sl';
 const CAT_TABS={
-  money:[{id:'currency',label:'💱 Rates'},{id:'fuel',label:'⛽ Fuel & Prices'},{id:'banking',label:'📲 Mobile Money'}],
-  news:[{id:'news',label:'📰 News'},{id:'laws',label:'⚖️ Laws'},{id:'exams',label:'📚 Exams'},{id:'holidays',label:'🎉 Holidays'}],
-  life:[{id:'weather',label:'🌤️ Weather'},{id:'power',label:'⚡ EDSA Power'},{id:'emergency',label:'📞 Emergency'},{id:'networks',label:'📱 Networks'}],
-  work:[{id:'jobs',label:'💼 Remote Jobs'},{id:'visa',label:'🛂 Visa-Free'}],
-  fun:[{id:'football',label:'⚽ Football'}],
+  money:[{id:'currency',label:'💱 Rates'},{id:'fuel',label:'⛽ Fuel & Prices'},{id:'banking',label:'📲 Mobile Money'},{id:'crypto',label:'₿ Crypto & Tax'}],
+  news:[{id:'news',label:'📰 News'},{id:'laws',label:'⚖️ Laws'},{id:'exams',label:'📚 Exams'},{id:'holidays',label:'🎉 Holidays'},{id:'about',label:'🇸🇱 About SL'}],
+  life:[{id:'weather',label:'🌤️ Weather'},{id:'power',label:'⚡ EDSA Power'},{id:'emergency',label:'📞 Emergency'},{id:'networks',label:'📱 Networks'},{id:'hospitals',label:'🏥 Hospitals'},{id:'traffic',label:'🚦 Traffic'}],
+  work:[{id:'jobs',label:'💼 Remote Jobs'},{id:'visa',label:'🛂 Visa-Free'},{id:'diaspora',label:'🌍 Diaspora'}],
+  fun:[{id:'football',label:'⚽ Football'},{id:'recipes',label:'🍲 Recipes'},{id:'culture',label:'🎵 Culture'}],
   ai:[{id:'chat',label:'🤖 AI Chat'}]
 };
 let currentCat='money',rates={},selectedCurr='USD',footballLeague='PL',footballView='results',footData=null;
+let hospitalTypeFilter='all',visaTypeFilter='all',recipeFilter='all';
 
 function switchCat(cat){
   currentCat=cat;
@@ -584,6 +767,10 @@ function switchTab(id){
   if(id==='football')loadLeague('PL','EPL');
   if(id==='jobs')loadJobs();
   if(id==='holidays')initHolidays();
+  if(id==='crypto')loadCrypto();
+  if(id==='hospitals')renderHospitals();
+  if(id==='visa')renderVisa();
+  if(id==='recipes')renderRecipes();
 }
 
 // GREETING
@@ -593,98 +780,19 @@ function switchTab(id){
   document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 })();
 
-// ══════════════════════════════════════════════════════════
-// RATES — Multi-source with robust fallback
-// SLE/SLL not widely supported so we fetch USD base rates
-// then convert using live USD→SLE cross-rate
-// ══════════════════════════════════════════════════════════
+// RATES
 async function loadRates(){
   document.getElementById('rate-loading').style.display='flex';
   document.getElementById('rate-body').style.display='none';
-
-  // Multiple free forex APIs as fallbacks (all return USD-base rates)
-  const FOREX_URLS=[
-    'https://open.er-api.com/v6/latest/USD',
-    'https://api.exchangerate-api.com/v4/latest/USD',
-    'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json',
-  ];
-
-  // Known USD→SLE rate (BSL indicative) — updated manually in admin panel
-  // SLE ≈ 22–25 per USD as of 2026
-  const USD_TO_SLE_FALLBACK = 24.57;
-  let usdToSle = USD_TO_SLE_FALLBACK;
-
-  let usdRates = null;
-
-  for(const url of FOREX_URLS){
-    try{
-      const ctrl = new AbortController();
-      setTimeout(()=>ctrl.abort(), 8000);
-      const res = await fetch(url, {signal: ctrl.signal});
-      const data = await res.json();
-      // Handle different response shapes
-      const fx = data.rates || data.usd || data.conversion_rates;
-      if(fx && (fx.EUR || fx.eur)){
-        // Normalise to uppercase keys
-        usdRates = {};
-        Object.keys(fx).forEach(k => { usdRates[k.toUpperCase()] = parseFloat(fx[k]); });
-        break;
-      }
-    }catch(e){}
-  }
-
-  // Try to get SLE/SLL rate directly
-  const SLE_URLS=[
-    'https://open.er-api.com/v6/latest/SLE',
-    'https://api.exchangerate-api.com/v4/latest/SLE',
-    'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sle.json',
-  ];
-  for(const url of SLE_URLS){
-    try{
-      const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),6000);
-      const res=await fetch(url,{signal:ctrl.signal});
-      const data=await res.json();
-      const fx=data.rates||data.sle||data.conversion_rates;
-      if(fx && fx.USD && parseFloat(fx.USD)>0){
-        usdToSle = 1/parseFloat(fx.USD);
-        break;
-      }
-    }catch(e){}
-  }
-  // Also try SLL (old leone ×1000)
-  if(usdToSle===USD_TO_SLE_FALLBACK){
-    try{
-      const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),6000);
-      const res=await fetch('https://open.er-api.com/v6/latest/SLL',{signal:ctrl.signal});
-      const data=await res.json();
-      const fx=data.rates||data.conversion_rates;
-      if(fx && fx.USD && parseFloat(fx.USD)>0){
-        usdToSle=(1/parseFloat(fx.USD))/1000; // SLL to SLE
-      }
-    }catch(e){}
-  }
-
-  if(usdRates){
-    // Convert: X SLE per 1 foreign currency
-    // 1 USD = usdToSle SLE
-    // 1 GBP = usdRates.GBP USD → 1/usdRates.GBP USD per GBP → (1/usdRates.GBP)*usdToSle SLE per GBP
-    rates={};
-    rates.USD = usdToSle;
-    ['GBP','EUR','CAD','CHF','CNY','ZAR','GMD','GHS','XOF','AED','SAR','NGN'].forEach(c=>{
-      if(usdRates[c]) rates[c] = (1/usdRates[c]) * usdToSle;
-    });
-    document.getElementById('rate-loading').style.display='none';
-    document.getElementById('rate-body').style.display='block';
-    document.getElementById('rate-updated').textContent='BSL indicative · Updated '+new Date().toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit'})+' · '+new Date().toLocaleDateString('en-SL',{day:'numeric',month:'short',year:'numeric'});
-    updateRateDisplay(); updateTicker(); updateHeroStats();
-  } else {
-    // Hard-coded BSL fallback rates (clearly labelled)
-    rates={USD:24.57,GBP:31.50,EUR:26.80,CAD:18.10,CNY:3.40,ZAR:1.34,GMD:0.33,GHS:1.85,NGN:0.016};
-    document.getElementById('rate-loading').style.display='none';
-    document.getElementById('rate-body').style.display='block';
-    document.getElementById('rate-updated').textContent='⚠️ Showing cached BSL rates · Live data unavailable';
-    updateRateDisplay(); updateTicker(); updateHeroStats();
-  }
+  const FOREX_URLS=['https://open.er-api.com/v6/latest/USD','https://api.exchangerate-api.com/v4/latest/USD','https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json'];
+  const USD_TO_SLE_FALLBACK=24.57;
+  let usdToSle=USD_TO_SLE_FALLBACK,usdRates=null;
+  for(const url of FOREX_URLS){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),8000);const res=await fetch(url,{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.usd||data.conversion_rates;if(fx&&(fx.EUR||fx.eur)){usdRates={};Object.keys(fx).forEach(k=>{usdRates[k.toUpperCase()]=parseFloat(fx[k]);});break;}}catch(e){}}
+  const SLE_URLS=['https://open.er-api.com/v6/latest/SLE','https://api.exchangerate-api.com/v4/latest/SLE','https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sle.json'];
+  for(const url of SLE_URLS){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),6000);const res=await fetch(url,{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.sle||data.conversion_rates;if(fx&&fx.USD&&parseFloat(fx.USD)>0){usdToSle=1/parseFloat(fx.USD);break;}}catch(e){}}
+  if(usdToSle===USD_TO_SLE_FALLBACK){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),6000);const res=await fetch('https://open.er-api.com/v6/latest/SLL',{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.conversion_rates;if(fx&&fx.USD&&parseFloat(fx.USD)>0){usdToSle=(1/parseFloat(fx.USD))/1000;}}catch(e){}}
+  if(usdRates){rates={};rates.USD=usdToSle;['GBP','EUR','CAD','CHF','CNY','ZAR','GMD','GHS','XOF','AED','SAR','NGN'].forEach(c=>{if(usdRates[c])rates[c]=(1/usdRates[c])*usdToSle;});document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='BSL indicative · Updated '+new Date().toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit'})+' · '+new Date().toLocaleDateString('en-SL',{day:'numeric',month:'short',year:'numeric'});updateRateDisplay();updateTicker();updateHeroStats();}
+  else{rates={USD:24.57,GBP:31.50,EUR:26.80,CAD:18.10,CNY:3.40,ZAR:1.34,GMD:0.33,GHS:1.85,NGN:0.016};document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='⚠️ Showing cached BSL rates · Live data unavailable';updateRateDisplay();updateTicker();updateHeroStats();}
 }
 function fmtSLE(v){return v?(SYM+v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')):'—';}
 function updateRateDisplay(){
@@ -700,290 +808,117 @@ function convertForeign(){const v=parseFloat(document.getElementById('foreign-in
 function swapCurr(){convertLocal();}
 function updateTicker(){
   const m={USD:'usd',GBP:'gbp',EUR:'eur',GMD:'gmd',GHS:'ghs',CNY:'cny'};
-  Object.entries(m).forEach(([c,id])=>{
-    const v=rates[c]?fmtSLE(rates[c]):'—';
-    ['t-'+id,'t-'+id+'2'].forEach(i=>{const el=document.getElementById(i);if(el)el.textContent=v;});
-  });
+  Object.entries(m).forEach(([c,id])=>{const v=rates[c]?fmtSLE(rates[c]):'—';['t-'+id,'t-'+id+'2'].forEach(i=>{const el=document.getElementById(i);if(el)el.textContent=v;});});
 }
 function updateHeroStats(){
   document.getElementById('d-usd').textContent=rates.USD?fmtSLE(rates.USD):'—';
   document.getElementById('d-gbp').textContent=rates.GBP?fmtSLE(rates.GBP):'—';
 }
 
-// WEATHER — uses Open-Meteo free API (no key required, CORS-safe)
-const CITIES=[
-  {name:'Freetown',lat:8.484,lon:-13.234},
-  {name:'Bo',lat:7.965,lon:-11.738},
-  {name:'Kenema',lat:7.876,lon:-11.191},
-  {name:'Makeni',lat:8.882,lon:-12.048},
-  {name:'Koidu',lat:8.634,lon:-10.969},
-  {name:'Port Loko',lat:8.878,lon:-12.870},
-  {name:'Kambia',lat:9.125,lon:-12.918},
-];
-function wxIcon(wc){return wc<=1?'☀️':wc<=3?'⛅':wc<=48?'🌫️':wc<=67?'🌧️':wc<=77?'🌨️':'⛈️';}
-function wxDesc(wc){return wc<=1?'Sunny':wc<=3?'Partly Cloudy':wc<=48?'Foggy':wc<=67?'Rainy':wc<=77?'Showers':'Thunderstorm';}
-
-async function fetchWeatherCity(c){
-  // Use both current_weather (legacy) AND current= (new) for max compatibility
-  const urls=[
-    `https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Africa%2FFreetown`,
-    `https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current_weather=true&timezone=Africa%2FFreetown`,
-  ];
-  for(const url of urls){
-    try{
-      const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),8000);
-      const r=await fetch(url,{signal:ctrl.signal});
-      const d=await r.json();
-      // New API format
-      if(d.current?.temperature_2m!==undefined){
-        return {t:Math.round(d.current.temperature_2m), w:Math.round(d.current.windspeed_10m||0), wc:d.current.weathercode||0};
-      }
-      // Legacy format
-      if(d.current_weather?.temperature!==undefined){
-        return {t:Math.round(d.current_weather.temperature), w:Math.round(d.current_weather.windspeed||0), wc:d.current_weather.weathercode||0};
-      }
-    }catch(e){}
-  }
-  return null;
+// CRYPTO
+async function loadCrypto(){
+  const el=document.getElementById('crypto-grid');
+  const loading=document.getElementById('crypto-loading');
+  loading.style.display='flex'; el.style.display='none';
+  try{
+    const res=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,tether&vs_currencies=usd');
+    const data=await res.json();
+    const usdToSle=rates.USD||24.57;
+    const coins=[{id:'bitcoin',sym:'₿ BTC',icon:'₿'},{id:'ethereum',sym:'Ξ ETH',icon:'Ξ'},{id:'binancecoin',sym:'BNB',icon:'🔶'},{id:'solana',sym:'SOL',icon:'◎'},{id:'tether',sym:'USDT',icon:'💲'}];
+    el.innerHTML=coins.map(c=>{const usd=data[c.id]?.usd||0;const sle=(usd*usdToSle).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');return `<div class="rate-chip"><div class="curr">${c.icon} ${c.sym}</div><div class="val">Le ${sle}</div><div style="font-size:10px;color:var(--mid);margin-top:2px;">$${usd.toLocaleString()}</div></div>`}).join('');
+    // update BTC in banner
+    const btcSle=((data.bitcoin?.usd||0)*usdToSle);
+    document.getElementById('d-btc').textContent=btcSle>0?'Le'+Math.round(btcSle).toLocaleString():'—';
+    document.getElementById('t-btc').textContent=btcSle>0?'Le'+Math.round(btcSle).toLocaleString():'—';
+    loading.style.display='none'; el.style.display='grid';
+  }catch(e){loading.innerHTML='<span style="color:var(--mid);font-size:13px;">Crypto data unavailable. <a href="https://www.coinmarketcap.com" target="_blank" style="color:var(--primary);">CoinMarketCap →</a></span>';}
 }
 
-async function loadWeather(){
-  document.getElementById('weather-loading').style.display='flex';
-  document.getElementById('weather-cities').style.display='none';
-  const con=document.getElementById('weather-cities');
-  con.innerHTML='';
-
-  // Fetch all cities in parallel
-  const results=await Promise.all(CITIES.map(c=>fetchWeatherCity(c)));
-  results.forEach((wx,i)=>{
-    const c=CITIES[i];
-    if(wx){
-      con.innerHTML+=`<div class="weather-card"><div class="weather-city">${c.name}</div><div style="font-size:28px;margin:6px 0">${wxIcon(wx.wc)}</div><div class="weather-temp">${wx.t}°C</div><div class="weather-desc">${wxDesc(wx.wc)}</div><div style="font-size:11px;color:var(--mid);margin-top:6px;">💨 ${wx.w}km/h</div></div>`;
-    } else {
-      con.innerHTML+=`<div class="weather-card"><div class="weather-city">${c.name}</div><div style="font-size:28px;margin:6px 0">🌡️</div><div class="weather-desc" style="margin-top:8px;">Unavailable</div></div>`;
-    }
-  });
-
-  document.getElementById('weather-loading').style.display='none';
-  document.getElementById('weather-cities').style.display='grid';
-
-  // Update hero banner with Freetown weather
-  if(results[0]){
-    const wx=results[0];
-    document.getElementById('d-weather').textContent=wx.t+'°C';
-    document.getElementById('d-weathersub').textContent=wxDesc(wx.wc)+' · Freetown';
+// TAX CALCULATOR (Sierra Leone NRA PAYE brackets)
+function calcTax(){
+  const gross=parseFloat(document.getElementById('tax-salary').value)||0;
+  if(!gross){document.getElementById('tax-results').style.display='none';return;}
+  // SL NRA PAYE brackets (approximate 2025)
+  // 0 – 36,000,000: 0% first ~3M/month (personal relief)
+  // Simplified progressive:
+  let tax=0;
+  const brackets=[{limit:36000000,rate:0},{limit:96000000,rate:0.15},{limit:192000000,rate:0.20},{limit:Infinity,rate:0.25}];
+  let remaining=Math.max(0,gross-36000000);// approx personal allowance
+  let prev=0;
+  for(const b of brackets){
+    if(remaining<=0)break;
+    const taxable=Math.min(remaining,b.limit-prev);
+    tax+=taxable*b.rate;
+    prev=b.limit;remaining-=taxable;
   }
+  const net=gross-tax;const rate=gross>0?(tax/gross*100).toFixed(1):0;
+  document.getElementById('tr-annual').textContent=fmtSLE(tax);
+  document.getElementById('tr-monthly').textContent=fmtSLE(tax/12);
+  document.getElementById('tr-net').textContent=fmtSLE(net);
+  document.getElementById('tr-rate').textContent=rate+'%';
+  document.getElementById('tax-results').style.display='grid';
+}
+
+// WEATHER
+const CITIES=[{name:'Freetown',lat:8.484,lon:-13.234},{name:'Bo',lat:7.965,lon:-11.738},{name:'Kenema',lat:7.876,lon:-11.191},{name:'Makeni',lat:8.882,lon:-12.048},{name:'Koidu',lat:8.634,lon:-10.969},{name:'Port Loko',lat:8.878,lon:-12.870},{name:'Kambia',lat:9.125,lon:-12.918}];
+function wxIcon(wc){return wc<=1?'☀️':wc<=3?'⛅':wc<=48?'🌫️':wc<=67?'🌧️':wc<=77?'🌨️':'⛈️';}
+function wxDesc(wc){return wc<=1?'Sunny':wc<=3?'Partly Cloudy':wc<=48?'Foggy':wc<=67?'Rainy':wc<=77?'Showers':'Thunderstorm';}
+async function fetchWeatherCity(c){
+  const urls=[`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=Africa%2FFreetown`,`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current_weather=true&timezone=Africa%2FFreetown`];
+  for(const url of urls){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),8000);const r=await fetch(url,{signal:ctrl.signal});const d=await r.json();if(d.current?.temperature_2m!==undefined)return{t:Math.round(d.current.temperature_2m),w:Math.round(d.current.windspeed_10m||0),wc:d.current.weathercode||0};if(d.current_weather?.temperature!==undefined)return{t:Math.round(d.current_weather.temperature),w:Math.round(d.current_weather.windspeed||0),wc:d.current_weather.weathercode||0};}catch(e){}}
+  return null;
+}
+async function loadWeather(){
+  const con=document.getElementById('weather-cities');con.innerHTML='';
+  const results=await Promise.all(CITIES.map(c=>fetchWeatherCity(c)));
+  results.forEach((wx,i)=>{const c=CITIES[i];if(wx){con.innerHTML+=`<div class="weather-card"><div class="weather-city">${c.name}</div><div style="font-size:28px;margin:6px 0">${wxIcon(wx.wc)}</div><div class="weather-temp">${wx.t}°C</div><div class="weather-desc">${wxDesc(wx.wc)}</div><div style="font-size:11px;color:var(--mid);margin-top:6px;">💨 ${wx.w}km/h</div></div>`;}else{con.innerHTML+=`<div class="weather-card"><div class="weather-city">${c.name}</div><div style="font-size:28px;margin:6px 0">🌡️</div><div class="weather-desc" style="margin-top:8px;">Unavailable</div></div>`;}});
+  document.getElementById('weather-loading').style.display='none';
+  con.style.display='grid';
+  if(results[0]){const wx=results[0];document.getElementById('d-weather').textContent=wx.t+'°C';document.getElementById('d-weathersub').textContent=wxDesc(wx.wc)+' · Freetown';}
 }
 
 // NEWS
-// ══════════════════════════════════════════════════════════
-// 10-SOURCE PARALLEL NEWS READER — SaloneHub
-// Fetches all sources simultaneously, merges & sorts by date
-// ══════════════════════════════════════════════════════════
-
-const SL_NEWS_SOURCES = [
-  { name:'SL Telegraph',        url:'https://www.thesierraleonetelegraph.com',     feed:'https://www.thesierraleonetelegraph.com/feed/' },
-  { name:'Awoko',               url:'https://awokonewspapersl.com',                feed:'https://awokonewspapersl.com/feed/' },
-  { name:'Concord Times',       url:'https://slconcordtimes.com',                  feed:'https://slconcordtimes.com/feed/' },
-  { name:'Cocorioko',           url:'https://cocorioko.net',                       feed:'https://cocorioko.net/feed/' },
-  { name:'The Calabash',        url:'https://thecalabashnewspaper.com',            feed:'https://thecalabashnewspaper.com/feed/' },
-  { name:'Swit Salone',         url:'https://www.switsalone.com',                  feed:'https://www.switsalone.com/feed/' },
-  { name:'Critique Echo',       url:'https://www.critiqueecho.com',                feed:'http://www.critiqueecho.com/feed/' },
-  { name:'Patriotic Vanguard',  url:'https://www.thepatrioticvanguard.com',        feed:'https://feeds.feedburner.com/ThePatrioticVanguard' },
-  { name:'SL Times',            url:'https://www.sierraleonetimes.com',            feed:'http://feeds.sierraleonetimes.com/rss/8fcd2bb0346b8627' },
-  { name:'BBC Africa',          url:'https://www.bbc.com/news/world/africa',       feed:'https://feeds.bbci.co.uk/news/world/africa/rss.xml' },
+const SL_NEWS_SOURCES=[
+  {name:'SL Telegraph',url:'https://www.thesierraleonetelegraph.com',feed:'https://www.thesierraleonetelegraph.com/feed/'},
+  {name:'Awoko',url:'https://awokonewspapersl.com',feed:'https://awokonewspapersl.com/feed/'},
+  {name:'Concord Times',url:'https://slconcordtimes.com',feed:'https://slconcordtimes.com/feed/'},
+  {name:'Cocorioko',url:'https://cocorioko.net',feed:'https://cocorioko.net/feed/'},
+  {name:'The Calabash',url:'https://thecalabashnewspaper.com',feed:'https://thecalabashnewspaper.com/feed/'},
+  {name:'Swit Salone',url:'https://www.switsalone.com',feed:'https://www.switsalone.com/feed/'},
+  {name:'Critique Echo',url:'https://www.critiqueecho.com',feed:'http://www.critiqueecho.com/feed/'},
+  {name:'Patriotic Vanguard',url:'https://www.thepatrioticvanguard.com',feed:'https://feeds.feedburner.com/ThePatrioticVanguard'},
+  {name:'SL Times',url:'https://www.sierraleonetimes.com',feed:'http://feeds.sierraleonetimes.com/rss/8fcd2bb0346b8627'},
+  {name:'BBC Africa',url:'https://www.bbc.com/news/world/africa',feed:'https://feeds.bbci.co.uk/news/world/africa/rss.xml'},
 ];
-
-// Show source badges in UI
-(function renderSourceBadges(){
-  const el = document.getElementById('news-source-badges');
-  if(!el) return;
-  el.innerHTML = SL_NEWS_SOURCES.map(s =>
-    `<span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(30,181,58,.1);color:var(--primary);border:1px solid rgba(30,181,58,.2);">${s.name}</span>`
-  ).join('');
-})();
-
-const SL_KEYWORDS = /sierra leone|sierraleone|leonean|freetown|bo town|kenema|makeni|koidu|kailahun|kono|tonkolili|port loko|kambia|bonthe|pujehun|moyamba|leone stars|salone|julius maada bio|bio government|nra sl|edsa|bsl bank|africell|orange sl|qcell|npp sierra|slpp|apc sierra|sierra rutile|nassit|slicom|rokel|setco/i;
-
-// Native SL sources — pass ALL their articles through without keyword check
-const SL_NATIVE = new Set(['SL Telegraph','Awoko','Concord Times','Cocorioko','The Calabash','Swit Salone','Critique Echo','Patriotic Vanguard','SL Times']);
-
-let currentNewsCat = 'general';
-
-function setNewsCat(el, cat) {
-  currentNewsCat = cat;
-  document.querySelectorAll('#news-cat-chips .curr-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  loadNews();
-}
-
-function detectSLTag(title, desc) {
-  const t = (title + ' ' + (desc||'')).toLowerCase();
-  if(/football|soccer|leone stars|premier league|champions league|afcon|transfer|goal|match|fifa|world cup|sport/i.test(t)) return {tag:'Sports', color:'#1EB53A'};
-  if(/parliament|minister|president bio|government|cabinet|party|election|politics|senate|police|court|judge|arrest|corruption|efcc/i.test(t)) return {tag:'Politics', color:'#6c5ce7'};
-  if(/business|economy|market|invest|trade|company|gdp|inflation|banking|finance|budget|tax|import|export|revenue|profit/i.test(t)) return {tag:'Business', color:'#e17055'};
-  if(/diaspora|abroad|uk sierra|usa sierra|travel|visa|passport|overseas|london|america|canada/i.test(t)) return {tag:'Diaspora', color:'#0072C6'};
-  if(/health|hospital|doctor|disease|covid|malaria|medical|drug|vaccine|cholera|ebola/i.test(t)) return {tag:'Health', color:'#00b894'};
-  if(/school|university|student|exam|waec|bece|education|academic|scholarship|njala|fourah/i.test(t)) return {tag:'Education', color:'#fdcb6e'};
-  if(/mining|rutile|iron ore|diamond|gold|petroleum|energy|electricity|edsa|power/i.test(t)) return {tag:'Energy', color:'#f39c12'};
-  return {tag:'Sierra Leone', color:'#1EB53A'};
-}
-
-function getTimeAgoSL(dateStr) {
-  if(!dateStr) return '';
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const m = Math.floor(diff/60000);
-  if(m < 1)  return 'Just now';
-  if(m < 60) return m + 'm ago';
-  const h = Math.floor(m/60);
-  if(h < 24) return h + 'h ago';
-  return Math.floor(h/24) + 'd ago';
-}
-
-// Parse raw RSS XML into articles array
-function parseRSSXML(xmlText, sourceName) {
-  try {
-    const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
-    return [...xml.querySelectorAll('item')].slice(0,10).map(item => {
-      const title = (item.querySelector('title')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'').trim();
-      const rawDesc = (item.querySelector('encoded')?.textContent||item.querySelector('description')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'');
-      const desc = rawDesc.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,180);
-      const linkEl = item.querySelector('link');
-      const url = linkEl?.textContent?.trim()||linkEl?.nextSibling?.textContent?.trim()||'#';
-      const pubDate = item.querySelector('pubDate')?.textContent||'';
-      const imgMatch = rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);
-      const img = item.querySelector('enclosure')?.getAttribute('url')||(imgMatch&&imgMatch[1])||'';
-      return title ? {title,desc,url,pubDate,img,source:sourceName,isNative:SL_NATIVE.has(sourceName)} : null;
-    }).filter(Boolean);
-  } catch(e){ return []; }
-}
-
-// Fetch one feed: try rss2json JSON API first, then allorigins CORS proxy
-async function fetchOneFeed(feedUrl, sourceName) {
-  // Method 1: rss2json (JSON response, easiest to parse)
-  try {
-    const ctrl = new AbortController();
-    setTimeout(()=>ctrl.abort(), 9000);
-    const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=10`, {signal:ctrl.signal});
-    const d = await r.json();
-    if(d.status==='ok' && d.items?.length) {
-      return d.items.map(item => {
-        const rd = item.description||item.content||'';
-        const desc = rd.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,180);
-        const imgM = rd.match(/<img[^>]+src=["']([^"']+)["']/i);
-        const img = item.thumbnail||item.enclosure?.link||(imgM&&imgM[1])||'';
-        const title = (item.title||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'").trim();
-        return title ? {title,desc,url:item.link||'#',pubDate:item.pubDate||'',img,source:sourceName,isNative:SL_NATIVE.has(sourceName)} : null;
-      }).filter(Boolean);
-    }
-  } catch(e) {}
-
-  // Method 2: allorigins CORS proxy → raw XML
-  try {
-    const ctrl2 = new AbortController();
-    setTimeout(()=>ctrl2.abort(), 9000);
-    const r2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`, {signal:ctrl2.signal});
-    const d2 = await r2.json();
-    if(d2.contents) return parseRSSXML(d2.contents, sourceName);
-  } catch(e) {}
-
-  return [];
-}
-
-async function loadNews() {
-  document.getElementById('news-loading').style.display = 'flex';
-  document.getElementById('news-list').innerHTML = '';
-
-  const allArticles = [];
-  await Promise.all(SL_NEWS_SOURCES.map(async src => {
-    // For category tabs try specific path, fall back to general feed
-    let articles = [];
-    if(currentNewsCat !== 'general' && currentNewsCat !== 'diaspora') {
-      const catFeed = src.feed.replace('/feed/', `/category/${currentNewsCat}/feed/`);
-      articles = await fetchOneFeed(catFeed, src.name);
-    }
-    if(!articles.length) articles = await fetchOneFeed(src.feed, src.name);
-    allArticles.push(...articles);
-  }));
-
-  document.getElementById('news-loading').style.display = 'none';
-
-  if(!allArticles.length) {
-    document.getElementById('news-list').innerHTML = `<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📭</div>Could not load news right now. Check your connection.</div>`;
-    return;
-  }
-
-  // Sort newest first
-  allArticles.sort((a,b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-  // Category keyword filter
-  const catKW = {
-    sports:   /football|soccer|sport|match|goal|league|afcon|transfer|fifa|stadium|leone stars/i,
-    business: /business|economy|market|invest|trade|company|inflation|banking|finance|budget|tax|revenue/i,
-    politics: /parliament|minister|president|government|cabinet|party|election|politic|senate|corruption/i,
-    diaspora: /diaspora|abroad|uk|usa|canada|overseas|london|america|travel|passport|visa/i,
-  };
-  let filtered = allArticles;
-
-  // STRICT: non-native sources (BBC, Africa News) must mention Sierra Leone
-  filtered = filtered.filter(a => a.isNative || SL_KEYWORDS.test(a.title + ' ' + a.desc));
-  // Further category filter on top of SL filter
-  if(currentNewsCat !== 'general' && catKW[currentNewsCat]) {
-    const cf2 = filtered.filter(a => catKW[currentNewsCat].test(a.title + ' ' + a.desc));
-    if(cf2.length >= 2) filtered = cf2;
-  }
-
-  // Deduplicate by title prefix
-  const seen = new Set();
-  filtered = filtered.filter(a => {
-    const k = a.title.slice(0,50).toLowerCase();
-    if(seen.has(k)) return false;
-    seen.add(k); return true;
-  });
-
-  const final = filtered.slice(0, 15);
-
-  if(!final.length) {
-    document.getElementById('news-list').innerHTML = `<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📭</div>No stories found for this category right now.</div>`;
-    return;
-  }
-
-  document.getElementById('news-list').innerHTML = final.map((item, i) => {
-    const {tag, color} = detectSLTag(item.title, item.desc);
-    const ago = getTimeAgoSL(item.pubDate);
-    return `<div class="news-item" style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;" onclick="window.open('${item.url}','_blank','noopener')">
-      ${item.img ? `<img src="${item.img}" alt="" style="width:70px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-top:2px;" onerror="this.style.display='none'">` : `<div style="width:70px;height:52px;border-radius:8px;background:rgba(30,181,58,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🇸🇱</div>`}
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;">
-          <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:${color}18;color:${color};">${tag}</span>
-          <span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(30,181,58,.08);color:var(--primary);">${item.source}</span>
-          ${ago ? `<span style="font-size:10px;color:var(--mid);">${ago}</span>` : ''}
-        </div>
-        <div style="font-weight:700;font-size:13px;line-height:1.4;margin-bottom:4px;color:var(--charcoal);">${item.title}</div>
-        ${item.desc ? `<div style="font-size:12px;color:var(--mid);line-height:1.5;">${item.desc}${item.desc.length>=160?'…':''}</div>` : ''}
-        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--primary);">Read full story →</div>
-      </div>
-    </div>`;
-  }).join('');
+const SL_KEYWORDS=/sierra leone|sierraleone|leonean|freetown|bo town|kenema|makeni|koidu|kailahun|kono|tonkolili|port loko|kambia|bonthe|pujehun|moyamba|leone stars|salone|julius maada bio|bio government|nra sl|edsa|bsl bank|africell|orange sl|qcell|npp sierra|slpp|apc sierra|sierra rutile|nassit|slicom|rokel|setco/i;
+const SL_NATIVE=new Set(['SL Telegraph','Awoko','Concord Times','Cocorioko','The Calabash','Swit Salone','Critique Echo','Patriotic Vanguard','SL Times']);
+let currentNewsCat='general';
+function setNewsCat(el,cat){currentNewsCat=cat;document.querySelectorAll('#news-cat-chips .curr-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');loadNews();}
+function detectSLTag(title,desc){const t=(title+' '+(desc||'')).toLowerCase();if(/football|soccer|leone stars|premier league|champions league|afcon|transfer|goal|match|fifa|world cup|sport/i.test(t))return{tag:'Sports',color:'#1EB53A'};if(/parliament|minister|president bio|government|cabinet|party|election|politics|senate|police|court|judge|arrest|corruption/i.test(t))return{tag:'Politics',color:'#6c5ce7'};if(/business|economy|market|invest|trade|company|gdp|inflation|banking|finance|budget|tax/i.test(t))return{tag:'Business',color:'#e17055'};if(/diaspora|abroad|uk sierra|usa sierra|travel|visa|passport|overseas|london|america|canada/i.test(t))return{tag:'Diaspora',color:'#0072C6'};if(/health|hospital|doctor|disease|covid|malaria|medical|drug|vaccine|cholera|ebola/i.test(t))return{tag:'Health',color:'#00b894'};if(/school|university|student|exam|waec|bece|education|academic|scholarship|njala|fourah/i.test(t))return{tag:'Education',color:'#fdcb6e'};if(/mining|rutile|iron ore|diamond|gold|petroleum|energy|electricity|edsa|power/i.test(t))return{tag:'Energy',color:'#f39c12'};return{tag:'Sierra Leone',color:'#1EB53A'};}
+function getTimeAgoSL(dateStr){if(!dateStr)return'';const diff=Date.now()-new Date(dateStr).getTime();const m=Math.floor(diff/60000);if(m<1)return'Just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
+function parseRSSXML(xmlText,sourceName){try{const xml=new DOMParser().parseFromString(xmlText,'text/xml');return[...xml.querySelectorAll('item')].slice(0,10).map(item=>{const title=(item.querySelector('title')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'').trim();const rawDesc=(item.querySelector('encoded')?.textContent||item.querySelector('description')?.textContent||'').replace(/<!\[CDATA\[|\]\]>/g,'');const desc=rawDesc.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,180);const linkEl=item.querySelector('link');const url=linkEl?.textContent?.trim()||linkEl?.nextSibling?.textContent?.trim()||'#';const pubDate=item.querySelector('pubDate')?.textContent||'';const imgMatch=rawDesc.match(/<img[^>]+src=["']([^"']+)["']/i);const img=item.querySelector('enclosure')?.getAttribute('url')||(imgMatch&&imgMatch[1])||'';return title?{title,desc,url,pubDate,img,source:sourceName,isNative:SL_NATIVE.has(sourceName)}:null;}).filter(Boolean);}catch(e){return[];}}
+async function fetchOneFeed(feedUrl,sourceName){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),9000);const r=await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=10`,{signal:ctrl.signal});const d=await r.json();if(d.status==='ok'&&d.items?.length)return d.items.map(item=>{const rd=item.description||item.content||'';const desc=rd.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,180);const imgM=rd.match(/<img[^>]+src=["']([^"']+)["']/i);const img=item.thumbnail||item.enclosure?.link||(imgM&&imgM[1])||'';const title=(item.title||'').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#039;/g,"'").trim();return title?{title,desc,url:item.link||'#',pubDate:item.pubDate||'',img,source:sourceName,isNative:SL_NATIVE.has(sourceName)}:null;}).filter(Boolean);}catch(e){}try{const ctrl2=new AbortController();setTimeout(()=>ctrl2.abort(),9000);const r2=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`,{signal:ctrl2.signal});const d2=await r2.json();if(d2.contents)return parseRSSXML(d2.contents,sourceName);}catch(e){}return[];}
+(function renderSourceBadges(){const el=document.getElementById('news-source-badges');if(!el)return;el.innerHTML=SL_NEWS_SOURCES.map(s=>`<span style="font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(30,181,58,.1);color:var(--primary);border:1px solid rgba(30,181,58,.2);">${s.name}</span>`).join('');})();
+async function loadNews(){
+  document.getElementById('news-loading').style.display='flex';document.getElementById('news-list').innerHTML='';
+  const allArticles=[];
+  await Promise.all(SL_NEWS_SOURCES.map(async src=>{let articles=[];if(currentNewsCat!=='general'&&currentNewsCat!=='diaspora'){const catFeed=src.feed.replace('/feed/',`/category/${currentNewsCat}/feed/`);articles=await fetchOneFeed(catFeed,src.name);}if(!articles.length)articles=await fetchOneFeed(src.feed,src.name);allArticles.push(...articles);}));
+  document.getElementById('news-loading').style.display='none';
+  if(!allArticles.length){document.getElementById('news-list').innerHTML=`<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📭</div>Could not load news right now. Check your connection.</div>`;return;}
+  allArticles.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));
+  const catKW={sports:/football|soccer|sport|match|goal|league|afcon|transfer|fifa|stadium|leone stars/i,business:/business|economy|market|invest|trade|company|inflation|banking|finance|budget|tax|revenue/i,politics:/parliament|minister|president|government|cabinet|party|election|politic|senate|corruption/i,diaspora:/diaspora|abroad|uk|usa|canada|overseas|london|america|travel|passport|visa/i};
+  let filtered=allArticles.filter(a=>a.isNative||SL_KEYWORDS.test(a.title+' '+a.desc));
+  if(currentNewsCat!=='general'&&catKW[currentNewsCat]){const cf2=filtered.filter(a=>catKW[currentNewsCat].test(a.title+' '+a.desc));if(cf2.length>=2)filtered=cf2;}
+  const seen=new Set();filtered=filtered.filter(a=>{const k=a.title.slice(0,50).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+  const final=filtered.slice(0,15);
+  if(!final.length){document.getElementById('news-list').innerHTML=`<div style="color:var(--mid);font-size:13px;padding:20px 0;text-align:center;"><div style="font-size:28px;margin-bottom:8px;">📭</div>No stories found for this category right now.</div>`;return;}
+  document.getElementById('news-list').innerHTML=final.map((item)=>{const{tag,color}=detectSLTag(item.title,item.desc);const ago=getTimeAgoSL(item.pubDate);return`<div class="news-item" style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;" onclick="window.open('${item.url}','_blank','noopener')">${item.img?`<img src="${item.img}" alt="" style="width:70px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-top:2px;" onerror="this.style.display='none'">`:`<div style="width:70px;height:52px;border-radius:8px;background:rgba(30,181,58,.08);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🇸🇱</div>`}<div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:${color}18;color:${color};">${tag}</span><span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(30,181,58,.08);color:var(--primary);">${item.source}</span>${ago?`<span style="font-size:10px;color:var(--mid);">${ago}</span>`:''}</div><div style="font-weight:700;font-size:13px;line-height:1.4;margin-bottom:4px;color:var(--charcoal);">${item.title}</div>${item.desc?`<div style="font-size:12px;color:var(--mid);line-height:1.5;">${item.desc}${item.desc.length>=160?'…':''}</div>`:''}<div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--primary);">Read full story →</div></div></div>`;}).join('');
 }
 
 // FOOTBALL
-async function loadLeague(code,name){
-  footballLeague=code;
-  document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));
-  document.getElementById('football-loading').style.display='flex';
-  document.getElementById('football-content').innerHTML='';
-  try{
-    const res=await fetch(`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`,{headers:{'X-Auth-Token':''}});
-    const data=await res.json();footData=data.matches||[];renderFootball();
-  }catch(e){document.getElementById('football-loading').style.display='none';document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">Football data unavailable. <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);">BBC Sport →</a></div>';}
-}
+async function loadLeague(code,name){footballLeague=code;document.querySelectorAll('#league-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.league===code));document.getElementById('football-loading').style.display='flex';document.getElementById('football-content').innerHTML='';try{const res=await fetch(`https://api.football-data.org/v4/competitions/${code}/matches?status=FINISHED&limit=10`,{headers:{'X-Auth-Token':''}});const data=await res.json();footData=data.matches||[];renderFootball();}catch(e){document.getElementById('football-loading').style.display='none';document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">Football data unavailable. <a href="https://www.bbc.com/sport/football" target="_blank" style="color:var(--primary);">BBC Sport →</a></div>';}}
 function switchView(v){footballView=v;document.querySelectorAll('#fixture-chips .curr-chip').forEach(c=>c.classList.toggle('active',c.dataset.view===v));renderFootball();}
-function renderFootball(){
-  document.getElementById('football-loading').style.display='none';
-  if(!footData?.length){document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">No matches found.</div>';return;}
-  document.getElementById('football-content').innerHTML=footData.slice(0,8).map(m=>`<div class="match-card"><div class="match-teams"><span class="team-name">${m.homeTeam.shortName||m.homeTeam.name}</span><span class="match-score">${m.score?.fullTime?.home??'—'} – ${m.score?.fullTime?.away??'—'}</span><span class="team-name away">${m.awayTeam.shortName||m.awayTeam.name}</span></div><div class="match-meta">${new Date(m.utcDate).toLocaleDateString('en-SL',{day:'numeric',month:'short'})}</div></div>`).join('');
-}
+function renderFootball(){document.getElementById('football-loading').style.display='none';if(!footData?.length){document.getElementById('football-content').innerHTML='<div style="color:var(--mid);font-size:13px;">No matches found.</div>';return;}document.getElementById('football-content').innerHTML=footData.slice(0,8).map(m=>`<div class="match-card"><div class="match-teams"><span class="team-name">${m.homeTeam.shortName||m.homeTeam.name}</span><span class="match-score">${m.score?.fullTime?.home??'—'} – ${m.score?.fullTime?.away??'—'}</span><span class="team-name away">${m.awayTeam.shortName||m.awayTeam.name}</span></div><div class="match-meta">${new Date(m.utcDate).toLocaleDateString('en-SL',{day:'numeric',month:'short'})}</div></div>`).join('');}
 
 // JOBS
 function loadJobs(){
@@ -1002,10 +937,7 @@ function calcRemit(){
   const curr=document.getElementById('send-currency').value;
   const base=rates[curr]||22;
   const providers=[{name:'Wise',spread:.98,fee:3,icon:'💙'},{name:'WorldRemit',spread:.97,fee:2.99,icon:'🌍'},{name:'MoneyGram',spread:.96,fee:4.99,icon:'💰'},{name:'Western Union',spread:.95,fee:4,icon:'🏦'}];
-  document.getElementById('remit-grid').innerHTML=providers.map(p=>{
-    const recv=((amt-p.fee)*base*p.spread).toFixed(2);
-    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;"><div><span>${p.icon}</span> <strong style="font-size:13px;">${p.name}</strong><div style="font-size:11px;color:var(--mid);">Fee: ${curr} ${p.fee}</div></div><div style="text-align:right;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--primary);">${SYM}${recv}</div><div style="font-size:10px;color:var(--mid);">Recipient gets</div></div></div>`;
-  }).join('');
+  document.getElementById('remit-grid').innerHTML=providers.map(p=>{const recv=((amt-p.fee)*base*p.spread).toFixed(2);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;"><div><span>${p.icon}</span> <strong style="font-size:13px;">${p.name}</strong><div style="font-size:11px;color:var(--mid);">Fee: ${curr} ${p.fee}</div></div><div style="text-align:right;"><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--primary);">${SYM}${recv}</div><div style="font-size:10px;color:var(--mid);">Recipient gets</div></div></div>`;}).join('');
 }
 
 // HOLIDAYS
@@ -1038,55 +970,86 @@ function initHolidays(){
   const today=new Date();today.setHours(0,0,0,0);
   const ts=today.toISOString().slice(0,10);
   const next=SL_HOLIDAYS.filter(h=>h.date>=ts).sort((a,b)=>a.date.localeCompare(b.date))[0];
-  if(next){
-    const days=Math.round((new Date(next.date)-today)/86400000);
-    document.getElementById('next-holiday-emoji').textContent=next.emoji;
-    document.getElementById('next-holiday-title').textContent=next.name;
-    document.getElementById('next-holiday-date').textContent=new Date(next.date).toLocaleDateString('en-SL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    document.getElementById('next-holiday-days').textContent=days===0?'TODAY':days;
-    document.getElementById('next-holiday-days-label').textContent=days===0?'🎊':'days away';
-    document.getElementById('d-holiday-days').textContent=days===0?'TODAY':days+'d';
-    document.getElementById('d-holiday-name').textContent=next.emoji+' '+next.name;
-  }
+  if(next){const days=Math.round((new Date(next.date)-today)/86400000);document.getElementById('next-holiday-emoji').textContent=next.emoji;document.getElementById('next-holiday-title').textContent=next.name;document.getElementById('next-holiday-date').textContent=new Date(next.date).toLocaleDateString('en-SL',{weekday:'long',day:'numeric',month:'long',year:'numeric'});document.getElementById('next-holiday-days').textContent=days===0?'TODAY':days;document.getElementById('next-holiday-days-label').textContent=days===0?'🎊':'days away';document.getElementById('d-holiday-days').textContent=days===0?'TODAY':days+'d';document.getElementById('d-holiday-name').textContent=next.emoji+' '+next.name;}
   let html='',lastY=null;
-  SL_HOLIDAYS.forEach(h=>{
-    const d=new Date(h.date);d.setHours(0,0,0,0);
-    const days=Math.round((d-today)/86400000);
-    const isPast=d<today,isNext=next&&h.date===next.date,isToday=days===0;
-    const yr=h.date.slice(0,4);
-    if(yr!==lastY){if(lastY)html+='</div>';lastY=yr;html+=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--primary);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.8px;">${yr}</div><div>`;}
-    let bg='background:var(--card);border-color:var(--border);',ns='',badge='';
-    if(isToday){bg='background:rgba(214,48,49,.08);border-color:rgba(214,48,49,.3);';ns='color:var(--red);';badge=`<span style="background:var(--red);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;">TODAY 🎉</span>`;}
-    else if(isNext){bg='background:rgba(30,181,58,.08);border-color:rgba(30,181,58,.3);';ns='color:var(--primary);';badge=`<span style="background:var(--primary);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;">${days}d away</span>`;}
-    else if(isPast){bg='opacity:.4;';ns='text-decoration:line-through;color:var(--mid);';badge=`<span style="font-size:11px;color:var(--mid);">Past</span>`;}
-    else{badge=`<span style="font-size:11px;color:var(--mid);">${days}d</span>`;}
-    html+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:12px;border:1px solid transparent;margin-bottom:7px;${bg}"><div style="display:flex;align-items:center;gap:12px;"><span style="font-size:22px;">${h.emoji}</span><div><div style="font-weight:600;font-size:13px;${ns}">${h.name}</div><div style="font-size:11px;color:var(--mid);margin-top:2px;">${new Date(h.date).toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'long'})}</div></div></div>${badge}</div>`;
-  });
+  SL_HOLIDAYS.forEach(h=>{const d=new Date(h.date);d.setHours(0,0,0,0);const days=Math.round((d-today)/86400000);const isPast=d<today,isNext=next&&h.date===next.date,isToday=days===0;const yr=h.date.slice(0,4);if(yr!==lastY){if(lastY)html+='</div>';lastY=yr;html+=`<div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--primary);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.8px;">${yr}</div><div>`;}let bg='background:var(--card);border-color:var(--border);',ns='',badge='';if(isToday){bg='background:rgba(214,48,49,.08);border-color:rgba(214,48,49,.3);';ns='color:var(--red);';badge=`<span style="background:var(--red);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;">TODAY 🎉</span>`;}else if(isNext){bg='background:rgba(30,181,58,.08);border-color:rgba(30,181,58,.3);';ns='color:var(--primary);';badge=`<span style="background:var(--primary);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;">${days}d away</span>`;}else if(isPast){bg='opacity:.4;';ns='text-decoration:line-through;color:var(--mid);';badge=`<span style="font-size:11px;color:var(--mid);">Past</span>`;}else{badge=`<span style="font-size:11px;color:var(--mid);">${days}d</span>`;}html+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-radius:12px;border:1px solid transparent;margin-bottom:7px;${bg}"><div style="display:flex;align-items:center;gap:12px;"><span style="font-size:22px;">${h.emoji}</span><div><div style="font-weight:600;font-size:13px;${ns}">${h.name}</div><div style="font-size:11px;color:var(--mid);margin-top:2px;">${new Date(h.date).toLocaleDateString('en-SL',{weekday:'short',day:'numeric',month:'long'})}</div></div></div>${badge}</div>`;});
   if(lastY)html+='</div>';
   document.getElementById('holiday-calendar').innerHTML=html;
 }
 
-// POWER REPORT
-function reportPower(){
-  const area=document.getElementById('edsa-area').value;
-  const status=document.getElementById('edsa-status').value;
-  if(!area){showToast('Please select your area');return;}
-  const r=JSON.parse(localStorage.getItem('sl_power')||'[]');
-  r.unshift({area,status,time:new Date().toISOString()});
-  localStorage.setItem('sl_power',JSON.stringify(r.slice(0,50)));
-  renderPower();
-  showToast(status==='on'?'✅ Power ON reported for '+area:'🔴 Outage reported for '+area);
+// POWER
+function reportPower(){const area=document.getElementById('edsa-area').value;const status=document.getElementById('edsa-status').value;if(!area){showToast('Please select your area');return;}const r=JSON.parse(localStorage.getItem('sl_power')||'[]');r.unshift({area,status,time:new Date().toISOString()});localStorage.setItem('sl_power',JSON.stringify(r.slice(0,50)));renderPower();showToast(status==='on'?'✅ Power ON reported for '+area:'🔴 Outage reported for '+area);}
+function renderPower(){const r=JSON.parse(localStorage.getItem('sl_power')||'[]');const c=document.getElementById('power-reports');if(!r.length){c.innerHTML='';return;}c.innerHTML='<div style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--primary);">📊 Recent Reports</div>'+r.slice(0,8).map(x=>{const icon=x.status==='on'?'🟢':x.status==='partial'?'🟡':'🔴';const mins=Math.round((Date.now()-new Date(x.time))/60000);const ago=mins<1?'Just now':mins<60?mins+'m ago':Math.round(mins/60)+'h ago';return`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><span>${icon} ${x.area}</span><span style="color:var(--mid);">${ago}</span></div>`;}).join('');}
+
+// HOSPITALS DATA
+const SL_HOSPITALS=[
+  {name:'Connaught Hospital',type:'government',city:'Freetown',addr:'Lightfoot Boston St, Freetown',phone:'+232-22-224-438'},
+  {name:'Princess Christian Maternity Hosp.',type:'government',city:'Freetown',addr:'Fourah Bay Rd, Freetown',phone:'+232-22-225-001'},
+  {name:'Ola During Children\'s Hospital',type:'government',city:'Freetown',addr:'Liverpool St, Freetown',phone:'+232-22-226-230'},
+  {name:'Rokupa Government Hospital',type:'government',city:'Freetown',addr:'Rokupa, Freetown East',phone:'+232-22-261-055'},
+  {name:'Lumley Government Hospital',type:'government',city:'Freetown',addr:'Lumley, Freetown West',phone:'+232-22-232-010'},
+  {name:'34 Military Hospital',type:'government',city:'Freetown',addr:'Wilberforce Barracks, Freetown',phone:'+232-22-224-004'},
+  {name:'Choithram\'s Memorial Hospital',type:'private',city:'Freetown',addr:'Wilkinson Rd, Freetown',phone:'+232-22-231-900'},
+  {name:'Hill Station Clinic',type:'private',city:'Freetown',addr:'Hill Station, Freetown',phone:'+232-78-233-000'},
+  {name:'Macauley Memorial Clinic',type:'private',city:'Freetown',addr:'Circular Rd, Freetown',phone:'+232-76-777-700'},
+  {name:'Bo Government Hospital',type:'government',city:'Bo',addr:'Bo Town, Southern Province',phone:'+232-32-262-001'},
+  {name:'Kenema Government Hospital',type:'government',city:'Kenema',addr:'Kenema, Eastern Province',phone:'+232-32-421-001'},
+  {name:'Makeni Government Hospital',type:'government',city:'Makeni',addr:'Makeni, Northern Province',phone:'+232-72-220-001'},
+  {name:'St. John of God Hospital',type:'missionary',city:'Lunsar',addr:'Lunsar, Port Loko District',phone:'+232-76-653-000'},
+  {name:'Serabu Community Hospital',type:'missionary',city:'Serabu',addr:'Serabu, Bo District',phone:'+232-32-260-210'},
+  {name:'Koidu Government Hospital',type:'government',city:'Koidu',addr:'Koidu, Kono District',phone:'+232-78-290-001'},
+];
+let hospitalSearch='';
+function setHospType(el,type){hospitalTypeFilter=type;document.querySelectorAll('#hospital-type-chips .curr-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderHospitals();}
+function filterHospitals(){hospitalSearch=document.getElementById('hospital-search').value.toLowerCase();renderHospitals();}
+function renderHospitals(){
+  let list=SL_HOSPITALS;
+  if(hospitalTypeFilter!=='all')list=list.filter(h=>h.type===hospitalTypeFilter);
+  if(hospitalSearch)list=list.filter(h=>(h.name+h.city+h.addr).toLowerCase().includes(hospitalSearch));
+  document.getElementById('hospitals-list').innerHTML=list.length?list.map(h=>`<div class="hospital-card"><span class="hospital-type">${h.type==='government'?'🏥 Government':h.type==='missionary'?'✝️ Missionary':'🩺 Private'}</span><div class="hospital-name">${h.name}</div><div class="hospital-addr">📍 ${h.city} · ${h.addr}</div>${h.phone?`<div style="margin-top:6px;"><a href="tel:${h.phone}" style="color:var(--primary);font-size:12px;font-weight:600;">📞 ${h.phone}</a></div>`:''}</div>`).join(''):`<div style="color:var(--mid);font-size:13px;padding:20px;text-align:center;">No hospitals found matching your search.</div>`;
 }
-function renderPower(){
-  const r=JSON.parse(localStorage.getItem('sl_power')||'[]');
-  const c=document.getElementById('power-reports');
-  if(!r.length){c.innerHTML='';return;}
-  c.innerHTML='<div style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--primary);">📊 Recent Reports</div>'+r.slice(0,8).map(x=>{
-    const icon=x.status==='on'?'🟢':x.status==='partial'?'🟡':'🔴';
-    const mins=Math.round((Date.now()-new Date(x.time))/60000);
-    const ago=mins<1?'Just now':mins<60?mins+'m ago':Math.round(mins/60)+'h ago';
-    return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;"><span>${icon} ${x.area}</span><span style="color:var(--mid);">${ago}</span></div>`;
-  }).join('');
+
+// VISA DATA
+const VISA_DATA=[
+  {country:'🇱🇷 Liberia',access:'Visa-free',type:'free'},{country:'🇬🇳 Guinea',access:'Visa-free',type:'free'},{country:'🇬🇼 Guinea-Bissau',access:'Visa-free',type:'free'},
+  {country:'🇸🇳 Senegal',access:'Visa-free',type:'free'},{country:'🇬🇲 Gambia',access:'Visa-free',type:'free'},{country:'🇲🇱 Mali',access:'Visa-free',type:'free'},
+  {country:'🇧🇯 Benin',access:'Visa-free',type:'free'},{country:'🇧🇫 Burkina Faso',access:'Visa-free',type:'free'},{country:'🇨🇮 Côte d\'Ivoire',access:'Visa-free',type:'free'},
+  {country:'🇬🇭 Ghana',access:'Visa-free',type:'free'},{country:'🇳🇬 Nigeria',access:'Visa-free',type:'free'},{country:'🇹🇬 Togo',access:'Visa-free',type:'free'},
+  {country:'🇳🇪 Niger',access:'Visa-free',type:'free'},{country:'🇨🇻 Cape Verde',access:'Visa-free',type:'free'},{country:'🇰🇪 Kenya',access:'eTA',type:'evisa'},
+  {country:'🇷🇼 Rwanda',access:'Visa on arrival',type:'arrival'},{country:'🇪🇹 Ethiopia',access:'Visa on arrival',type:'arrival'},{country:'🇹🇿 Tanzania',access:'Visa on arrival',type:'arrival'},
+  {country:'🇿🇦 South Africa',access:'Visa-free',type:'free'},{country:'🇲🇦 Morocco',access:'Visa-free',type:'free'},{country:'🇹🇷 Turkey',access:'eVisa',type:'evisa'},
+  {country:'🇯🇲 Jamaica',access:'Visa-free',type:'free'},{country:'🇧🇧 Barbados',access:'Visa-free',type:'free'},{country:'🇹🇹 Trinidad & Tobago',access:'Visa-free',type:'free'},
+  {country:'🇺🇬 Uganda',access:'Visa on arrival',type:'arrival'},{country:'🇿🇼 Zimbabwe',access:'Visa on arrival',type:'arrival'},{country:'🇲🇿 Mozambique',access:'Visa on arrival',type:'arrival'},
+];
+function filterVisa(el,type){visaTypeFilter=type;document.querySelectorAll('#visa-type-chips .curr-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderVisa();}
+function renderVisa(){
+  let list=VISA_DATA;
+  if(visaTypeFilter!=='all')list=list.filter(v=>v.type===visaTypeFilter);
+  document.getElementById('visa-list').innerHTML=list.map(v=>`<div class="rate-chip"><div class="curr">${v.country}</div><div class="val" style="font-size:13px;">${v.access}</div></div>`).join('');
+}
+
+// RECIPES
+const SL_RECIPES=[
+  {id:1,name:'Plasas',emoji:'🍃',cat:'soup',desc:'Cassava leaf stew — Sierra Leone\'s national dish',time:'60 min',ingredients:['500g cassava leaves (ground)','500g meat/fish','1 cup palm oil','2 onions','4 cloves garlic','Salt and pepper to taste','Seasoning cubes'],steps:['Wash and pound/blend cassava leaves thoroughly','Boil meat with onions, garlic and seasoning until tender','Add palm oil and cassava leaves to the pot','Stir well and cook on medium heat for 30-40 minutes, stirring regularly','Adjust seasoning and serve with rice']},
+  {id:2,name:'Groundnut Stew',emoji:'🥜',cat:'soup',desc:'Rich peanut stew with chicken',time:'50 min',ingredients:['500g chicken pieces','2 cups groundnut paste','4 tomatoes','2 onions','Palm oil','Seasoning and salt','Pepper'],steps:['Season and brown chicken in oil','Blend tomatoes and onions into a sauce','Cook tomato sauce until oil rises','Add groundnut paste diluted in water','Add chicken and simmer 30 minutes until thick']},
+  {id:3,name:'Jollof Rice',emoji:'🍚',cat:'rice',desc:'West African one-pot tomato rice',time:'45 min',ingredients:['3 cups long-grain rice','4 ripe tomatoes','2 onions','3 tbsp tomato paste','Palm oil','1 cup stock','Seasoning and spices'],steps:['Blend tomatoes and onions','Fry tomato blend in oil with tomato paste','Add stock, spices and bring to boil','Add washed rice and cook on low heat','Cover tightly and steam until rice is cooked']},
+  {id:4,name:'Benachin (Thieboudienne)',emoji:'🐟',cat:'rice',desc:'Rice cooked with fish and vegetables',time:'90 min',ingredients:['2 cups broken rice','1 whole fish (grouper/snapper)','Vegetables: cabbage, carrots, yam','Tomato paste','Onions and garlic','Fish sauce / seasoning'],steps:['Stuff fish with herb mixture and fry','Fry tomato and onion base in same oil','Add water and vegetables, boil','Add rice, reduce heat and cook until done','Arrange fish and vegetables on top to serve']},
+  {id:5,name:'Akara (Bean Fritters)',emoji:'🫘',cat:'snack',desc:'Deep-fried black-eyed pea fritters',time:'30 min',ingredients:['2 cups black-eyed peas','1 onion','1 egg','Salt and pepper','Oil for frying'],steps:['Soak and peel peas overnight','Blend peas with onion until smooth','Beat in egg, salt and pepper','Drop spoonfuls into hot oil','Fry until golden brown on both sides']},
+  {id:6,name:'Fried Plantain',emoji:'🍌',cat:'snack',desc:'Sweet ripe plantain fried golden',time:'15 min',ingredients:['2 ripe plantains','Oil for frying','Pinch of salt'],steps:['Peel and slice plantains diagonally','Heat oil in a pan over medium heat','Fry plantain slices 2-3 min per side','Drain on paper towels','Serve as side dish or snack']},
+  {id:7,name:'Ginger Beer',emoji:'🥤',cat:'drink',desc:'Spicy non-alcoholic ginger drink',time:'20 min',ingredients:['200g fresh ginger','1 cup sugar','4 cups water','Lime juice','Mint leaves'],steps:['Peel and grate ginger','Boil ginger in water for 10 minutes','Strain and add sugar','Cool and add lime juice','Serve over ice with mint']},
+  {id:8,name:'Bissap (Hibiscus Drink)',emoji:'🌺',cat:'drink',desc:'Refreshing hibiscus flower drink',time:'15 min',ingredients:['2 cups dried hibiscus flowers','6 cups water','Sugar to taste','Fresh ginger (optional)','Mint'],steps:['Boil hibiscus flowers in water for 5-8 minutes','Strain out flowers','Add sugar and stir until dissolved','Chill in refrigerator','Serve cold over ice']},
+];
+let openRecipeId=null;
+function filterRecipes(el,cat){recipeFilter=cat;document.querySelectorAll('#recipe-chips .curr-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderRecipes();}
+function renderRecipes(){
+  const list=recipeFilter==='all'?SL_RECIPES:SL_RECIPES.filter(r=>r.cat===recipeFilter);
+  document.getElementById('recipe-grid').innerHTML=list.map(r=>`<div class="recipe-card" onclick="openRecipe(${r.id})"><div class="recipe-emoji">${r.emoji}</div><div class="recipe-name">${r.name}</div><div class="recipe-desc">${r.desc}</div><div style="font-size:11px;color:var(--primary);margin-top:8px;font-weight:600;">⏱ ${r.time} · Tap for recipe →</div></div>`).join('');
+  document.getElementById('recipe-detail').innerHTML='';
+}
+function openRecipe(id){
+  const r=SL_RECIPES.find(x=>x.id===id);if(!r)return;
+  document.getElementById('recipe-detail').innerHTML=`<div class="recipe-detail open"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;">${r.emoji} ${r.name}</div><div style="font-size:12px;color:var(--mid);">${r.desc} · ⏱ ${r.time}</div></div><button onclick="document.getElementById('recipe-detail').innerHTML=''" style="background:none;border:1px solid var(--border);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:12px;">✕</button></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--primary);margin-bottom:8px;">🛒 Ingredients</div><ul class="recipe-ing" style="list-style:none;margin-bottom:16px;">${r.ingredients.map(i=>`<li>• ${i}</li>`).join('')}</ul><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--primary);margin-bottom:8px;">👩‍🍳 Steps</div>${r.steps.map((s,i)=>`<div class="recipe-step"><div class="recipe-step-num">${i+1}</div><div style="font-size:13px;color:var(--charcoal);">${s}</div></div>`).join('')}</div>`;
+  document.getElementById('recipe-detail').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // AI CHAT
@@ -1116,29 +1079,20 @@ function closePrefs(){document.getElementById('prefs-overlay').classList.remove(
 function savePrefs(){localStorage.setItem('salonehub_prefs',JSON.stringify({city:document.getElementById('pref-city').value,currency:document.getElementById('pref-currency').value}));closePrefs();showToast('✅ Preferences saved!');}
 function acceptCookies(){localStorage.setItem('sl_consent','accepted');document.getElementById('cookie-banner').classList.remove('show');}
 function declineCookies(){localStorage.setItem('sl_consent','declined');document.getElementById('cookie-banner').classList.remove('show');}
-
-// ── ONLINE / OFFLINE detection ──────────────────────────────
-window.addEventListener('offline',()=>showToast('📡 You are offline — some data may not load'));
-window.addEventListener('online', ()=>{showToast('✅ Back online — refreshing data...');loadRates();loadWeather();});
+window.addEventListener('offline',()=>{const b=document.getElementById('offline-banner');if(b)b.style.display='block';showToast('📡 You are offline — some data may not load');});
+window.addEventListener('online',()=>{const b=document.getElementById('offline-banner');if(b)b.style.display='none';showToast('✅ Back online — refreshing data...');loadRates();loadWeather();});
+if(!navigator.onLine){const b=document.getElementById('offline-banner');if(b)b.style.display='block';}
 
 // INIT
 const st=localStorage.getItem('salonehub_theme');
 if(st==='dark'||(!st&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.setAttribute('data-theme','dark');document.getElementById('theme-icon').textContent='☀️';}
 if(!localStorage.getItem('sl_consent'))setTimeout(()=>document.getElementById('cookie-banner').classList.add('show'),2000);
 switchCat('money');
-// Stagger loads to avoid simultaneous network congestion
 loadRates();
 setTimeout(()=>renderPower(),200);
 setTimeout(()=>initHolidays(),400);
-</script>
-<!-- OFFLINE BANNER -->
-<div id="offline-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#d63031;color:white;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;z-index:9999;">
-  📡 You are offline — showing cached data · Some features may be unavailable
-</div>
-<script>
-window.addEventListener('offline',()=>{const b=document.getElementById('offline-banner');if(b)b.style.display='block';});
-window.addEventListener('online',()=>{const b=document.getElementById('offline-banner');if(b)b.style.display='none';});
-if(!navigator.onLine){const b=document.getElementById('offline-banner');if(b)b.style.display='block';}
+// preload remit on banking tab open
+setTimeout(()=>{if(rates.USD)calcRemit();},3000);
 </script>
 </body>
 </html>
