@@ -214,8 +214,8 @@
 // ── BANNER ALERTS ──────────────────────────────────────────────
 window.SALONEHUB_ALERTS = {
   power: {
-    active: true,
-    message: "⚡ Power disruption reported in Sierra Leone. Check your EDSA area in the Power tab."
+    active: false,
+    message: ""
   },
   security: {
     active: false,
@@ -3760,89 +3760,68 @@ async function loadLeague(leagueCode, leagueName){
   document.getElementById('football-loading').style.display='flex';
   document.getElementById('football-content').innerHTML='';
 
-  try{
-    // Always fetch finished matches for form data
-    const finishedUrl='https://api.football-data.org/v4/competitions/'+leagueCode+'/matches?status=FINISHED';
-    // Try direct, then proxy for football API
-    let fr;
-    try{ fr=await fetch(finishedUrl); if(!fr.ok) throw new Error(); }
-    catch(e){ fr=await fetch('/api/proxy?url='+encodeURIComponent(finishedUrl)); }
-    const fd=await fr.json();
-    allLeagueMatches=fd.matches||[];
+  const FBALL_TOKEN='40aa3852a8e942dbaa91d6f70e99b517';
+  const fHeaders={'X-Auth-Token':FBALL_TOKEN};
 
-    let displayMatches=[];
-    if(currentView==='results'){
-      displayMatches=allLeagueMatches.slice(-10).reverse();
-    } else {
-      const schedUrl='https://api.football-data.org/v4/competitions/'+leagueCode+'/matches?status=SCHEDULED';
-      const sr=await fetch('/api/proxy?url='+encodeURIComponent(schedUrl));
-      const sd=await sr.json();
-      displayMatches=(sd.matches||[]).slice(0,10);
+  try{
+    const isFixtures = currentView === 'fixtures';
+    const url = isFixtures
+      ? 'https://api.football-data.org/v4/competitions/'+leagueCode+'/matches?status=SCHEDULED'
+      : 'https://api.football-data.org/v4/competitions/'+leagueCode+'/matches?status=FINISHED';
+
+    let data = null;
+    try{
+      const r = await fetch(url, {headers:fHeaders, signal:AbortSignal.timeout(8000)});
+      if(r.ok) data = await r.json();
+    }catch(e){}
+    if(!data){
+      const r2 = await fetch('/api/proxy?url='+encodeURIComponent(url), {headers:fHeaders, signal:AbortSignal.timeout(8000)});
+      if(r2.ok) data = await r2.json();
     }
+
+    const matches = (data?.matches || []);
+    const display = isFixtures ? matches.slice(0,10) : matches.slice(-10).reverse();
 
     document.getElementById('football-loading').style.display='none';
 
-    if(!displayMatches.length){
-      document.getElementById('football-content').innerHTML=`<p style="color:var(--mid);padding:12px;">No ${currentView==='results'?'recent results':'upcoming fixtures'} found.</p>`;
+    if(!display.length){
+      document.getElementById('football-content').innerHTML='<p style="color:var(--mid);padding:12px;">No '+( isFixtures?'upcoming fixtures':'recent results')+' found.</p>';
       return;
     }
 
-    document.getElementById('football-content').innerHTML=displayMatches.map(m=>{
+    const html = display.map(m=>{
       const date=m.utcDate?.slice(0,10)||'';
-      const time=m.utcDate?new Date(m.utcDate).toLocaleTimeString('en-NG',{hour:'2-digit',minute:'2-digit',timeZone:'Africa/Freetown'}):'';
-      const isFixture=currentView==='fixtures';
-      const homeScore=m.score?.fullTime?.home;
-      const awayScore=m.score?.fullTime?.away;
-
-      const scoreDisplay=isFixture
-        ? `<div style="font-size:13px;color:var(--mid);font-weight:700;">${time} WAT</div>`
-        : `<div class="score" style="font-size:24px;font-weight:800;color:var(--green);">${homeScore??'—'} – ${awayScore??'—'}</div>`;
-
-      // Form for both teams
-      const homeForm=getTeamForm(m.homeTeam?.id, allLeagueMatches);
-      const awayForm=getTeamForm(m.awayTeam?.id, allLeagueMatches);
-      const homeFormHtml=homeForm.form.map(formDot).join('');
-      const awayFormHtml=awayForm.form.map(formDot).join('');
-
-      // Prediction (only for fixtures)
-      let predictionHtml='';
-      if(isFixture && homeForm.played>0 && awayForm.played>0){
-        const {homeP,drawP,awayP}=calcPrediction(homeForm,awayForm);
-        const favourite=homeP>awayP?`🏠 ${m.homeTeam?.shortName||m.homeTeam?.name} favoured`:
-                        awayP>homeP?`✈️ ${m.awayTeam?.shortName||m.awayTeam?.name} favoured`:
-                        '⚖️ Evenly matched';
-        predictionHtml=`
-          <div style="margin-top:10px;padding:10px;background:rgba(0,135,81,.05);border-radius:10px;border:1px solid rgba(0,135,81,.12);">
-            <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;">⚡ Match Prediction</div>
-            ${predictionBar('🏠',homeP,'var(--green)')}
-            ${predictionBar('⚖️',drawP,'var(--gold)')}
-            ${predictionBar('✈️',awayP,'var(--blue)')}
-            <div style="font-size:11px;color:var(--mid);margin-top:6px;font-style:italic;">${favourite}</div>
-          </div>`;
-      }
-
-      return `
-      <div class="match-card">
-        <div style="font-size:11px;color:var(--mid);margin-bottom:8px;">
-          ${isFixture?'📅':'🏆'} ${leagueName} · ${date}
-        </div>
-        <div class="match-teams" style="margin-bottom:8px;">
-          <div class="team-name">${m.homeTeam?.name||''}</div>
-          ${scoreDisplay}
-          <div class="team-name">${m.awayTeam?.name||''}</div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--mid);">
-          <div style="display:flex;align-items:center;gap:4px;">Form: ${homeFormHtml}</div>
-          <div style="font-size:10px;">${isFixture?'⏳ Upcoming':'FT'}${m.matchday?' · MD'+m.matchday:''}</div>
-          <div style="display:flex;align-items:center;gap:4px;">${awayFormHtml} :Form</div>
-        </div>
-        ${predictionHtml}
-      </div>`;
+      const time=m.utcDate?new Date(m.utcDate).toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit',timeZone:'Africa/Freetown'})+' WAT':'';
+      const home=m.homeTeam?.shortName||m.homeTeam?.name||'';
+      const away=m.awayTeam?.shortName||m.awayTeam?.name||'';
+      const hs=m.score?.fullTime?.home;
+      const as2=m.score?.fullTime?.away;
+      const hasScore=hs!==null&&hs!==undefined&&!isFixtures;
+      return '<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;">'
+        +'<div style="font-size:10px;color:var(--mid);margin-bottom:10px;display:flex;justify-content:space-between;">'
+        +'<span>⚽ '+leagueName+'</span><span>'+date+'</span></div>'
+        +'<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;">'
+        +'<div style="text-align:right;font-weight:700;font-size:13px;">'+home+'</div>'
+        +'<div style="text-align:center;font-family:Syne,sans-serif;font-weight:900;font-size:'+(hasScore?'22px':'13px')+';color:'+(hasScore?'var(--green)':'var(--mid)')+';">'
+        +(hasScore?(hs+' – '+as2):(time||'TBD'))+'</div>'
+        +'<div style="text-align:left;font-weight:700;font-size:13px;">'+away+'</div>'
+        +'</div></div>';
     }).join('');
+
+    document.getElementById('football-content').innerHTML = html;
+    try{ cacheFootballResults(html, leagueName); }catch(e){}
 
   }catch(e){
     document.getElementById('football-loading').style.display='none';
-    document.getElementById('football-content').innerHTML='<p style="color:var(--mid);padding:12px;">Could not load matches. Please try again.</p>';
+    const cached=getCachedFootball();
+    if(cached){ document.getElementById('football-content').innerHTML=cached; return; }
+    document.getElementById('football-content').innerHTML='<div style="text-align:center;padding:24px;">'
+      +'<div style="font-size:32px;margin-bottom:10px;">⚽</div>'
+      +'<div style="font-size:13px;color:var(--mid);margin-bottom:14px;">Football scores temporarily unavailable.</div>'
+      +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">'
+      +'<a href="https://www.bbc.com/sport/football" target="_blank" rel="noopener noreferrer" style="background:var(--green);color:white;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;">BBC Sport →</a>'
+      +'<button onclick="footballLoaded=false;loadLeague(currentLeagueCode,currentLeagueName)" style="background:rgba(30,181,58,.1);color:var(--green);border:1px solid rgba(30,181,58,.3);padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;">🔄 Retry</button>'
+      +'</div></div>';
   }
 }
 
