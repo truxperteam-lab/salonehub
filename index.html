@@ -307,7 +307,7 @@ footer strong{color:var(--primary);}
       <div class="fuel-card"><div class="fuel-icon">⚡</div><div class="fuel-name">EDSA Electricity</div><div class="fuel-price">Le 3.50</div><div class="fuel-sub">Per kWh · Freetown</div></div>
     </div>
     <div style="background:rgba(0,114,198,.06);border:1px solid rgba(0,114,198,.2);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--mid);">
-      ⛽ Prices regulated by <strong>National Petroleum</strong> · Vary by region · <a href="https://www.nppsl.gov.sl" target="_blank" style="color:var(--primary);">Verify with NP →</a>
+      ⛽ Prices regulated by <strong>National Petroleum</strong> · Vary by region · <a href="https://www.npa.gov.sl" target="_blank" style="color:var(--primary);">Verify with NP →</a>
     </div>
   </div>
   <div class="card">
@@ -501,13 +501,14 @@ footer strong{color:var(--primary);}
     <div style="background:rgba(214,48,49,.06);border:1px solid rgba(214,48,49,.15);border-radius:10px;padding:12px;font-size:12px;color:var(--mid);margin-bottom:14px;">🔴 Power outages (load shedding) are common in Freetown. EDSA manages electricity distribution. Report your area status to help neighbours.</div>
     <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
       <select id="edsa-area" style="flex:1;min-width:150px;"><option value="">Select your area</option><option>Freetown — West</option><option>Freetown — East End</option><option>Freetown — Central</option><option>Aberdeen</option><option>Congo Town</option><option>Lumley</option><option>Kissy</option><option>Wellington</option><option>Bo</option><option>Kenema</option><option>Makeni</option></select>
-      <select id="edsa-status" style="flex:1;min-width:150px;"><option value="out">🔴 No power (NEPA off)</option><option value="on">🟢 Power is ON</option><option value="partial">🟡 Intermittent</option></select>
+      <select id="edsa-status" style="flex:1;min-width:150px;"><option value="out">🔴 No power (EDSA off)</option><option value="on">🟢 Power is ON</option><option value="partial">🟡 Intermittent</option></select>
     </div>
     <button class="btn btn-primary" onclick="reportPower()">📢 Report Power Status</button>
     <div id="power-reports" style="margin-top:16px;"></div>
     <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
-      <a href="https://www.edsa.gov.sl" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">EDSA Official Site →</a>
-      <a href="tel:+23222222601" style="font-size:12px;color:var(--primary);font-weight:600;">📞 EDSA: +232-22-222-601</a>
+      <a href="https://www.edsa.sl" target="_blank" style="font-size:12px;color:var(--primary);font-weight:600;">EDSA Official Site →</a>
+      <a href="mailto:info@edsa.sl" style="font-size:12px;color:var(--primary);font-weight:600;">✉️ info@edsa.sl</a>
+      <a href="tel:672" style="font-size:12px;color:var(--primary);font-weight:600;">📞 EDSA Toll Free: 672</a>
     </div>
   </div>
 </div>
@@ -522,7 +523,7 @@ footer strong{color:var(--primary);}
       <div class="emrg-card" onclick="copyText('019','Fire copied')"><div class="name">🚒 Fire Brigade</div><a href="tel:019" class="num">019</a></div>
       <div class="emrg-card" onclick="copyText('117','Ambulance copied')"><div class="name">🚑 Ambulance</div><a href="tel:117" class="num">117</a></div>
       <div class="emrg-card" onclick="copyText('112','112 copied')"><div class="name">📱 Universal (Mobile)</div><a href="tel:112" class="num">112</a></div>
-      <div class="emrg-card"><div class="name">⚡ EDSA Faults</div><a href="tel:+23222222601" class="num" style="font-size:12px;">+232-22-222-601</a></div>
+      <div class="emrg-card"><div class="name">⚡ EDSA Faults</div><a href="tel:672" class="num">672</a></div>
       <div class="emrg-card"><div class="name">🏥 PCMH Hospital</div><a href="tel:+23222224438" class="num" style="font-size:12px;">+232-22-224-438</a></div>
     </div>
     <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--primary);margin:16px 0 8px;">🏥 Major Hospitals</div>
@@ -806,8 +807,8 @@ async function loadRates(){
   const SLE_URLS=['https://open.er-api.com/v6/latest/SLE','https://api.exchangerate-api.com/v4/latest/SLE','https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/sle.json'];
   for(const url of SLE_URLS){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),6000);const res=await fetch(url,{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.sle||data.conversion_rates;if(fx&&fx.USD&&parseFloat(fx.USD)>0){usdToSle=1/parseFloat(fx.USD);break;}}catch(e){}}
   if(usdToSle===USD_TO_SLE_FALLBACK){try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),6000);const res=await fetch('https://open.er-api.com/v6/latest/SLL',{signal:ctrl.signal});const data=await res.json();const fx=data.rates||data.conversion_rates;if(fx&&fx.USD&&parseFloat(fx.USD)>0){usdToSle=(1/parseFloat(fx.USD))/1000;}}catch(e){}}
-  if(usdRates){rates={};rates.USD=usdToSle;['GBP','EUR','CAD','CHF','CNY','ZAR','GMD','GHS','XOF','AED','SAR','NGN'].forEach(c=>{if(usdRates[c])rates[c]=(1/usdRates[c])*usdToSle;});document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='BSL indicative · Updated '+new Date().toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit'})+' · '+new Date().toLocaleDateString('en-SL',{day:'numeric',month:'short',year:'numeric'});updateRateDisplay();updateTicker();updateHeroStats();}
-  else{rates={USD:24.57,GBP:31.50,EUR:26.80,CAD:18.10,CNY:3.40,ZAR:1.34,GMD:0.33,GHS:1.85,NGN:0.016};document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='⚠️ Showing cached BSL rates · Live data unavailable';updateRateDisplay();updateTicker();updateHeroStats();}
+  if(usdRates){rates={};rates.USD=usdToSle;['GBP','EUR','CAD','CHF','CNY','ZAR','GMD','GHS','XOF','AED','SAR'].forEach(c=>{if(usdRates[c])rates[c]=(1/usdRates[c])*usdToSle;});document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='BSL indicative · Updated '+new Date().toLocaleTimeString('en-SL',{hour:'2-digit',minute:'2-digit'})+' · '+new Date().toLocaleDateString('en-SL',{day:'numeric',month:'short',year:'numeric'});updateRateDisplay();updateTicker();updateHeroStats();}
+  else{rates={USD:24.57,GBP:31.50,EUR:26.80,CAD:18.10,CNY:3.40,ZAR:1.34,GMD:0.33,GHS:1.85,};document.getElementById('rate-loading').style.display='none';document.getElementById('rate-body').style.display='block';document.getElementById('rate-updated').textContent='⚠️ Showing cached BSL rates · Live data unavailable';updateRateDisplay();updateTicker();updateHeroStats();}
 }
 function fmtSLE(v){return v?(SYM+v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')):'—';}
 function updateRateDisplay(){
@@ -1191,7 +1192,7 @@ const LEGAL_CONTENT={
 <p>SaloneHub provides information for general informational purposes only. While we strive for accuracy:</p>
 <ul style="padding-left:18px;margin-top:8px;margin-bottom:8px;">
   <li>Exchange rates are <strong>indicative only</strong> — always verify with your bank or the <a href="https://www.bsl.gov.sl" target="_blank" style="color:var(--primary);">Bank of Sierra Leone</a></li>
-  <li>Fuel prices may lag behind official NP/NNPC updates</li>
+  <li>Fuel prices may lag behind official National Petroleum updates</li>
   <li>Market prices are community estimates and may not reflect current reality</li>
   <li>Weather data is sourced from Open-Meteo and may be approximate</li>
   <li>News articles are sourced from third-party publishers — we do not edit or verify their content</li>
